@@ -1,0 +1,419 @@
+// ── IMAGE IMPORTS ─────────────────────────────────────────────────────────────
+import DAIKIN from "../Produk/DAIKIN.png";
+import JAF from "../Produk/JAF.png";
+import PANASONIC from "../Produk/PANASONIC.png";
+import GREE from "../Produk/GREE.png";
+import TICA from "../Produk/TICA.png";
+import ARISTON from "../Produk/ARISTON.png";
+import SERVVO from "../Produk/SERVVO.png";
+import WIKA from "../Produk/WIKA.png";
+import GALA from "../Produk/GALA.png";
+import TOZEN from "../Produk/TOZEN.png";
+import MAGNO from "../Produk/MAGNO.png";
+import SHIMIZU from "../Produk/SHIMIZU.png";
+import SUPREME from "../Produk/SUPREME.png";
+import TOYOODA from "../Produk/TOYOODA.png";
+import INSULFLEX from "../Produk/INSULFLEX.png";
+import MULTIKABEL from "../Produk/MULTIKABEL.png";
+import HODA from "../Produk/HODA.png";
+import INABA_DENKO from "../Produk/INABA DENKO.png";
+import DSP from "../Produk/DSP.png";
+import SEMEN_MERAH_PUTIH from "../Produk/SEMEN MERAH PUTIH.png";
+import DRYMIX from "../Produk/DRYMIX.png";
+import MORTINDO from "../Produk/MORTINDO.png";
+import ABU_BATU from "../Produk/ABU BATU.png";
+import ZIEGEL from "../Produk/ZIEGEL.png";
+import BATU_SPLIT from "../Produk/BATU SPLIT.png";
+import JCAS from "../Produk/JCAS.png";
+import PAKUROKET from "../Produk/PAKUROKET.png";
+import TRILLIUN from "../Produk/TRILLIUN.png";
+import TRILLIUNHOSE from "../Produk/TRILLIUNHOSE.png";
+import WAVIN from "../Produk/WAVIN.png";
+import SPINDO from "../Produk/SPINDO.png";
+import PIONEER from "../Produk/PIONEER.png";
+import RAJAWALI from "../Produk/RAJAWALI.png";
+import TRILLIUNWARE from "../Produk/TRILLIUNWARE.png";
+import UNNU from "../Produk/UNNU.png";
+import ZORA from "../Produk/ZORA.png";
+import OSTRA from "../Produk/OSTRA.png";
+import type { ImageMetadata } from "astro";
+
+// ── TYPE ──────────────────────────────────────────────────────────────────────
+type ProductItem = {
+  id: number;
+  name: string;
+  key: string;
+  image: ImageMetadata;
+  category: string;
+  discount?: number;
+  variants: string;
+  href: string;
+  price?: number;
+};
+
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const Product: ProductItem[] = [
+  {
+    id: 1,
+    name: "Daikin",
+    key: "daikindesc",
+    image: DAIKIN,
+    category: "MEP Systems",
+    variants: "6 Items",
+    href: "/produk/daikin",
+  },
+  {
+    id: 2,
+    name: "Japan Air Filter (JAF)",
+    image: JAF,
+    key: "jafdesc",
+    category: "MEP Systems",
+    variants: "7 Items",
+    href: "/produk/jaf",
+  },
+  {
+    id: 3,
+    name: "Panasonic",
+    price: 129900,
+    image: PANASONIC,
+    key: "panasonicdesc",
+    category: "MEP Systems",
+    variants: "6 Items",
+    href: "/produk/panasonic",
+  },
+  {
+    id: 4,
+    name: "Gree",
+    price: 129900,
+    image: GREE,
+    key: "greedesc",
+    category: "MEP Systems",
+    variants: "8 Items",
+    href: "/produk/gree",
+  },
+  {
+    id: 5,
+    name: "Tica",
+    price: 129900,
+    image: TICA,
+    key: "ticadesc",
+    category: "MEP Systems",
+    variants: "6 Items",
+    href: "/produk/tica",
+  },
+  {
+    id: 6,
+    name: "Ariston",
+    price: 129900,
+    image: ARISTON,
+    key: "aristondesc",
+    category: "MEP Systems",
+    variants: "6 Items",
+    href: "/produk/ariston",
+  },
+  {
+    id: 7,
+    name: "Servvo",
+    key: "servvodesc",
+    image: SERVVO,
+    category: "MEP Systems",
+    variants: "8 Items",
+    href: "/produk/servvo",
+  },
+  {
+    id: 8,
+    name: "Wika WH",
+    image: WIKA,
+    key: "wikawhdesc",
+    category: "MEP Systems",
+    variants: "3 Items",
+    href: "/produk/wikawh",
+  },
+  {
+    id: 9,
+    name: "Gala",
+    price: 129900,
+    image: GALA,
+    key: "galadesc",
+    category: "MEP Systems",
+    variants: "7 Items",
+    href: "/produk/gala",
+  },
+  {
+    id: 10,
+    name: "Tozen",
+    price: 129900,
+    image: TOZEN,
+    key: "tozendesc",
+    category: "MEP Systems",
+    variants: "3 Items",
+    href: "/produk/tozen",
+  },
+  {
+    id: 11,
+    name: "Magno",
+    price: 129900,
+    image: MAGNO,
+    key: "magnodesc",
+    category: "MEP Systems",
+    variants: "10 Items",
+    href: "/produk/magno",
+  },
+  {
+    id: 12,
+    name: "Shimizu",
+    price: 129900,
+    image: SHIMIZU,
+    key: "shimizudesc",
+    category: "MEP Systems",
+    variants: "7 Items",
+    href: "/produk/shimizu",
+  },
+  {
+    id: 13,
+    name: "Supreme",
+    price: 129900,
+    image: SUPREME,
+    key: "supremedesc",
+    category: "MEP Systems",
+    variants: "7 Items",
+    href: "/produk/supreme",
+  },
+  {
+    id: 14,
+    name: "Toyooda",
+    price: 129900,
+    image: TOYOODA,
+    key: "toyoodadesc",
+    category: "MEP Systems",
+    variants: "1 Items",
+    href: "/produk/toyooda",
+  },
+  {
+    id: 15,
+    name: "Insulflex",
+    price: 129900,
+    image: INSULFLEX,
+    key: "insulflexdesc",
+    category: "MEP Systems",
+    variants: "2 Items",
+    href: "/produk/insulflex",
+  },
+  {
+    id: 16,
+    name: "Multi Kabel",
+    price: 129900,
+    image: MULTIKABEL,
+    key: "multikabeldesc",
+    category: "MEP Systems",
+    variants: "6 Items",
+    href: "/produk/multicabel",
+  },
+  {
+    id: 17,
+    name: "Hoda",
+    price: 129900,
+    image: HODA,
+    key: "hodadesc",
+    category: "MEP Systems",
+    variants: "1 Items",
+    href: "/produk/hoda",
+  },
+  {
+    id: 18,
+    name: "Inaba Denko",
+    price: 129900,
+    image: INABA_DENKO,
+    key: "inabadenkodesc",
+    category: "MEP Systems",
+    variants: "3 Items",
+    href: "/produk/inabadenko",
+  },
+  {
+    id: 19,
+    name: "DSP",
+    image: DSP,
+    key: "dspdesc",
+    category: "MEP Systems",
+    variants: "3 Items",
+    href: "/produk/dsp",
+  },
+  {
+    id: 20,
+    name: "Semen Merah Putih",
+    image: SEMEN_MERAH_PUTIH,
+    key: "semenmerahputihdesc",
+    category: "Building Materials",
+    variants: "4 Items",
+    href: "/produk/semenmerahputih",
+  },
+  {
+    id: 21,
+    name: "Drymix",
+    price: 129900,
+    image: DRYMIX,
+    key: "drymixdesc",
+    category: "Building Materials",
+    variants: "10 Items",
+    href: "/produk/drymix",
+  },
+  {
+    id: 22,
+    name: "Mortindo",
+    price: 129900,
+    image: MORTINDO,
+    key: "mortindodesc",
+    category: "Building Materials",
+    variants: "5 Items",
+    href: "/produk/mortindo",
+  },
+  {
+    id: 23,
+    name: "Abu Batu",
+    price: 129900,
+    image: ABU_BATU,
+    key: "abubatudesc",
+    category: "Building Materials",
+    variants: "1 Items",
+    href: "/produk/abubatu",
+  },
+  {
+    id: 24,
+    name: "Ziegel",
+    price: 129900,
+    image: ZIEGEL,
+    key: "ziegeldesc",
+    category: "Building Materials",
+    variants: "1 Items",
+    href: "/produk/ziegel",
+  },
+  {
+    id: 25,
+    name: "Batu Split",
+    price: 129900,
+    image: BATU_SPLIT,
+    key: "batusplitdesc",
+    category: "Building Materials",
+    variants: "1 Items",
+    href: "/produk/batusplit",
+  },
+  {
+    id: 26,
+    name: "Besi Beton",
+    price: 129900,
+    image: JCAS,
+    key: "besibetondesc",
+    category: "Building Materials",
+    variants: "1 Items",
+    href: "/produk/jcas",
+  },
+  {
+    id: 27,
+    name: "Paku Roket",
+    price: 129900,
+    image: PAKUROKET,
+    key: "pakuroketdesc",
+    category: "Building Materials",
+    variants: "1 Items",
+    href: "/produk/pakuroket",
+  },
+  {
+    id: 28,
+    name: "Trilliun",
+    image: TRILLIUN,
+    key: "trilliundesc",
+    category: "MEP Systems",
+    variants: "6 Items",
+    href: "/produk/trilliun",
+  },
+  {
+    id: 29,
+    name: "Trilliunhose",
+    image: TRILLIUNHOSE,
+    key: "trilliunhosedesc",
+    category: "MEP Systems",
+    variants: "5 Items",
+    href: "/produk/trilliunhose",
+  },
+  {
+    id: 30,
+    name: "Wavin",
+    price: 129900,
+    image: WAVIN,
+    key: "wavindesc",
+    category: "MEP Systems",
+    variants: "6 Items",
+    href: "/produk/wavin",
+  },
+  {
+    id: 31,
+    name: "Spindo",
+    price: 129900,
+    image: SPINDO,
+    key: "spindodesc",
+    category: "MEP Systems",
+    variants: "3 Items",
+    href: "/produk/spindo",
+  },
+  {
+    id: 32,
+    name: "Pioneer",
+    price: 129900,
+    image: PIONEER,
+    key: "pioneerdesc",
+    category: "Building Materials",
+    variants: "8 Items",
+    href: "/produk/pioneer",
+  },
+  {
+    id: 33,
+    name: "Rajawali",
+    price: 129900,
+    image: RAJAWALI,
+    key: "rajawalidesc",
+    category: "Building Materials",
+    variants: "5 Items",
+    href: "/produk/rajawali",
+  },
+  {
+    id: 34,
+    name: "Trilliunware",
+    image: TRILLIUNWARE,
+    key: "trilliunwaredesc",
+    category: "Sanitary",
+    variants: "9 Items",
+    href: "/produk/trilliunware",
+  },
+  {
+    id: 35,
+    name: "Unnu",
+    price: 129900,
+    image: UNNU,
+    key: "unnudesc",
+    category: "Sanitary",
+    variants: "5 Items",
+    href: "/produk/unnu",
+  },
+  {
+    id: 36,
+    name: "Zora",
+    price: 129900,
+    image: ZORA,
+    key: "zoradesc",
+    category: "EV Charger",
+    variants: "3 Items",
+    href: "/produk/zora",
+  },
+  {
+    id: 37,
+    name: "Ostra",
+    price: 129900,
+    image: OSTRA,
+    key: "ostradesc",
+    category: "EV Charger",
+    variants: "2 Items",
+    href: "/produk/ostra",
+  },
+];
+
+export default Product;

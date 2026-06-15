@@ -1,0 +1,239 @@
+---
+import logoIMS from "../assets/Logo_IMS_01.png";
+import logoReddmas from "../assets/logoreddmas.png";
+import csImage from "../assets/CS-IMS-0001.png";
+import { Icon } from "astro-icon/components";
+import { Image } from "astro:assets";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<footer class="bg-linear-to-tl from-blue-200/90 to-red-50/30 pt-16 pb-6">
+  <div class="max-w-7xl mx-auto px-4 md:flex md:justify-between">
+    <div>
+      <h3 class="text-lg sm:text-xl font-bold mb-6 text-gray-900">
+        {t("footertitle_1")}
+      </h3>
+      <a
+        href="/"
+        class="flex items-center gap-2 hover:text-ims-red font-medium transition-colors duration-200 group"
+      >
+        <Image
+          src={logoIMS}
+          width={250}
+          height={190}
+          decoding="async"
+          loading="lazy"
+          alt="Logo"
+          class="h-auto w-auto object-contain"
+        />
+      </a>
+      <span class="block text-sm sm:text-lg font-semibold text-gray-700 mb-6"
+        >Intisukses Mitra Sejati</span
+      >
+      {/* Icons */}
+      <div class="flex items-center gap-6 text-gray-500">
+        <a
+          href="https://www.instagram.com/intisuksesmitrasejati/?igsh=aG1rbDV3NWE5MW9v"
+          class="hover:text-ims-red"
+        >
+          <Icon name="local:instagram" class="w-12 h-12 shrink-0" />
+        </a>
+        <a href="#" class="hover:text-ims-red">
+          <Icon name="local:linkedin" class="w-10 h-10 shrink-0" />
+        </a>
+        <a
+          href="https://www.youtube.com/@reddmasgroup"
+          class="hover:text-ims-red"
+        >
+          <Icon name="local:youtube" class="w-12 h-12 shrink-0" />
+        </a>
+      </div>
+    </div>
+
+    {/* OFFICE */}
+    <div class="mt-12 md:mt-0">
+      <h3 class="text-lg sm:text-xl font-bold mb-6 text-gray-900">
+        {t("footertitle_2")}
+      </h3>
+
+      <ul class="space-y-4 text-base text-gray-500">
+        <li class="flex items-start gap-3">
+          <Icon name="local:map" class="w-5 h-5 mt-0.5 shrink-0 text-ims-red" />
+          Business Park Kebon Jeruk Blok C-2 No.8 <br />
+          Jl. Meruya Ilir Raya No. 88 <br />
+          Meruya Utara, Kembangan
+          <br /> Jakarta 11620
+        </li>
+
+        <li class="flex items-center gap-3">
+          <svg
+            class="w-5 h-5 mt-0.5 shrink-0 text-ims-red"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"
+            ></path>
+          </svg>
+          +62 21 300 678 68
+        </li>
+
+        <li class="flex items-center gap-3">
+          <svg
+            class="w-5 h-5 mt-0.5 shrink-0 text-ims-red"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
+            ></path>
+            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
+            ></path>
+          </svg>
+          sales@intisukses-ms.com
+        </li>
+
+        <li class="flex items-center gap-3">
+          <svg
+            class="w-5 h-5 mt-0.5 shrink-0 text-ims-red"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+              clip-rule="evenodd"></path>
+          </svg>
+          Senin - Jumat : 08.00 - 16.30 WIB
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Copyright -->
+  <div
+    class="border-t border-gray-200 mt-14 pt-6 sm:pt-8 text-gray-500 text-center text-sm"
+  >
+    © 2025 PT Intisukses Mitra Sejati. All Rights Reserved |
+    <span class="inline-flex items-center gap-2 ml-1 align-middle">
+      <span>Member of</span>
+      <a
+        href="https://www.reddmasgroup.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-block hover:opacity-75 transition-opacity duration-200"
+      >
+        <Image
+          src={logoReddmas}
+          width={500}
+          height={450}
+          alt="Logo"
+          class="h-6 w-auto object-contain inline-block"
+        />
+      </a>
+    </span>
+  </div>
+
+  <div class="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3">
+    <!-- Toast -->
+    <div
+      id="toast-wa"
+      class="hidden md:block w-full max-w-xs p-4 bg-white rounded-lg shadow border border-gray-200"
+      role="alert"
+    >
+      <div class="flex relative">
+        <Image
+          src={csImage}
+          width={98}
+          height={98}
+          format="webp"
+          quality={80}
+          alt="CS"
+          class="w-7 h-7 rounded-full"
+          loading="lazy"
+        />
+        <div class="ms-3 text-sm font-normal">
+          <span class="text-sm font-semibold text-gray-900">Admin</span>
+          <div class="text-sm text-gray-600 mt-1">
+            {t("footertitle_3")}
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg p-1.5 inline-flex items-center justify-center h-8 w-8"
+          data-dismiss-target="#toast-wa"
+          aria-label="Close"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+    <!-- WhatsApp Button -->
+    <a
+      id="btn-wa"
+      href="https://api.whatsapp.com/send/?phone=6282156666802&text&type=phone_number&app_absent=0"
+      target="_blank"
+      class="relative bg-[#25d366] p-4 rounded-full shadow-lg hover:scale-110 transition-transform duration-300"
+    >
+      <Icon name="local:wa" class="w-8 h-8 text-white" />
+      <div id="notifikasi-wa">
+        <span
+          class="absolute -top-2 -right-2 w-6 h-6 text-xs font-bold text-white bg-red-600 rounded-full flex items-center justify-center"
+        >
+          1
+        </span>
+      </div>
+    </a>
+  </div>
+</footer>
+
+<script>
+  import { Dismiss } from "flowbite";
+
+  const setupToastLogic = () => {
+    const targetEl = document.getElementById("toast-wa");
+
+    if (targetEl) {
+      // 1. Cek apakah sudah pernah melihat toast
+      const hasSeenToast = sessionStorage.getItem("hasSeenToastIMS");
+
+      if (hasSeenToast === "true") {
+        // Jika sudah pernah, pastikan elemen benar-benar hilang/dihapus
+        targetEl.classList.add("hidden");
+        targetEl.style.display = "none";
+      } else {
+        targetEl.classList.remove("hidden");
+        sessionStorage.setItem("hasSeenToastIMS", "true");
+        setTimeout(() => {
+          const dismiss = new Dismiss(targetEl);
+          dismiss.hide();
+        }, 10000);
+      }
+    }
+
+    // 2. Notifikasi WA: hanya tampil 1x, hilang setelah diklik
+    const btnWa = document.getElementById("btn-wa");
+    const notifWa = document.getElementById("notifikasi-wa");
+
+    if (btnWa && notifWa) {
+      const hasClickedWa = sessionStorage.getItem("hasClickedWA");
+
+      if (hasClickedWa === "true") {
+        // Sudah pernah diklik sebelumnya → langsung sembunyikan
+        notifWa.style.display = "none";
+      }
+
+      btnWa.addEventListener("click", () => {
+        notifWa.style.display = "none";
+        sessionStorage.setItem("hasClickedWA", "true");
+      });
+    }
+  };
+
+  // Gunakan 'astro:page-load' agar berjalan setiap pindah page di Astro View Transitions
+  document.addEventListener("astro:page-load", setupToastLogic);
+</script>

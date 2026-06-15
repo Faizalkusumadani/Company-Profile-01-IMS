@@ -1,0 +1,459 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import Banner from "../../../components/Banner.astro";
+import Products from "../../../assets/tools/data";
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import { languages } from "../../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../../i18n/utils";
+
+export async function getStaticPaths() {
+  return Object.keys(languages).map((l) => ({
+    params: { lang: l },
+  }));
+}
+
+const productImages = import.meta.glob<{ default: ImageMetadata }>(
+  "../../../assets/Produk/*.png",
+  { eager: true },
+);
+
+function getProductImage(filename: string): ImageMetadata {
+  const key = Object.keys(productImages).find((k) => k.endsWith(filename));
+  if (!key) throw new Error(`Gambar tidak ditemukan: ${filename}`);
+  return productImages[key].default;
+}
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const breadcrumbs = [
+  { label: t("home"), href: `/${lang}/`, key: "home" },
+  { label: t("products"), current: true, key: "products" },
+];
+
+const title = t("products"),
+  description = t("productsdescription");
+---
+
+<Layout title={title} description={description}>
+  <!-- Banner Section -->
+  <Banner title={{ key: "products" }} breadcrumbs={breadcrumbs} />
+
+  <!-- Produk -->
+  <section id="produk">
+    <div class="w-full px-4 py-13 sm:py-16 md:py-20 lg:py-24">
+      <div class="mx-auto max-w-6xl space-x-4">
+        <h2
+          class="text-3xl sm:text-4xl md:text-5xl font-semibold text-gray-900 text-center"
+        >
+          {t("headerproducts_1")}<span class="text-red-600/70">
+            {t("headerproducts_2")}</span
+          >
+          {t("headerproducts_3")}
+        </h2>
+        <p
+          class="text-gray-500 text-base sm:text-lg md:text-lg max-w-2xl mx-auto text-center mt-6"
+        >
+          {t("headerproductsdescription")}
+        </p>
+        <!-- Filter -->
+        <div
+          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 py-6 md:py-10 justify-items-center"
+        >
+          <button
+            type="button"
+            data-category="all"
+            class="filter-btn w-full p-6 flex flex-col items-center justify-center
+           rounded-2xl border border-gray-200
+           transition-all duration-300 text-gray-500"
+          >
+            <Icon
+              name="local:all-category"
+              class="w-18 h-18 text-red-600/70 mb-4"
+            />
+            <span class="text-lg font-medium">All</span>
+          </button>
+          <button
+            type="button"
+            data-category="Building Materials"
+            class="filter-btn w-full p-6 flex flex-col items-center justify-center
+           rounded-2xl border border-gray-200
+           transition-all duration-300 text-gray-500"
+          >
+            <Icon
+              name="local:wheelbarrow"
+              class="w-18 h-18 text-red-600/70 mb-4"
+            />
+            <span class="text-lg font-medium">Building Materials</span>
+          </button>
+
+          <button
+            type="button"
+            data-category="MEP Systems"
+            class="filter-btn w-full p-6 flex flex-col items-center justify-center
+           rounded-2xl border border-gray-200
+           transition-all duration-300 text-gray-500"
+          >
+            <Icon
+              name="local:electrical-spark"
+              class="w-18 h-18 text-red-600/70 mb-4"
+            />
+            <span class="text-lg font-medium">MEP Systems</span>
+          </button>
+          <button
+            type="button"
+            data-category="Sanitary"
+            class="filter-btn w-full p-6 flex flex-col items-center justify-center
+           rounded-2xl border border-gray-200
+           transition-all duration-300 text-gray-500"
+          >
+            <Icon
+              name="local:bathroom"
+              class="w-18 h-18 text-red-600/70 mb-4"
+            />
+            <span class="text-lg font-medium">Sanitary</span>
+          </button>
+
+          <button
+            type="button"
+            data-category="EV Charger"
+            class="filter-btn w-full p-6 flex flex-col items-center justify-center
+           rounded-2xl border border-gray-200
+           transition-all duration-300 text-gray-500"
+          >
+            <Icon
+              name="local:EV Charger"
+              class="w-18 h-18 text-red-600/70 mb-4"
+            />
+            <span class="text-lg font-medium">EV Charger</span>
+          </button>
+        </div>
+
+        <!-- Product Count Info -->
+        <div class="text-center py-4 md:py-6">
+          <p class="text-gray-500 text-normal">
+            {t("displayproducts_1")}
+            <span id="product-count" class="font-semibold text-red-600">0</span>
+            {t("displayproducts_2")}
+          </p>
+        </div>
+
+        <!-- Product Grid -->
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8"
+          id="product-grid"
+        >
+          {
+            Products.map((product) => (
+              <div
+                class="h-112.5 product-item group rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2 border border-gray-200 "
+                data-category={product.category}
+              >
+                {/* Image */}
+                <div class="relative h-48 sm:h-56 bg-linear-to-br from-blue-50 to-blue-100 overflow-hidden">
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    width={500}
+                    height={370}
+                    decoding="async"
+                    loading="lazy"
+                    class="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-500"
+                  />
+
+                  {/* Badges */}
+                  {product.variants && (
+                    <div class="absolute top-3 left-3">
+                      <span class="bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-semibold text-gray-500 shadow-md">
+                        {product.variants}
+                      </span>
+                    </div>
+                  )}
+                  {product.discount && product.discount > 0 && (
+                    <div class="absolute top-3 right-3">
+                      <div class="bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg animate-pulse">
+                        -{product.discount}%
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Quick View Overlay */}
+                  <div class="absolute inset-0 bg-black/40 md:bg-black/50 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <a
+                      href={`/${lang}${product.href}`}
+                      class="bg-white border border-red-600 text-red-700 px-6 py-2.5 rounded-full font-semibold text-sm transform translate-y-0 md:translate-y-4 md:group-hover:translate-y-0 transition-transform duration-300 hover:bg-gray-100"
+                    >
+                      {t("ctaarchievements")}
+                    </a>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div class="p-4 sm:p-5">
+                  <h3 class="font-bold mb-2 text-gray-900 text-base sm:text-lg line-clamp-2 group-hover:text-red-600/70 transition-colors leading-snug">
+                    {product.name}
+                  </h3>
+
+                  {/* Category Badge */}
+                  <span class="inline-block text-xs font-medium text-blue-600 mb-3">
+                    {product.category}
+                  </span>
+
+                  <p class="text-gray-500 text-sm line-clamp-4 leading-relaxed">
+                    {t(product.key as any)}
+                  </p>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+
+        <!-- No Products Message -->
+        <div id="no-products" class="hidden text-center py-12">
+          <div class="inline-flex flex-col items-center gap-4">
+            <svg
+              class="w-20 h-20 text-gray-300"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+              ></path>
+            </svg>
+            <div>
+              <h3 class="text-xl font-semibold text-gray-500 mb-2">
+                {t("notificationproducts_1")}
+              </h3>
+              <p class="text-gray-500">
+                {t("notificationproducts_2")}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    interface FilterState {
+      buttons: NodeListOf<HTMLButtonElement>;
+      products: NodeListOf<HTMLElement>;
+      counter: HTMLElement | null;
+      noProductsMsg: HTMLElement | null;
+    }
+
+    class ProductFilter {
+      private state: FilterState;
+      private readonly ACTIVE_CLASSES = [
+        "bg-red-50",
+        "border-red-400",
+        "text-red-400",
+      ];
+      private readonly INACTIVE_CLASSES = [
+        "bg-gray-100",
+        "border-gray-200",
+        "text-gray-500",
+      ];
+      private readonly ANIMATION_CLASS = "animate-fade-in";
+
+      constructor() {
+        this.state = {
+          buttons: document.querySelectorAll<HTMLButtonElement>(".filter-btn"),
+          products: document.querySelectorAll<HTMLElement>(".product-item"),
+          counter: document.getElementById("product-count"),
+          noProductsMsg: document.getElementById("no-products"),
+        };
+      }
+
+      // Inisialisasi filter produk
+      public init(): void {
+        if (!this.validateElements()) {
+          console.warn("Product filter: Required elements not found");
+          return;
+        }
+
+        this.attachEventListeners();
+        this.setInitialState();
+      }
+
+      //  Validasi keberadaan elemen yang diperlukan
+      private validateElements(): boolean {
+        return this.state.buttons.length > 0 && this.state.products.length > 0;
+      }
+
+      //  Attach event listeners ke semua filter button
+      private attachEventListeners(): void {
+        this.state.buttons.forEach((button) => {
+          button.addEventListener("click", () =>
+            this.handleFilterClick(button),
+          );
+        });
+      }
+
+      // Set initial state - aktifkan button "all" dan tampilkan semua produk
+      private setInitialState(): void {
+        const allButton = Array.from(this.state.buttons).find(
+          (btn) => btn.dataset.category === "all",
+        );
+
+        if (allButton) {
+          this.setActiveButton(allButton);
+          this.filterProducts("all");
+        }
+      }
+
+      //  Handle klik pada filter button
+      private handleFilterClick(button: HTMLButtonElement): void {
+        const category = button.dataset.category;
+
+        if (!category) {
+          console.warn("Button missing data-category attribute");
+          return;
+        }
+
+        this.setActiveButton(button);
+        this.filterProducts(category);
+      }
+
+      /**
+       * Set button sebagai active dan nonaktifkan button lainnya
+       */
+      private setActiveButton(activeButton: HTMLButtonElement): void {
+        this.state.buttons.forEach((button) => {
+          const isActive = button === activeButton;
+
+          // Remove semua class terlebih dahulu
+          button.classList.remove(
+            ...this.ACTIVE_CLASSES,
+            ...this.INACTIVE_CLASSES,
+          );
+
+          // Tambahkan class sesuai state
+          button.classList.add(
+            ...(isActive ? this.ACTIVE_CLASSES : this.INACTIVE_CLASSES),
+          );
+        });
+      }
+
+      // Filter produk berdasarkan kategori
+
+      private filterProducts(category: string): void {
+        let visibleCount = 0;
+
+        this.state.products.forEach((product) => {
+          const productCategory = product.dataset.category;
+          const shouldShow = category === "all" || productCategory === category;
+
+          this.toggleProductVisibility(product, shouldShow);
+
+          if (shouldShow) visibleCount++;
+        });
+
+        this.updateUI(visibleCount);
+      }
+
+      /**
+       * Toggle visibility produk dengan animasi
+       */
+      private toggleProductVisibility(
+        product: HTMLElement,
+        show: boolean,
+      ): void {
+        if (show) {
+          product.classList.remove("hidden");
+          // Trigger reflow untuk animasi
+          void product.offsetWidth;
+          product.classList.add(this.ANIMATION_CLASS);
+        } else {
+          product.classList.add("hidden");
+          product.classList.remove(this.ANIMATION_CLASS);
+        }
+      }
+
+      /**
+       * Update UI counter dan pesan "no products"
+       */
+      private updateUI(visibleCount: number): void {
+        // Update counter
+        if (this.state.counter) {
+          this.state.counter.textContent = visibleCount.toString();
+        }
+
+        // Toggle pesan "no products"
+        if (this.state.noProductsMsg) {
+          this.state.noProductsMsg.classList.toggle("hidden", visibleCount > 0);
+        }
+      }
+
+      /**
+       * Destroy - cleanup event listeners jika diperlukan
+       */
+      public destroy(): void {
+        this.state.buttons.forEach((button) => {
+          button.replaceWith(button.cloneNode(true));
+        });
+      }
+    }
+
+    // Initialization
+    let filterInstance: ProductFilter | null = null;
+
+    function initializeProductFilter(): void {
+      // Cleanup instance lama jika ada
+      if (filterInstance) {
+        filterInstance.destroy();
+      }
+
+      // Buat instance baru dan initialize
+      filterInstance = new ProductFilter();
+      filterInstance.init();
+    }
+
+    // Setup berdasarkan document state
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initializeProductFilter);
+    } else {
+      initializeProductFilter();
+    }
+
+    // Re-initialize untuk Astro page transitions
+    document.addEventListener("astro:page-load", initializeProductFilter);
+  </script>
+
+  <style>
+    /* Animation untuk fade in effect */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    /* Smooth transition untuk filter buttons */
+    .filter-btn {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .filter-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .filter-btn:active {
+      transform: translateY(0);
+    }
+  </style>
+</Layout>

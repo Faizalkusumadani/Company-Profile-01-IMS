@@ -1,0 +1,201 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
+import Layout from "../../../../layouts/Layout.astro";
+import Banner from "../../../../components/Banner.astro";
+import { Icon } from "astro-icon/components";
+import { languages } from "../../../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../../../i18n/utils";
+
+// ─── TYPES ────────────────────────────────────────────────────────────────────
+
+type NewsEntry = CollectionEntry<"news">;
+
+// ─── IMAGE GLOB ───────────────────────────────────────────────────────────────
+
+const allImageMap = import.meta.glob<{ default: ImageMetadata }>(
+  "../../../../assets/**/*.{png,jpg,JPG,JPEG,jpeg,webp,svg}",
+  { eager: true },
+);
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+
+function resolveImage(
+  imagePath: string | null | undefined,
+): ImageMetadata | null {
+  if (!imagePath) return null;
+  const normalized = imagePath.replace(/^\//, "").toLowerCase();
+  const key = Object.keys(allImageMap).find((k) =>
+    k.toLowerCase().endsWith(normalized),
+  );
+  return key ? allImageMap[key].default : null;
+}
+
+function formatDate(
+  date: Date | string | null | undefined,
+  lang: string,
+): string {
+  if (!date) return "";
+  const d = date instanceof Date ? date : new Date(date);
+  if (isNaN(d.getTime())) return String(date);
+  return d.toLocaleDateString(lang === "id" ? "id-ID" : "en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function toSlug(id: string): string {
+  return id.replace(/\.[^.]+$/, "");
+}
+
+// ─── STATIC PATHS ─────────────────────────────────────────────────────────────
+
+export async function getStaticPaths() {
+  return Object.keys(languages).map((l) => ({
+    params: { lang: l },
+  }));
+}
+
+// ─── PAGE DATA ────────────────────────────────────────────────────────────────
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+// ✅ Ambil dari collection "news" — harus cocok dengan config.ts
+const allNews = await getCollection("news");
+
+const newsList = [...allNews]
+  .sort((a, b) => {
+    const toMs = (d: Date | string | undefined) => {
+      if (!d) return 0;
+      const date = d instanceof Date ? d : new Date(d);
+      return isNaN(date.getTime()) ? 0 : date.getTime();
+    };
+    const da = toMs(a.data.date);
+    const db = toMs(b.data.date);
+    if (da !== db) return db - da;
+    return b.id.localeCompare(a.id);
+  })
+  .map((entry: NewsEntry) => {
+    const slug = toSlug(entry.id);
+    const cover = resolveImage(entry.data.cover);
+
+    const title =
+      (entry.data.titleKey ? t(entry.data.titleKey as any) : null) ||
+      entry.data.title ||
+      "Berita";
+
+    const category =
+      (entry.data.category ? t(entry.data.category as any) : null) ||
+      entry.data.category ||
+      "";
+
+    const date =
+      (entry.data.dateKey ? t(entry.data.dateKey as any) : null) ||
+      formatDate(entry.data.date, lang);
+
+    const excerpt =
+      (entry.data.excerpKey ? t(entry.data.excerpKey as any) : null) ||
+      entry.data.excerpt ||
+      "";
+
+    return {
+      slug,
+      title,
+      date,
+      // cover bisa null — ditangani di template dengan fallback placeholder
+      image: cover,
+      href: `/${lang}/ruang-informasi/berita/${slug}`,
+      category,
+      excerpt,
+      isNew: entry.data.isNew ?? false,
+    };
+  });
+// ✅ TIDAK filter berdasarkan image — berita tetap muncul walau cover belum ada
+
+// ─── BREADCRUMBS ─────────────────────────────────────────────────────────────
+
+const breadcrumbs = [
+  { label: t("home"), href: `/${lang}/` },
+  { label: t("info_room"), href: `/${lang}/ruang-informasi/` },
+  { label: t("news"), current: true },
+];
+
+const pageTitle = t("news");
+const pageDescription = t("newsdesc");
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <Banner title={{ key: "news" }} breadcrumbs={breadcrumbs} />
+
+  <section id="berita">
+    <div class="w-full px-4 py-13 sm:py-16 md:py-20 lg:py-24">
+      <div class="mx-auto max-w-6xl">
+        <h2 class="text-gray-900 text-2xl font-semibold tracking-wide">
+          Berita <span class="text-ims-red">Eksklusif</span>
+        </h2>
+
+        <div class="h-px bg-gray-200 dark:bg-gray-700 my-9"></div>
+
+        {
+          newsList.length === 0 ? (
+            <p class="text-gray-400 text-sm text-center py-16">
+              Belum ada berita.
+            </p>
+          ) : (
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+              {newsList.map((item) => (
+                <a
+                  href={item.href}
+                  class="group transition-all duration-300 overflow-hidden transform hover:-translate-y-2 block"
+                >
+                  <div class="relative h-48 sm:h-56 overflow-hidden bg-gray-200 rounded-lg">
+                    {item.image ? (
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        width={350}
+                        height={250}
+                        decoding="async"
+                        loading="lazy"
+                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                        <span class="text-gray-300 text-sm">Tanpa Gambar</span>
+                      </div>
+                    )}
+                    {item.isNew && (
+                      <span class="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-0.5 rounded">
+                        Baru
+                      </span>
+                    )}
+                  </div>
+
+                  <div class="mt-4 space-y-1">
+                    {item.category && (
+                      <span class="text-xs text-ims-red font-medium uppercase tracking-wide">
+                        {item.category}
+                      </span>
+                    )}
+                    <h4 class="text-gray-900 font-semibold text-sm leading-snug line-clamp-3">
+                      {item.title}
+                    </h4>
+                    <div class="flex items-center text-gray-500 text-xs gap-1.5">
+                      <Icon
+                        name="local:calendar"
+                        class="w-3.5 h-3.5 shrink-0"
+                      />
+                      <span>{item.date}</span>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

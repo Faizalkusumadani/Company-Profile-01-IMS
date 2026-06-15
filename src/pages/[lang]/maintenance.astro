@@ -1,0 +1,67 @@
+---
+import BasicLayout from "../../layouts/BasicLayout.astro";
+import { Icon } from "astro-icon/components";
+import { languages } from "../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+
+export async function getStaticPaths() {
+  return Object.keys(languages).map((l) => ({
+    params: { lang: l },
+  }));
+}
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const breadcrumbs = [
+  { label: t("home"), href: `/${lang}/`, key: "home" },
+  { label: t("maintenance"), current: true, key: "maintenance" },
+];
+
+const title = t("maintenance");
+const description = t("maintenancedesc");
+---
+
+<BasicLayout title={title} description={description}>
+  <section class="py-28 bg-white min-h-screen flex items-center">
+    <div class="max-w-2xl mx-auto px-6 text-center">
+      <div
+        class="inline-flex items-center gap-2.5 bg-zinc-50 border border-zinc-200/80 rounded-full px-4 py-1.5 text-xs font-medium text-zinc-600 tracking-wide uppercase mb-8"
+      >
+        <span class="relative flex h-2 w-2">
+          <span
+            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"
+          ></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"
+          ></span>
+        </span>
+        {t("labelmaintenance")}
+      </div>
+
+      <h1
+        class="text-3xl sm:text-4xl font-bold text-zinc-900 mb-5 tracking-tight"
+      >
+        {t("headermaintenance")}
+      </h1>
+
+      <p
+        class="text-base sm:text-lg text-zinc-500 font-normal max-w-lg mx-auto mb-12 leading-relaxed"
+      >
+        {t("maintenancedesc")}
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a
+          href={`/${lang}/`}
+          class="group inline-flex items-center justify-center gap-2 bg-ims-red hover:bg-red-700 text-white font-medium px-8 py-3 rounded-2xl text-sm sm:text-base transition-colors duration-200"
+        >
+          {t("ctamaintenance")}
+          <Icon
+            name="local:arrow-right"
+            class="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1"
+          />
+        </a>
+      </div>
+    </div>
+  </section>
+</BasicLayout>

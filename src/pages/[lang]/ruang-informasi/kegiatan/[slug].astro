@@ -1,0 +1,451 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
+import Layout from "../../../../layouts/Layout.astro";
+import Banner from "../../../../components/Banner.astro";
+import { Icon } from "astro-icon/components";
+import { languages } from "../../../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../../../i18n/utils";
+
+// ─── TYPES ────────────────────────────────────────────────────────────────────
+
+type ActivityEntry = CollectionEntry<"activity">;
+
+type Props = {
+  entry: ActivityEntry;
+  otherActivities: ActivityEntry[];
+};
+
+type Slide = {
+  path: string;
+  img: ImageMetadata;
+};
+
+// ─── IMAGE GLOB ───────────────────────────────────────────────────────────────
+
+const allImageMap = import.meta.glob<{ default: ImageMetadata }>(
+  "../../../../assets/**/*.{png,jpg,JPG,JPEG,jpeg,webp,svg}",
+  { eager: true },
+);
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+
+/** Resolve path string dari frontmatter ke ImageMetadata */
+function resolveImage(
+  imagePath: string | null | undefined,
+): ImageMetadata | null {
+  if (!imagePath) return null;
+  const normalized = imagePath.replace(/^\//, "").toLowerCase();
+  const key = Object.keys(allImageMap).find((k) =>
+    k.toLowerCase().endsWith(normalized),
+  );
+  return key ? allImageMap[key].default : null;
+}
+
+// /** Format tanggal sesuai locale bahasa.
+function formatDate(
+  date: Date | string | null | undefined,
+  lang: string,
+): string {
+  if (!date) return "";
+  const d = date instanceof Date ? date : new Date(date);
+  if (isNaN(d.getTime())) return String(date); // fallback: tampilkan as-is
+  return d.toLocaleDateString(lang === "id" ? "id-ID" : "en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+/** Ambil slug bersih dari entry.id */
+function toSlug(id: string): string {
+  return id.replace(/\.[^.]+$/, "");
+}
+
+// ─── STATIC PATHS ─────────────────────────────────────────────────────────────
+
+export async function getStaticPaths() {
+  const allActivities = await getCollection("activity");
+  if (!allActivities.length) return [];
+
+  const sorted = [...allActivities].sort((a, b) => {
+    const toMs = (d: Date | string | undefined) => {
+      if (!d) return 0;
+      const date = d instanceof Date ? d : new Date(d);
+      return isNaN(date.getTime()) ? 0 : date.getTime();
+    };
+    const da = toMs(a.data.date);
+    const db = toMs(b.data.date);
+    if (da !== db) return db - da;
+    return b.id.localeCompare(a.id);
+  });
+
+  return Object.keys(languages).flatMap((lang) =>
+    sorted.map((entry) => ({
+      params: { lang, slug: entry.id.replace(/\.[^.]+$/, "") },
+      props: {
+        entry,
+        otherActivities: sorted.filter((e) => e.id !== entry.id),
+      } satisfies Props,
+    })),
+  );
+}
+
+// ─── PAGE DATA ────────────────────────────────────────────────────────────────
+
+const { entry, otherActivities } = Astro.props;
+const { data } = entry;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+// ─── I18N RESOLVE ────────────────────────────────────────────────────────────
+
+// Judul: titleKey → i18n, fallback ke field title statis
+const title = t(data.titleKey as any) || data.title || "Kegiatan";
+
+// Deskripsi meta: tidak ada descKey di .md baru, pakai excerpt sebagai fallback
+const description =
+  (data.excerpKey ? t(data.excerpKey as any) : null) || data.excerpt || "";
+
+// Tanggal: dateKey → string i18n, fallback ke date statis
+const dateLabel =
+  (data.dateKey ? t(data.dateKey as any) : null) ||
+  (data.date ? formatDate(data.date, lang) : "");
+
+// Kategori: bisa berupa i18n key atau teks langsung
+const category = t(data.category as any) || data.category || "";
+const header = category;
+
+// ─── RENDER KONTEN ───────────────────────────────────────────────────────────
+
+// Render <Content /> hanya jika tidak ada contentKeys (fallback ke body .md)
+const hasContentKeys = (data.contentKeys?.length ?? 0) > 0;
+const { Content } = hasContentKeys ? { Content: null } : await render(entry);
+
+// ─── RESOLVE SLIDES ──────────────────────────────────────────────────────────
+
+const seenPaths = new Set<string>();
+
+const uniqueGallery = (data.gallery ?? []).filter((p: string) => {
+  if (!p || seenPaths.has(p)) return false;
+  seenPaths.add(p);
+  return true;
+});
+
+const coverPath = data.cover ?? "";
+const allSlidePaths = seenPaths.has(coverPath)
+  ? uniqueGallery
+  : [coverPath, ...uniqueGallery].filter(Boolean);
+
+const mapped: { path: string; img: ImageMetadata | null }[] = allSlidePaths.map(
+  (p: string) => ({ path: p, img: resolveImage(p) }),
+);
+
+const slides: Slide[] = mapped.filter((s): s is Slide => s.img !== null);
+
+// ─── BREADCRUMBS & PATH ──────────────────────────────────────────────────────
+
+const breadcrumbs = [
+  { label: t("home"), href: `/${lang}/` },
+  { label: t("info_room"), href: `/${lang}/ruang-informasi/` },
+  { label: t("activities"), href: `/${lang}/ruang-informasi/kegiatan/` },
+  { label: header, current: true },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<Layout {title} description={description}>
+  <Banner title={{ key: data.category ?? "" }} breadcrumbs={breadcrumbs} />
+
+  <section id="kegiatan-detail">
+    <div class="w-full px-4 py-10 md:py-12">
+      <div class="max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* ══ Konten Utama (2/3) ══ */}
+          <div class="order-1 lg:col-span-2">
+            {/* Judul & Meta */}
+            <div class="py-5 space-y-2">
+              <h1
+                class="text-gray-900 text-xl lg:text-3xl font-bold leading-tight"
+              >
+                {title}
+              </h1>
+              <p
+                class="text-gray-400 text-xs sm:text-sm flex items-center gap-1.5"
+              >
+                {t("activities_tag")}
+                <span class="font-medium text-gray-600">{data.author}</span>
+                &nbsp;{dateLabel}
+              </p>
+            </div>
+
+            {/* Main Slider */}
+            {
+              slides.length > 0 ? (
+                <div class="swiper myswiper-main relative overflow-hidden rounded-xl">
+                  <div class="swiper-wrapper">
+                    {slides.map(({ img }: Slide, i: number) => (
+                      <div class="swiper-slide">
+                        <Image
+                          src={img}
+                          alt={`${title} — foto ${i + 1}`}
+                          width={800}
+                          height={500}
+                          format="webp"
+                          loading={i === 0 ? "eager" : "lazy"}
+                          decoding="async"
+                          class="w-full h-75 sm:h-105 object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  {slides.length > 1 && (
+                    <>
+                      <div class="swiper-button-prev text-white! after:text-xl! bg-black/40! w-9! h-9! rounded-full!" />
+                      <div class="swiper-button-next text-white! after:text-xl! bg-black/40! w-9! h-9! rounded-full!" />
+                    </>
+                  )}
+                </div>
+              ) : (
+                <div class="w-full h-75 sm:h-105 bg-gray-100 flex items-center justify-center rounded-xl">
+                  <span class="text-gray-400 text-sm">
+                    Gambar tidak tersedia
+                  </span>
+                </div>
+              )
+            }
+
+            {/* Thumbnail Slider */}
+            {
+              slides.length > 1 && (
+                <div class="swiper myswiper-thumbnail mt-3">
+                  <div class="swiper-wrapper">
+                    {slides.map(({ img }: Slide, i: number) => (
+                      <div class="swiper-slide">
+                        <Image
+                          src={img}
+                          alt={`Thumbnail ${i + 1}`}
+                          width={160}
+                          height={80}
+                          format="webp"
+                          loading="lazy"
+                          decoding="async"
+                          class="w-full h-20 object-cover rounded-lg cursor-pointer"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )
+            }
+
+            {/* ── Body Konten ── */}
+            <div class="content-body max-w-none pt-7">
+              {
+                hasContentKeys ? (
+                  // Render dari i18n contentKeys (multi-bahasa)
+                  data.contentKeys!.map((key: string) => (
+                    <p class="content-paragraph">{t(key as any)}</p>
+                  ))
+                ) : Content ? (
+                  <div class="content-md">
+                    <Content />
+                  </div>
+                ) : null
+              }
+            </div>
+          </div>
+
+          {/* ══ Sidebar Kanan (1/3) ══ */}
+          <div class="order-2 lg:col-span-1">
+            <div
+              class="overflow-hidden rounded-sm border border-gray-100 shadow-sm"
+            >
+              <div class="bg-linear-to-r from-red-500 to-red-600 px-6 py-2">
+                <h3 class="text-white text-base font-semibold">
+                  {t("activities_others")}
+                </h3>
+              </div>
+
+              <div class="divide-y divide-gray-100">
+                {
+                  otherActivities.map((item: ActivityEntry) => {
+                    const itemSlug = toSlug(item.id);
+                    const itemPath = `/${lang}/ruang-informasi/kegiatan/${itemSlug}`;
+                    const isActive = currentPath === itemPath;
+                    const itemCover = resolveImage(item.data.cover);
+
+                    // Category sidebar: bisa berupa i18n key atau teks langsung
+                    const itemCategory =
+                      t(item.data.category as any) || item.data.category || "";
+
+                    // Judul sidebar: titleKey → i18n, fallback ke title statis
+                    const itemTitle =
+                      (item.data.titleKey
+                        ? t(item.data.titleKey as any)
+                        : null) ||
+                      item.data.title ||
+                      "Kegiatan";
+
+                    // Tanggal sidebar: dateKey → i18n, fallback ke date statis
+                    const itemDate =
+                      (item.data.dateKey
+                        ? t(item.data.dateKey as any)
+                        : null) ||
+                      (item.data.date ? formatDate(item.data.date, lang) : "");
+
+                    return (
+                      <article
+                        class={`transition ${isActive ? "bg-gray-100" : "hover:bg-gray-50"}`}
+                      >
+                        <a href={itemPath} class="flex gap-3 p-4">
+                          {itemCover ? (
+                            <Image
+                              src={itemCover}
+                              alt={itemTitle}
+                              width={112}
+                              height={80}
+                              format="webp"
+                              loading="lazy"
+                              decoding="async"
+                              class={`w-28 h-20 object-cover rounded shrink-0 ${isActive ? "ring-2 ring-red-400" : ""}`}
+                            />
+                          ) : (
+                            <div
+                              class={`w-28 h-20 bg-gray-100 rounded shrink-0 flex items-center justify-center ${isActive ? "ring-2 ring-red-400" : ""}`}
+                            >
+                              <span class="text-gray-300 text-xs">—</span>
+                            </div>
+                          )}
+                          <div class="flex-1 min-w-0">
+                            <span class="text-gray-400 font-normal text-xs leading-snug block mb-1">
+                              {itemCategory}
+                            </span>
+                            <h4
+                              class={`font-semibold text-sm line-clamp-3 leading-snug mb-2 ${isActive ? "text-red-600" : "text-gray-900"}`}
+                            >
+                              {itemTitle}
+                            </h4>
+                            <div class="flex items-center text-gray-400 text-xs gap-1">
+                              <Icon
+                                name="local:calendar"
+                                class="w-3.5 h-3.5 shrink-0"
+                              />
+                              <span>{itemDate}</span>
+                            </div>
+                          </div>
+                        </a>
+                      </article>
+                    );
+                  })
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .myswiper-thumbnail .swiper-slide {
+    width: 20%;
+    opacity: 0.45;
+    transition: opacity 0.3s;
+  }
+  .myswiper-thumbnail .swiper-slide-thumb-active {
+    opacity: 1;
+    border: 2px solid #ef4444;
+    border-radius: 0.5rem;
+  }
+
+  /* ── Body Konten: paragraf dari contentKeys ── */
+  .content-body .content-paragraph {
+    color: #4b5563;
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 1.25rem;
+    text-align: justify;
+  }
+
+  .content-body .content-paragraph:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ── Body Konten: fallback dari .md (Content) ── */
+  .content-md p {
+    color: #4b5563;
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 1.25rem;
+    text-align: justify;
+  }
+
+  .content-md h2,
+  .content-md h3,
+  .content-md h4 {
+    color: #1f2937;
+    font-weight: 600;
+    margin-top: 1.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .content-md strong {
+    color: #111827;
+    font-weight: 600;
+  }
+
+  .content-md ul,
+  .content-md ol {
+    color: #4b5563;
+    padding-left: 1.5rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.8;
+  }
+
+  .content-md li {
+    margin-bottom: 0.375rem;
+  }
+</style>
+
+<script>
+  import Swiper from "swiper";
+  import { Navigation, Thumbs, Autoplay, FreeMode } from "swiper/modules";
+
+  function initSwipers(): void {
+    const mainEl = document.querySelector<HTMLElement>(".myswiper-main");
+    const thumbEl = document.querySelector<HTMLElement>(".myswiper-thumbnail");
+
+    if (!mainEl) return;
+
+    let thumbsSwiper: Swiper | undefined;
+
+    if (thumbEl) {
+      thumbsSwiper = new Swiper(".myswiper-thumbnail", {
+        modules: [FreeMode, Thumbs],
+        spaceBetween: 10,
+        slidesPerView: 4,
+        freeMode: true,
+        watchSlidesProgress: true,
+        breakpoints: { 640: { slidesPerView: 5 } },
+      });
+    }
+
+    new Swiper(".myswiper-main", {
+      modules: [Navigation, Thumbs, Autoplay],
+      loop: true,
+      autoplay: { delay: 5000, disableOnInteraction: false },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+      ...(thumbsSwiper ? { thumbs: { swiper: thumbsSwiper } } : {}),
+    });
+  }
+
+  document.addEventListener("astro:page-load", initSwipers);
+  document.addEventListener("DOMContentLoaded", initSwipers);
+</script>

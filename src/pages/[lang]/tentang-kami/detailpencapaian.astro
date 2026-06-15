@@ -1,0 +1,58 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { Image } from "astro:assets";
+import Piala from "../../../assets/Banner/PIALA.png";
+import { languages } from "../../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../../i18n/utils";
+
+export async function getStaticPaths() {
+  return Object.keys(languages).map((l) => ({
+    params: { lang: l },
+  }));
+}
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const id = Astro.url.searchParams.get("id");
+
+const title = t("detailachievements"),
+  description = t("aboutdetailachievements");
+---
+
+<Layout title={title} description={description}>
+  <section id="detail">
+    <div class="px-4 py-40 max-w-4xl mx-auto space-y-8">
+      <div
+        class="relative rounded-2xl overflow-hidden border border-gray-200 shadow-sm items-center md:min-h-102"
+      >
+        <Image
+          src={Piala}
+          alt="Tim Intisukses Mitra Sejati dalam pelatihan"
+          width={1600}
+          height={900}
+          transition:name={`news-${id}-image`}
+          decoding="async"
+          loading="lazy"
+          class="w-full h-full object-cover"
+        />
+      </div>
+
+      <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">
+        {t("detailachievements")}
+      </h1>
+      <p
+        class="text-lg text-gray-900 leading-relaxed border-l-4 border-ims-red pl-4 italic"
+      >
+        "{t("quoteachievements")}"
+      </p>
+      <div class="pt-6">
+        <h3 class="text-2xl font-bold text-ims-red mb-3">
+          {t("detailachievements2")}
+        </h3>
+        <p class="text-gray-500">
+          "{t("quoteachievements2")}"
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>

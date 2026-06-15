@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ims-red: #d23439;
+}
+
+/* Flowbite */
+@import "flowbite/src/themes/default";
+@plugin "flowbite/plugin";
+@source "../../node_modules/flowbite";
+
+/* Swiper */
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/thumbs";
+@import "swiper/css/free-mode";
+
+/* Fonts */
+@import "@fontsource/poppins/300.css";
+@import "@fontsource/poppins/400.css";
+@import "@fontsource/poppins/500.css";

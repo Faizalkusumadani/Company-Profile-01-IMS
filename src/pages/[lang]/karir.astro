@@ -1,0 +1,55 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+import Banner from "../../components/Banner.astro";
+import { languages } from "../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+
+export async function getStaticPaths() {
+  return Object.keys(languages).map((l) => ({
+    params: { lang: l },
+  }));
+}
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const breadcrumbs = [
+  { label: t("home"), href: `/${lang}/`, key: "home" },
+  { label: t("career"), current: true, key: "career" },
+];
+
+const title = t("career"),
+  description = t("careerdescription");
+---
+
+<Layout title={title} description={description}>
+  <!-- Banner Section -->
+  <Banner title={{ key: "career" }} breadcrumbs={breadcrumbs} />
+  <section id="karir">
+    <div class="w-full px-4 py-13 sm:py-16 md:py-20 lg:py-24">
+      <div class="mx-auto max-w-6xl">
+        <div class="space-y-6 py-6 text-center">
+          <h2
+            class="text-gray-900 font-extrabold text-3xl sm:text-4xl md:text-5xl"
+          >
+            {t("careertitle")}
+          </h2>
+          <p class="text-gray-500 font-normal text-base">
+            {t("careerheader")}
+          </p>
+          <a
+            href="https://www.reddmasgroup.com/karir"
+            target="_blank"
+            class="group inline-flex items-center justify-center gap-5 border-2 border-ims-red hover:bg-red-700 hover:text-white text-ims-red font-medium px-8 py-3 rounded-full text-sm sm:text-base"
+          >
+            <Icon
+              name="local:arrow-right"
+              class="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1"
+            />
+            {t("ctaabout")}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section></Layout
+>

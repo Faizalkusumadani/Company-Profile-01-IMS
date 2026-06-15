@@ -1,0 +1,846 @@
+---
+import logoIMS from "../assets/Logo_IMS_01.png";
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import Product from "../assets/tools/data";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import navItems, {
+  type NavItemKey,
+  type SubItemKey,
+} from "../assets/tools/navbar";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+// ─── 1. Setup Bahasa ───────────────────────────────────────────────────────────
+const currentPath = Astro.url.pathname;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+// ─── 3. Nav Items dengan Terjemahan ───────────────────────────────────────────
+const localizedNavItems = navItems.map((item) => {
+  const base = {
+    ...item,
+    text: t(item.key as NavItemKey) || item.text,
+    href: `/${lang}${item.href === "/" ? "" : item.href}`,
+  };
+
+  // TypeScript tahu persis item mana yang punya subItems lewat as const
+  if ("subItems" in item) {
+    return {
+      ...base,
+      subItems: item.subItems.map((sub) => ({
+        ...sub,
+        text: t(sub.key as SubItemKey) || sub.text,
+        href: `/${lang}${sub.href}`,
+      })),
+    };
+  }
+
+  return { ...base, subItems: undefined };
+});
+
+// ─── 4. Data Produk untuk Search ──────────────────────────────────────────────
+// Data ini di-serialize ke JSON dan dibaca oleh JavaScript di browser
+const productSearchData = Product.map((p) => ({
+  id: p.id,
+  translatedName: t(p.name as any) || p.name,
+  translatedDesc: t(p.key as any) || "",
+  translatedCategory: t(p.category as any) || p.category,
+  // p.image adalah ImageMetadata — .src berisi URL yang sudah dioptimasi Astro (/_astro/...)
+  image: p.image.src,
+  // fullHref = URL lengkap dengan prefix bahasa, contoh: /id/produk/daikin
+  fullHref: `/${lang}${p.href}`,
+}));
+
+// Escape karakter </script> agar tidak memutus tag JSON prematurely
+const safeProductJSON = JSON.stringify(productSearchData).replace(
+  /<\/script>/gi,
+  "<\\/script>",
+);
+
+// ─── Helper: normalisasi trailing slash ───────────────────────────────────────
+function normalizePath(path: string): string {
+  return path.endsWith("/") && path.length > 1 ? path.slice(0, -1) : path;
+}
+
+// ─── 5. Helper untuk class aktif/tidak aktif ──────────────────────────────────
+function isNavItemActive(item: (typeof localizedNavItems)[0]): boolean {
+  const current = normalizePath(currentPath);
+  const itemHref = normalizePath(item.href);
+
+  if (current === itemHref) return true;
+
+  return (
+    item.subItems?.some((sub) => current.startsWith(normalizePath(sub.href))) ??
+    false
+  );
+}
+
+function isSubItemActive(href: string): boolean {
+  return normalizePath(currentPath) === normalizePath(href);
+}
+---
+
+<nav
+  id="navbar"
+  role="navigation"
+  aria-label="Main navigation"
+  class="fixed top-0 left-0 w-full z-50 bg-blue-200/5 transition-all duration-300"
+>
+  <div class="mx-auto max-w-7xl px-4 md:px-6">
+    <div class="flex items-center justify-between h-25">
+      <!-- ── Logo ───────────────────────────────────────────────────────────── -->
+      <div class="shrink-0 flex items-center gap-3">
+        <a href={`/${lang}/`} class="flex items-center gap-2 group">
+          <Image
+            src={logoIMS}
+            alt="Logo IMS"
+            width={150}
+            height={84}
+            format="webp"
+            loading="eager"
+            fetchpriority="high"
+            class="h-12 w-auto md:h-14 object-contain transition-transform group-hover:scale-105"
+          />
+          <span
+            class="hidden lg:block text-gray-700 font-medium text-lg leading-tight"
+          >
+            Intisukses<br /><span class="text-ims-red">Mitra Sejati</span>
+          </span>
+        </a>
+      </div>
+
+      <!-- ── Desktop Menu ────────────────────────────────────────────────────── -->
+      <div class="hidden xl:flex xl:items-center xl:gap-7">
+        {
+          localizedNavItems.map((item) => {
+            const active = isNavItemActive(item);
+            return (
+              <div class="relative group">
+                <a
+                  href={item.href}
+                  class:list={[
+                    "inline-flex items-center gap-1 py-3 border-b-2 text-base font-normal transition-all duration-200 whitespace-nowrap",
+                    active
+                      ? "border-red-600/70 text-ims-red"
+                      : "border-transparent text-gray-600 hover:text-ims-red hover:border-red-300",
+                  ]}
+                >
+                  {item.text}
+                  {item.subItems && (
+                    <Icon
+                      name="local:chevron-down"
+                      class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180"
+                    />
+                  )}
+                </a>
+
+                {/* Dropdown submenu */}
+                {item.subItems && (
+                  <div
+                    role="menu"
+                    class="absolute left-0 mt-2 w-56 py-2 rounded-lg shadow-xl bg-white/95 ring-1 ring-gray-300/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20"
+                  >
+                    {item.subItems.map((sub) => (
+                      <a
+                        href={sub.href}
+                        role="menuitem"
+                        class:list={[
+                          "block px-4 py-3 text-sm transition-colors",
+                          isSubItemActive(sub.href)
+                            ? "bg-red-50 text-red-600 font-medium"
+                            : "text-gray-700 hover:bg-red-50 hover:text-red-600",
+                        ]}
+                      >
+                        {sub.text}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })
+        }
+
+        <div class="flex items-center gap-4 pl-6 border-l border-gray-300">
+          <LanguageSwitcher />
+          <button
+            id="search-button-desktop"
+            type="button"
+            aria-label="Buka pencarian"
+            class="p-2 rounded-md text-gray-700 hover:text-red-600 hover:bg-gray-100 transition-colors"
+          >
+            <Icon name="local:search" class="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Mobile: Tombol Search & Hamburger ──────────────────────────────── -->
+      <div class="flex items-center xl:hidden">
+        <LanguageSwitcher />
+        <button
+          id="search-button-mobile"
+          type="button"
+          aria-label="Buka pencarian"
+          class="p-2 rounded-md text-gray-700 hover:text-red-600 hover:bg-gray-100 transition-colors"
+        >
+          <Icon name="local:search" class="w-5 h-5" />
+        </button>
+        <button
+          id="mobile-menu-button"
+          type="button"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+          aria-label="Buka menu navigasi"
+          class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-red-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors"
+        >
+          <Icon name="local:hamburger" id="icon-open" class="w-5 h-5" />
+          <Icon name="local:close" id="icon-close" class="hidden w-5 h-5" />
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Mobile Menu ────────────────────────────────────────────────────────── -->
+  <div
+    id="mobile-menu"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Menu navigasi mobile"
+    class="xl:hidden hidden"
+  >
+    <div
+      class="pt-2 pb-3 space-y-1 bg-white shadow-lg h-screen overflow-y-auto"
+    >
+      {
+        localizedNavItems.map((item, index) => {
+          const active = isNavItemActive(item);
+          return (
+            <div class="border-b border-gray-100 last:border-0">
+              {item.subItems ? (
+                /* Item dengan dropdown */
+                <div>
+                  <button
+                    type="button"
+                    data-dropdown-index={index}
+                    aria-expanded="false"
+                    class:list={[
+                      "mobile-dropdown-toggle flex items-center justify-between w-full px-6 py-3 text-base font-medium transition-colors",
+                      active
+                        ? "text-red-600 bg-red-50"
+                        : "text-gray-700 hover:bg-gray-50 hover:text-red-600",
+                    ]}
+                  >
+                    <span>{item.text}</span>
+                    <Icon
+                      name="local:chevron-down"
+                      class="mobile-dropdown-icon w-5 h-5 transition-transform duration-200"
+                    />
+                  </button>
+
+                  <div
+                    class="mobile-dropdown-content hidden bg-gray-50"
+                    data-dropdown-index={index}
+                  >
+                    {item.subItems.map((sub) => (
+                      <a
+                        href={sub.href}
+                        class:list={[
+                          "block px-10 py-3 text-sm transition-colors border-l-4",
+                          isSubItemActive(sub.href)
+                            ? "text-red-600 font-medium bg-red-50 border-red-600"
+                            : "text-gray-600 hover:bg-gray-100 hover:text-red-600 border-transparent hover:border-red-300",
+                        ]}
+                      >
+                        {sub.text}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                /* Item biasa (tanpa dropdown) */
+                <a
+                  href={item.href}
+                  class:list={[
+                    "block w-full px-6 py-3 text-base font-medium transition-colors",
+                    active
+                      ? "text-red-600 bg-red-50"
+                      : "text-gray-700 hover:bg-gray-50 hover:text-red-600",
+                  ]}
+                >
+                  {item.text}
+                </a>
+              )}
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+
+  <script
+    type="application/json"
+    id="product-data"
+    set:html={safeProductJSON}
+  />
+
+  <script>
+    // ─────────────────────────────────────────────────────────────────────────
+    // BAGIAN 1: FUNGSI KEAMANAN (Security Utilities)
+    // ─────────────────────────────────────────────────────────────────────────
+    function escapeHTML(raw: unknown): string {
+      if (raw == null) return "";
+      return String(raw)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function sanitizeUrl(url: unknown): string {
+      const str = String(url ?? "").trim();
+      if (str.startsWith("/") || /^https?:\/\//i.test(str)) {
+        return encodeURI(str);
+      }
+      return "#";
+    }
+
+    function highlightMatch(text: unknown, query: string): string {
+      const escaped = escapeHTML(text); // escape dulu, baru highlight
+      if (!query.trim()) return escaped;
+
+      // Escape karakter regex spesial (., *, +, dll.) dari input user
+      const safeQuery = query.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+      try {
+        const regex = new RegExp(`(${safeQuery})`, "gi");
+        return escaped.replace(
+          regex,
+          '<mark class="bg-transparent text-ims-red font-semibold not-italic">$1</mark>',
+        );
+      } catch {
+        return escaped; // jika regex gagal, kembalikan teks asli (sudah escaped)
+      }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // BAGIAN 2: FUNGSI DOM (DOM Utilities)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Membuat elemen HTML dengan atribut-atribut yang ditentukan.
+     * Lebih aman daripada menulis innerHTML langsung untuk struktur kompleks.
+     */
+    function createElement<K extends keyof HTMLElementTagNameMap>(
+      tag: K,
+      attrs: Record<string, string> = {},
+      classes: string[] = [],
+    ): HTMLElementTagNameMap[K] {
+      const el = document.createElement(tag);
+      for (const [key, val] of Object.entries(attrs)) {
+        el.setAttribute(key, val);
+      }
+      if (classes.length) el.className = classes.join(" ");
+      return el;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // BAGIAN 3: FUNGSI SEARCH
+    // ─────────────────────────────────────────────────────────────────────────
+
+    type ProductData = {
+      id: number;
+      translatedName: string;
+      translatedDesc: string;
+      translatedCategory: string;
+      image: string;
+      fullHref: string;
+    };
+
+    /**
+     * Membangun kartu produk sebagai elemen DOM (bukan string HTML).
+     * Menggunakan DOM API sehingga tidak ada risiko XSS dari data produk.
+     */
+    function buildProductCard(
+      product: ProductData,
+      query: string,
+    ): HTMLElement {
+      // Wrapper link
+      const link = createElement("a", { href: sanitizeUrl(product.fullHref) }, [
+        "search-result-item",
+        "flex",
+        "gap-4",
+        "p-3",
+        "hover:bg-gray-100",
+        "rounded-lg",
+        "transition-colors",
+      ]);
+
+      // Container gambar
+      const imgWrapper = createElement("div", {}, [
+        "flex-shrink-0",
+        "w-16",
+        "h-16",
+        "bg-gray-50",
+        "rounded-lg",
+        "overflow-hidden",
+        "flex",
+        "items-center",
+        "justify-center",
+      ]);
+
+      // Gambar produk
+      const img = createElement(
+        "img",
+        {
+          // src sudah berupa URL Astro yang valid (/_astro/...)
+          src: sanitizeUrl(product.image),
+          alt: escapeHTML(product.translatedName),
+          loading: "lazy",
+        },
+        ["w-full", "h-full", "object-contain"],
+      );
+
+      // Fallback jika gambar gagal dimuat — listener event, bukan inline onerror
+      img.addEventListener("error", () => {
+        img.src = "/fallback.png";
+      });
+      imgWrapper.appendChild(img);
+
+      // Container teks
+      const textWrapper = createElement("div", {}, ["flex-1", "min-w-0"]);
+
+      const title = createElement("h3", {}, [
+        "font-semibold",
+        "text-gray-900",
+        "text-sm",
+      ]);
+      // innerHTML aman di sini karena highlightMatch sudah escape teks terlebih dahulu
+      title.innerHTML = highlightMatch(product.translatedName, query);
+
+      const category = createElement("p", {}, [
+        "text-xs",
+        "text-gray-500",
+        "mt-0.5",
+      ]);
+      category.textContent = product.translatedCategory;
+
+      const rawDesc = product.translatedDesc || "";
+      const shortDesc =
+        rawDesc.length > 100 ? rawDesc.slice(0, 100) + "…" : rawDesc;
+      const desc = createElement("p", {}, [
+        "text-xs",
+        "text-gray-600",
+        "mt-1",
+        "line-clamp-2",
+      ]);
+      desc.innerHTML = highlightMatch(shortDesc, query); // aman karena sudah di-escape
+
+      textWrapper.append(title, category, desc);
+      link.append(imgWrapper, textWrapper);
+
+      return link;
+    }
+
+    /**
+     * Menampilkan pesan kosong di area hasil pencarian.
+     */
+    function renderEmptyState(container: HTMLElement, message: string): void {
+      container.replaceChildren(); // bersihkan isi lama
+      const p = createElement("p", {}, [
+        "text-gray-500",
+        "text-center",
+        "py-8",
+      ]);
+      p.textContent = message; // textContent = aman, tidak perlu escapeHTML
+      container.appendChild(p);
+    }
+
+    /**
+     * Menampilkan pesan "tidak ditemukan" dengan query yang di-highlight.
+     */
+    function renderNotFound(
+      container: HTMLElement,
+      query: string,
+      msgNotFound: string,
+      msgTry: string,
+    ): void {
+      container.replaceChildren();
+
+      const wrapper = createElement("div", {}, ["text-center", "py-8"]);
+
+      // Ikon SVG (konten statis, tidak ada input user)
+      const svgNS = "http://www.w3.org/2000/svg";
+      const svg = document.createElementNS(svgNS, "svg");
+      svg.setAttribute("viewBox", "0 0 24 24");
+      svg.setAttribute("fill", "none");
+      svg.setAttribute("stroke", "currentColor");
+      svg.classList.add("w-16", "h-16", "mx-auto", "text-gray-300", "mb-4");
+      const path = document.createElementNS(svgNS, "path");
+      path.setAttribute("stroke-linecap", "round");
+      path.setAttribute("stroke-linejoin", "round");
+      path.setAttribute("stroke-width", "2");
+      path.setAttribute(
+        "d",
+        "M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
+      );
+      svg.appendChild(path);
+
+      const p1 = createElement("p", {}, ["text-gray-500"]);
+      const querySpan = createElement("span", {}, [
+        "font-medium",
+        "text-ims-red",
+      ]);
+      querySpan.textContent = query;
+      p1.append(`${msgNotFound} "`, querySpan, '"');
+
+      const p2 = createElement("p", {}, ["text-gray-400", "text-sm", "mt-1"]);
+      p2.textContent = msgTry;
+
+      wrapper.append(svg, p1, p2);
+      container.appendChild(wrapper);
+    }
+
+    /**
+     * Menampilkan daftar produk hasil pencarian.
+     */
+    function renderResults(
+      container: HTMLElement,
+      results: ProductData[],
+      query: string,
+      msgFound: string,
+    ): void {
+      container.replaceChildren();
+
+      // Label jumlah hasil — ganti {count} dengan angka aktual
+      // Contoh terjemahan: "Ditemukan {count} produk" → "Ditemukan 5 produk"
+      const [before, after] = msgFound.split("{count}");
+      const label = createElement("div", {}, [
+        "mb-3",
+        "text-sm",
+        "text-gray-500",
+      ]);
+      const count = createElement("span", {}, [
+        "font-semibold",
+        "text-gray-800",
+      ]);
+      count.textContent = String(results.length);
+      label.append(before ?? "Ditemukan ", count, after ?? " produk");
+
+      const list = createElement("div", {}, ["space-y-1"]);
+      results.forEach((product) => {
+        list.appendChild(buildProductCard(product, query));
+      });
+
+      container.append(label, list);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // BAGIAN 4: INISIALISASI
+    // Astro View Transitions (astro:after-swap)
+    // ─────────────────────────────────────────────────────────────────────────
+    function initializeNavbar(): void {
+      // ── 4a. Baca Data Produk ───────────────────────────────────────────────
+      const productDataEl = document.getElementById("product-data");
+      let products: ProductData[] = [];
+
+      if (productDataEl?.textContent) {
+        try {
+          products = JSON.parse(productDataEl.textContent);
+        } catch {
+          console.error("[Navbar] Gagal membaca data produk dari JSON.");
+        }
+      }
+
+      // ── 4b. Mobile Menu ────────────────────────────────────────────────────
+      const mobileMenuBtn = document.getElementById("mobile-menu-button");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const iconOpen = document.getElementById("icon-open");
+      const iconClose = document.getElementById("icon-close");
+
+      function openMobileMenu(): void {
+        mobileMenu?.classList.remove("hidden");
+        iconOpen?.classList.add("hidden");
+        iconClose?.classList.remove("hidden");
+        mobileMenuBtn?.setAttribute("aria-expanded", "true");
+        document.body.classList.add("overflow-hidden");
+      }
+
+      function closeMobileMenu(): void {
+        mobileMenu?.classList.add("hidden");
+        iconOpen?.classList.remove("hidden");
+        iconClose?.classList.add("hidden");
+        mobileMenuBtn?.setAttribute("aria-expanded", "false");
+        document.body.classList.remove("overflow-hidden");
+      }
+
+      mobileMenuBtn?.addEventListener("click", () => {
+        const isOpen = mobileMenuBtn.getAttribute("aria-expanded") === "true";
+        isOpen ? closeMobileMenu() : openMobileMenu();
+      });
+
+      // Tutup mobile menu saat link di dalamnya diklik
+      mobileMenu?.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", closeMobileMenu);
+      });
+
+      // Tutup mobile menu saat klik di luar
+      document.addEventListener("click", (e) => {
+        const target = e.target as Node;
+        if (
+          !mobileMenuBtn?.contains(target) &&
+          !mobileMenu?.contains(target) &&
+          !mobileMenu?.classList.contains("hidden")
+        ) {
+          closeMobileMenu();
+        }
+      });
+
+      // ── 4c. Mobile Dropdown ────────────────────────────────────────────────
+      // Menggunakan data-dropdown-index (hanya angka) untuk menghindari
+      document
+        .querySelectorAll<HTMLElement>(".mobile-dropdown-toggle")
+        .forEach((toggle) => {
+          toggle.addEventListener("click", () => {
+            const index = toggle.dataset.dropdownIndex;
+
+            // Gunakan querySelector yang aman dengan validasi index
+            if (!index || !/^\d+$/.test(index)) return;
+
+            const content = document.querySelector<HTMLElement>(
+              `.mobile-dropdown-content[data-dropdown-index="${index}"]`,
+            );
+            const icon = toggle.querySelector(".mobile-dropdown-icon");
+            const isOpen = toggle.getAttribute("aria-expanded") === "true";
+            const willOpen = !isOpen;
+
+            content?.classList.toggle("hidden", !willOpen);
+            icon?.classList.toggle("rotate-180", willOpen);
+            toggle.setAttribute("aria-expanded", String(willOpen));
+          });
+        });
+
+      // ── 4d. Scroll Effect Navbar ───────────────────────────────────────────
+      const navbar = document.getElementById("navbar");
+
+      function updateNavbarOnScroll(): void {
+        if (!navbar) return;
+        const isScrolled = window.scrollY > 50;
+        navbar.classList.toggle("bg-white/95", isScrolled);
+        navbar.classList.toggle("shadow-md", isScrolled);
+        navbar.classList.toggle("backdrop-blur-md", isScrolled);
+        navbar.classList.toggle("bg-blue-200/5", !isScrolled);
+      }
+
+      updateNavbarOnScroll(); // jalankan sekali saat load
+      window.addEventListener("scroll", updateNavbarOnScroll, {
+        passive: true,
+      });
+      // Update --modal-top saat resize agar tetap akurat di semua ukuran layar
+      window.addEventListener(
+        "resize",
+        () => {
+          const navbarEl = document.getElementById("navbar");
+          if (!navbarEl) return;
+          const h = navbarEl.getBoundingClientRect().height;
+          document.documentElement.style.setProperty(
+            "--modal-top",
+            `${h + 8}px`,
+          );
+        },
+        { passive: true },
+      );
+
+      // ── 4e. Search Modal ───────────────────────────────────────────────────
+      const searchModal = document.getElementById("search-modal");
+      const searchInput = document.getElementById(
+        "search-input",
+      ) as HTMLInputElement | null;
+      const searchResults = document.getElementById("search-results");
+
+      // Ambil pesan i18n dari data-* attribute yang di-set Astro saat build
+      const MSG_EMPTY =
+        searchResults?.dataset.msgEmpty ?? "Temukan produk anda disini..";
+      const MSG_NOT_FOUND =
+        searchResults?.dataset.msgNotFound ?? "Produk tidak ditemukan";
+      const MSG_TRY =
+        searchResults?.dataset.msgTry ?? "Coba kata kunci lainnya";
+      // "Ditemukan X produk" — {count} akan diganti angka di renderResults()
+      const MSG_FOUND =
+        searchResults?.dataset.msgFound ?? "Ditemukan {count} produk";
+
+      // Scroll
+      function updateModalTop(): void {
+        const navbarEl = document.getElementById("navbar");
+        if (!navbarEl) return;
+        const h = navbarEl.getBoundingClientRect().height;
+        document.documentElement.style.setProperty("--modal-top", `${h + 8}px`);
+      }
+
+      function openSearchModal(): void {
+        updateModalTop();
+        searchModal?.classList.remove("hidden");
+        searchModal?.setAttribute("aria-hidden", "false");
+        document.body.classList.add("overflow-hidden");
+        setTimeout(() => searchInput?.focus(), 100);
+      }
+
+      function closeSearchModal(): void {
+        searchModal?.classList.add("hidden");
+        searchModal?.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("overflow-hidden");
+        if (searchInput) searchInput.value = "";
+        if (searchResults) renderEmptyState(searchResults, MSG_EMPTY);
+      }
+
+      // Tombol buka search (desktop & mobile)
+      document
+        .getElementById("search-button-desktop")
+        ?.addEventListener("click", openSearchModal);
+      document
+        .getElementById("search-button-mobile")
+        ?.addEventListener("click", openSearchModal);
+
+      // Tombol tutup (tombol X)
+      document
+        .getElementById("close-search")
+        ?.addEventListener("click", closeSearchModal);
+
+      // ── Auto-close: klik backdrop → tutup modal ───────────────────────────
+      document
+        .getElementById("search-backdrop")
+        ?.addEventListener("click", closeSearchModal);
+
+      searchModal?.addEventListener("click", (e) => {
+        const content = document.getElementById("search-modal-content");
+        if (content && !content.contains(e.target as Node)) {
+          closeSearchModal();
+        }
+      });
+
+      // Tutup saat tekan Escape
+      document.addEventListener("keydown", (e) => {
+        if (
+          e.key === "Escape" &&
+          searchModal &&
+          !searchModal.classList.contains("hidden")
+        ) {
+          closeSearchModal();
+        }
+      });
+
+      // Input handler — dipanggil setiap user mengetik
+      searchInput?.addEventListener("input", () => {
+        if (!searchResults) return;
+        const query = searchInput.value;
+        const normalized = query.trim().toLowerCase();
+
+        if (!normalized) {
+          renderEmptyState(searchResults, MSG_EMPTY);
+          return;
+        }
+
+        // Filter produk berdasarkan nama, deskripsi, atau kategori
+        const matched = products.filter((p) => {
+          const name = p.translatedName.toLowerCase();
+          const desc = p.translatedDesc.toLowerCase();
+          const cat = p.translatedCategory.toLowerCase();
+          return (
+            name.includes(normalized) ||
+            desc.includes(normalized) ||
+            cat.includes(normalized)
+          );
+        });
+
+        if (matched.length === 0) {
+          renderNotFound(searchResults, query, MSG_NOT_FOUND, MSG_TRY);
+        } else {
+          renderResults(searchResults, matched, query, MSG_FOUND);
+        }
+      });
+    }
+
+    initializeNavbar();
+    document.addEventListener("astro:after-swap", initializeNavbar);
+  </script>
+</nav>
+
+<div
+  id="search-modal"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Pencarian produk"
+  aria-hidden="true"
+  class="hidden fixed inset-0 z-9999 overflow-y-auto"
+>
+  <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" id="search-backdrop">
+  </div>
+  <div
+    class="relative min-h-full flex items-start justify-center px-4 pb-10"
+    style="padding-top: var(--modal-top, 80px)"
+  >
+    <!-- Kotak putih modal -->
+    <div
+      id="search-modal-content"
+      class="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl"
+    >
+      <!-- Input search -->
+      <div class="p-4 border-b border-gray-100">
+        <div class="relative">
+          <svg
+            class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"></path>
+          </svg>
+          <input
+            id="search-input"
+            type="search"
+            autocomplete="off"
+            placeholder={t("search_result")}
+            class="w-full pl-12 pr-12 py-3 text-base border-2 border-gray-200 rounded-xl focus:outline-none focus:border-red-500 transition-colors bg-gray-50 focus:bg-white"
+          />
+          <button
+            id="close-search"
+            type="button"
+            aria-label="Tutup pencarian"
+            class="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Hasil pencarian -->
+      <div
+        id="search-results"
+        class="max-h-[60vh] overflow-y-auto p-4"
+        data-msg-empty={t("search_result")}
+        data-msg-not-found={t("search_no_results")}
+        data-msg-try={t("search_try")}
+        data-msg-found={t("search_found")}
+      >
+        <p class="text-gray-400 text-center py-10 text-sm sm:text-base">
+          {t("search_result")}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

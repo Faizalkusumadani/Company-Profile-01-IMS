@@ -1,0 +1,36 @@
+{
+  "name": "framework_astrojs_ims",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/react": "^4.4.2",
+    "@astrojs/sitemap": "^3.7.0",
+    "@fontsource/poppins": "^5.2.7",
+    "@tailwindcss/vite": "^4.1.13",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "add": "^2.0.6",
+    "astro": "^5.17.1",
+    "astro-icon": "^1.1.5",
+    "astro-swiper": "^1.1.0",
+    "flowbite": "^3.1.2",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "swiper": "^12.0.3",
+    "tailwindcss": "^4.1.13"
+  },
+  "description": "```sh npm create astro@latest -- --template basics ```",
+  "main": "index.js",
+  "devDependencies": {
+    "@vite-pwa/astro": "^1.2.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

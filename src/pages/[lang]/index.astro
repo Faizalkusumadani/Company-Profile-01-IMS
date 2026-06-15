@@ -1,0 +1,1015 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+import Talent from "../../assets/Tallent-ims-01.png";
+import Talent01 from "../../assets/Tallent-ims-03.png";
+import proyekData from "../../assets/tools/proyekdata";
+import promoData from "../../assets/tools/promodata";
+import Product from "../../assets/tools/data";
+import StatsItem from "../../assets/tools/stats";
+import bannerImg from "../../assets/Banner/Banner-Utama.png";
+import { Image } from "astro:assets";
+import { languages } from "../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+
+export async function getStaticPaths() {
+  return Object.keys(languages).map((lang) => ({
+    params: { lang },
+  }));
+}
+
+const promoImages = import.meta.glob<{ default: ImageMetadata }>(
+  "../../assets/Promo/*.png",
+  { eager: true },
+);
+
+const proyekImages = import.meta.glob<{ default: ImageMetadata }>(
+  "../../assets/Proyek/*.png",
+  { eager: true },
+);
+
+function getPromoImage(filename: string): ImageMetadata | undefined {
+  const key = Object.keys(promoImages).find((k) =>
+    k.toLowerCase().endsWith(filename.toLowerCase()),
+  );
+  return key ? promoImages[key].default : undefined;
+}
+
+function getProyekImage(filename: string): ImageMetadata | undefined {
+  const key = Object.keys(proyekImages).find((k) =>
+    k.toLowerCase().endsWith(filename.toLowerCase()),
+  );
+  return key ? proyekImages[key].default : undefined;
+}
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const title = t("home"),
+  description = t("homedesc");
+---
+
+<Layout title={title} description={description}>
+  <!-- Hero Section -->
+  <header
+    id="Hero"
+    class="relative bg-linear-to-br from-blue-50/60 via-white to-gray-50"
+  >
+    <div class="w-full px-4 pt-33 pb-20 sm:pb-32 sm:pt-35 lg:pt-38 relative z-15">
+      <div class="mx-auto max-w-6xl">
+        <div class="grid gap-10 md:gap-16 lg:grid-cols-2 items-center">
+          <div class="order-1 lg:order-1">
+            <div class="space-y-6">
+              <h1
+                class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-snug"
+              >
+                {t("hero_part1")}<br />
+                <span class="text-ims-red">{t("hero_part2")}</span>
+              </h1>
+              <p
+                class="text-gray-500 text-base sm:text-base md:text-lg max-w-xl leading-relaxed"
+              >
+                {t("hero_description")}
+              </p>
+            </div>
+            <!-- CTA Buttons -->
+            <div class="mt-8 flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
+              <a
+                href={`/${lang}/contact`}
+                class="group inline-flex items-center justify-center gap-2 bg-ims-red hover:bg-red-700 text-white font-medium px-8 py-3 rounded-2xl text-sm sm:text-base transition-colors duration-200"
+              >
+                {t("cta_1")}
+                <Icon
+                  name="local:arrow-right"
+                  class="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1"
+                />
+              </a>
+              <a
+                href={`/${lang}/produk`}
+                class="group inline-flex items-center justify-center gap-2 border border-ims-red hover:bg-ims-red hover:text-white text-ims-red font-medium px-8 py-3 rounded-2xl transition-colors duration-200"
+              >
+                {t("cta_2")}
+              </a>
+            </div>
+          </div>
+          <div class="order-2 lg:order-2">
+            <div
+              id="custom-controls-gallery"
+              class="relative w-full"
+              data-carousel="slide"
+            >
+              <!-- Carousel wrapper -->
+              <div
+                class="relative h-72 sm:h-80 md:h-102 flex items-center justify-center overflow-hidden"
+              >
+                {
+                  Product.map((product, index) => (
+                    <div
+                      class={
+                        index === 0
+                          ? "duration-700 ease-in-out"
+                          : "hidden duration-700 ease-in-out"
+                      }
+                      data-carousel-item={index === 0 ? "active" : true}
+                    >
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        width={700}
+                        height={500}
+                        format="webp"
+                        quality={80}
+                        decoding="async"
+                        loading={index === 0 ? "eager" : "lazy"}
+                        class="absolute inset-0 w-full h-full object-contain mask-[linear-gradient(to_right,black_80%,transparent_100%)]"
+                      />
+                    </div>
+                  ))
+                }
+              </div>
+              <!-- Controls -->
+              <div class="flex justify-center items-center">
+                <button
+                  type="button"
+                  class="p-2 flex justify-center items-center me-4 h-full cursor-pointer group focus:outline-none rounded-full border border-gray-400"
+                  data-carousel-prev
+                >
+                  <span
+                    class="text-body hover:text-heading group-focus:text-heading"
+                  >
+                    <Icon
+                      name="local:arrow left"
+                      class="rtl:rotate-180 w-6 h-6 text-gray-500 md:hover:text-ims-red"
+                    />
+                    <span class="sr-only">Previous</span>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  class="p-2 flex justify-center items-center h-full cursor-pointer group focus:outline-none rounded-full border border-gray-400"
+                  data-carousel-next
+                >
+                  <span
+                    class="text-body hover:text-heading group-focus:text-heading"
+                  >
+                    <Icon
+                      name="local:arrow right"
+                      class="rtl:rotate-180 w-6 h-6 text-gray-500 md:hover:text-ims-red"
+                    />
+                    <span class="sr-only">Next</span>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Stats Section -->
+  <section id="Stats" class="border-y border-gray-100">
+    <div class="max-w-6xl mx-auto text-center justify-center py-14 px-4 sm:py-16">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+        {
+          StatsItem.map((stat, index) => (
+            <div
+              class={`space-y-1 sm:space-y-2 pr-4 sm:pr-6 ${
+                index % 2 !== 1
+                  ? "border-r border-gray-300 sm:border-r"
+                  : "sm:border-r border-gray-300"
+              }`}
+            >
+              <div
+                class="stat-number text-2xl sm:text-3xl md:text-4xl font-bold text-ims-red"
+                data-target={parseInt(stat.number)}
+              >
+                0
+              </div>
+              <p class="text-xs sm:text-sm md:text-base text-gray-500">
+                {t(stat.key as any)}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+ <!-- Keunggulan Section -->
+<section id="features" class="relative w-full py-20 sm:py-28 overflow-hidden">
+  <Image
+  src={bannerImg}
+  width={1280}
+  height={720}
+  format="webp"
+  quality={75}
+  alt="Gedung IMS"
+  class="absolute inset-0 w-full h-full object-cover"
+  loading="eager"
+  fetchpriority="high"
+/>
+  
+  <!-- Overlay gelap — juga langsung child section -->
+  <div class="absolute inset-0 bg-black/65"></div>
+
+  <!-- Content -->
+  <div class="relative z-10 max-w-7xl mx-auto px-4">
+    <div class="text-center mb-14">
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white">
+        {t("headerfeatures_1")}
+        <span class="text-ims-red"> {t("headerfeatures_2")} </span>
+        {t("headerfeatures_3")}
+      </h2>
+      <p class="mt-4 text-gray-300 text-base sm:text-lg max-w-3xl mx-auto">
+        {t("featuresdescription")}
+      </p>
+    </div>
+
+    <!-- Feature Cards -->
+    <div class="flex flex-wrap justify-center gap-6">
+      {/* Card 1 */}
+      <div class="group w-full sm:w-full lg:w-[calc(33.333%-16px)] rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 hover:border-white/30 p-6 transition-all duration-200">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="w-12 h-12 rounded-xl bg-ims-red/20 flex items-center justify-center shrink-0">
+            <Icon name="local:product" class="w-6 h-6 text-ims-red" />
+          </div>
+          <h3 class="text-lg font-semibold text-white">
+            {t("featuresproduct")}
+          </h3>
+        </div>
+        <p class="text-base text-gray-300 leading-relaxed">
+          {t("arcticlefeaturesproduct_1")}
+          <span class="text-red-400 font-medium">{t("arcticlefeaturesproduct_2")}</span>
+          {t("arcticlefeaturesproduct_3")}
+          <span class="text-red-400 font-medium">{t("arcticlefeaturesproduct_4")}</span>
+        </p>
+      </div>
+
+      {/* Card 2 */}
+      <div class="group w-full sm:w-full lg:w-[calc(33.333%-16px)] rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 hover:border-white/30 p-6 transition-all duration-200">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="w-12 h-12 rounded-xl bg-ims-red/20 flex items-center justify-center shrink-0">
+            <Icon name="local:warehouse" class="w-6 h-6 text-ims-red" />
+          </div>
+          <h3 class="text-lg font-semibold text-white">{t("featuresinfra")}</h3>
+        </div>
+        <p class="text-base text-gray-300 leading-relaxed">
+          {t("articlefeaturesinfra_1")}
+          <span class="text-red-400 font-medium">{t("articlefeaturesinfra_2")}</span>
+          {t("articlefeaturesinfra_3")}
+        </p>
+      </div>
+
+      {/* Card 3 */}
+      <div class="group w-full sm:w-full lg:w-[calc(33.333%-16px)] rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 hover:border-white/30 p-6 transition-all duration-200">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="w-12 h-12 rounded-xl bg-ims-red/20 flex items-center justify-center shrink-0">
+            <Icon name="local:award" class="w-6 h-6 text-ims-red" />
+          </div>
+          <h3 class="text-lg font-semibold text-white">{t("featuresawards")}</h3>
+        </div>
+        <p class="text-base text-gray-300 leading-relaxed">
+          {t("articlefeaturesawards_1")}
+          <span class="text-red-400 font-medium">{t("articlefeaturesawards_2")}</span>
+          {t("articlefeaturesawards_3")}
+          <span class="text-red-400 font-medium">{t("articlefeaturesawards_4")}</span>
+        </p>
+      </div>
+
+      {/* Card 4 */}
+      <div class="group w-full sm:w-full lg:w-[calc(33.333%-16px)] rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 hover:border-white/30 p-6 transition-all duration-200">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="w-12 h-12 rounded-xl bg-ims-red/20 flex items-center justify-center shrink-0">
+            <Icon name="local:customer" class="w-6 h-6 text-ims-red" />
+          </div>
+          <h3 class="text-lg font-semibold text-white">{t("featuresteam")}</h3>
+        </div>
+        <p class="text-base text-gray-300 leading-relaxed">
+          {t("articlefeaturesteam_1")}
+          <span class="text-red-400 font-medium">{t("articlefeaturesteam_2")}</span>
+          {t("articlefeaturesteam_3")}
+          <span class="text-red-400 font-medium">{t("articlefeaturesteam_4")}</span>
+        </p>
+      </div>
+
+      {/* Card 5 */}
+      <div class="group w-full sm:w-full lg:w-[calc(33.333%-16px)] rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 hover:border-white/30 p-6 transition-all duration-200">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="w-12 h-12 rounded-xl bg-ims-red/20 flex items-center justify-center shrink-0">
+            <Icon name="local:truck" class="w-6 h-6 text-ims-red" />
+          </div>
+          <h3 class="text-lg font-semibold text-white">{t("featuresfleet")}</h3>
+        </div>
+        <p class="text-base text-gray-300 leading-relaxed">
+          {t("arcticlefeaturesfleet_1")}
+          <span class="text-red-400 font-medium">{t("arcticlefeaturesfleet_2")}</span>
+          {t("arcticlefeaturesfleet_3")}
+          <span class="text-red-400 font-medium">{t("arcticlefeaturesfleet_4")}</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- About Section -->
+  <section id="about">
+    <div class="w-full px-4 py-20 sm:py-24 md:py-28">
+      <div class="mx-auto max-w-6xl">
+        <div
+          class="grid gap-8 md:gap-12 lg:grid-cols-2 items-center justify-center"
+        >
+          <!-- Gambar -->
+          <figure class="order-1 lg:order-1 mb-8">
+            <div class="relative w-full h-auto flex">
+              <div
+                class="absolute w-65 h-65 md:w-90 md:h-90 lg:w-115 lg:h-115 rounded-full bg-linear-to-br from-red-200/40 to-orange-100/30
+                      blur-3xl opacity-70"
+              >
+              </div>
+              <Image
+                src={Talent}
+                width={900}
+                height={600}
+                decoding="async"
+                loading="lazy"
+                alt="Talent"
+                class="w-full h-full z-10 object-contain rounded-4xl mask-[linear-gradient(to_bottom,black_80%,transparent_100%)]"
+              />
+            </div>
+          </figure>
+
+          <!-- Konten Teks -->
+          <article class="order-2 lg:order-2 space-y-4 sm:space-y-6">
+            <div class="inline-block">
+              <span
+                class="text-ims-red font-normal text-base sm:text-base tracking-wide border-b border-ims-red"
+              >
+                {t("headerabout")}
+              </span>
+            </div>
+
+            <h2
+              class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 py-2"
+            >
+              Intisukses <span class="text-ims-red">Mitra</span> Sejati
+            </h2>
+
+            <p
+              class="text-sm sm:text-base md:text-lg text-gray-500 leading-relaxed text-justify [text-align-last:start]"
+            >
+              {t("headeraboutdescription")}
+            </p>
+
+            <div class="pt-2 sm:pt-4">
+              <a
+                href={`/${lang}/tentang-kami`}
+                class="group inline-flex items-center gap-2 border border-ims-red hover:bg-ims-red hover:text-white text-ims-red font-medium px-6 py-2.5 rounded-2xl transition-colors duration-200"
+              >
+                {t("ctaabout")}
+                <Icon
+                  name="local:arrow-right"
+                  class="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform"
+                />
+              </a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Section -->
+  <section id="product">
+   <div class="w-full px-4 py-20 sm:py-24 md:py-28">
+      <div class="mx-auto max-w-7xl">
+        <div
+          class="grid gap-8 md:gap-12 lg:grid-cols-2 items-center justify-center"
+        >
+          <!-- Gambar -->
+          <figure class="order-2 lg:order-2 mb-8">
+            <div class="relative w-full h-auto flex">
+              <div
+                class="absolute w-65 h-65 md:w-90 md:h-90 lg:w-115 lg:h-115 rounded-full bg-linear-to-br from-red-200/40 to-orange-100/30
+                      blur-3xl opacity-70"
+              >
+              </div>
+              <Image
+                src={Talent01}
+                width={900}
+                height={600}
+                decoding="async"
+                loading="lazy"
+                alt="Talent"
+                class="w-full h-full z-10 object-contain rounded-4xl mask-[linear-gradient(to_bottom,black_80%,transparent_100%)]"
+              />
+            </div>
+          </figure>
+
+          <!-- Konten Teks -->
+         <article class="order-1 lg:order-1 space-y-4 sm:space-y-8">
+          <!-- Headline -->
+            <div class="space-y-6">
+              <div class="inline-block">
+                  <span
+                    class="text-ims-red font-normal text-base sm:text-base tracking-wide border-b border-ims-red"
+                  >
+                    {t("category")}
+                  </span>
+              </div>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">
+              {t("title_product_1")} <span class="text-ims-red">{t("title_product_2")}</span> {t("title_product_3")}
+            </h2>
+            <p class="text-gray-500 text-base sm:text-lg leading-relaxed max-w-lg">
+                {t("desc_product")}
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {[
+                {
+                icon: "local:wheelbarrow",
+                title: "Building Materials",
+                desc:  t("buildingmaterial_desc"),
+              },
+                {
+                icon: "local:electrical-spark",
+                title: "MEP Systems",
+                desc:  t("mep_desc"),
+              }, 
+              {
+                icon: "local:bathroom",
+                title: "Sanitary",
+                desc:  t("sanitary_desc"),
+              },
+                 {
+                icon: "local:EV Charger",
+                title: "EV Charger",
+                desc: t("ev_desc"),
+              },
+            ].map((item) => (
+              <div class="group flex items-start gap-4 p-4 rounded-2xl border border-gray-200 hover:border-red-200 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer">
+                <!-- Icon -->
+                <div class="shrink-0 w-16 h-16 rounded-xl bg-red-50 border border-gray-100 group-hover:bg-ims-red flex items-center justify-center transition-colors duration-200">
+                  <Icon
+                    name={item.icon}
+                    class="w-8 h-8 text-ims-red group-hover:text-white transition-colors duration-200"
+                  />
+                </div>
+                <!-- Text -->
+                <div class="min-w-0">
+                  <h3 class="text-base font-bold text-gray-900 mb-0.5 group-hover:text-ims-red transition-colors duration-200 leading-snug">
+                    {item.title}
+                  </h3>
+                  <p class="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+   <!-- Promo Section -->
+  <section id="promo">
+     <div class="w-full relative overflow-hidden px-4 py-20 sm:py-24 md:py-28">
+       <div class="relative z-10 max-w-7xl mx-auto">
+         <!-- Section Header -->
+         <div class="text-center mb-12 sm:mb-16 space-y-4">
+            <div class="inline-block">
+                  <span
+                    class="text-ims-red font-normal text-base sm:text-base tracking-wide border-b border-ims-red"
+                  >
+                    {t("promo")}
+                  </span>
+              </div>
+           <h2
+             class="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight"
+           >
+           {t("promo")}
+             <span
+               class="text-ims-red"
+             >
+                {t("special")} 
+             </span>
+             {t("bulan")}
+           </h2>
+           <p
+             class="text-gray-500 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed"
+           >
+              {t("desc_promo")}
+           </p>
+         </div>
+   
+         <!-- Swiper Carousel -->
+         <div class="relative">
+           <div
+             class="swiper mySwiper relative w-full overflow-hidden rounded-2xl shadow-lg ring-1 ring-gray-200/60 bg-white"
+           >
+             <div class="swiper-wrapper">
+               {
+                 promoData.map((item) => {
+                   const promoImg = getPromoImage(item.image);
+                   return (
+                     <div class="swiper-slide">
+                       <div class="relative w-full bg-gray-100 overflow-hidden">
+                         {promoImg ? (
+                           <Image
+                             src={promoImg}
+                             alt={item.title}
+                             width={1200}
+                             height={600}
+                             format="webp"
+                             quality={80}
+                             loading="lazy"
+                             decoding="async"
+                             class="w-full h-full object-cover"
+                           />
+                         ) : (
+                           <div class="w-full h-64 bg-gray-200 flex items-center justify-center">
+                             <span class="text-gray-400 text-sm">
+                               {item.title}
+                             </span>
+                           </div>
+                         )}
+                       </div>
+                     </div>
+                   );
+                 })
+               }
+             </div>
+             <div class="swiper-pagination bottom-4!"></div>
+           </div>
+         </div>
+   
+         <!-- Benefit Cards -->
+         <div
+           class="mt-12 sm:mt-16 grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6"
+         >
+           {
+             [
+               {
+                 icon: "local:voucher",
+                 title: "Voucher Eksklusif",
+                 body: null,
+                 custom: true,
+               },
+               {
+                 icon: "local:promo",
+                 title: t("promo_terbatas"),
+                 body: t("promo_semua"),
+                 custom: false,
+               },
+               {
+                 icon: "local:trolley",
+                 title: `Discount ${t("belanja")}`,
+                 body: t("promo_hemat"),
+                 highlight: true,
+                 custom: false,
+               },
+             ].map((item) => (
+               <div class="group flex items-start gap-4 p-6 rounded-2xl border border-gray-200 hover:border-red-200 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                 {/* Icon bubble */}
+                 <div class="shrink-0 w-16 h-16 rounded-xl bg-red-50 border border-gray-100 flex items-center justify-center group-hover:bg-ims-red group-hover:border-ims-red transition-colors duration-200">
+                   <Icon
+                     name={item.icon}
+                     class="w-8 h-8 text-ims-red group-hover:text-white transition-colors duration-200"
+                   />
+                 </div>
+   
+                 {/* Text */}
+                 <div class="min-w-0 flex-1">
+                   <p class="text-sm font-semibold text-gray-800 leading-snug group-hover:text-ims-red transition-colors duration-200">
+                     {item.title}
+                   </p>
+   
+                   {item.custom ? (
+                     <div class="mt-1 space-y-0.5">
+                       <p class="text-sm sm:text-base text-gray-500 leading-snug">
+                         Voucher {t("diskon")} s/d{" "}
+                         <span class="text-ims-red font-bold">1JT</span>
+                       </p>
+                       <p class="text-sm sm:text-base text-gray-500 leading-snug">
+                         {t("akses")} {t("diskon")}{" "}
+                         <span class="text-ims-red font-bold">20%</span> IMS Day
+                       </p>
+                     </div>
+                   ) : item.highlight ? (
+                     <p class="mt-1 text-sm sm:text-base font-bold text-ims-red leading-snug">
+                       {item.body}
+                     </p>
+                   ) : (
+                     <p class="mt-1 text-sm sm:text-base text-gray-500 leading-snug">
+                       {item.body}
+                     </p>
+                   )}
+                 </div>
+               </div>
+             ))
+           }
+         </div>
+       </div>
+     </div>
+  </section>
+
+  <!-- Proyek Section -->
+  <section id="Proyek" class="border-y border-gray-100">
+    <div class="w-full px-4 py-20 sm:py-24 md:py-28">
+      <div class="mx-auto max-w-7xl">
+
+        <!-- Section Header -->
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
+          <div class="space-y-3">
+              <div class="inline-block">
+              <span
+                class="text-ims-red font-normal text-base sm:text-base tracking-wide border-b border-ims-red"
+              >
+           {t("projectlabel") ?? "Portfolio Proyek"}
+              </span>
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight max-w-4xl">
+              <span class="text-ims-red">{t("headerproyek_1")} </span>{t("headerproyek_2")}
+            </h2>
+            <p class="text-gray-500 text-sm sm:text-lg max-w-3xl leading-relaxed">
+              {t("projectdescription")}
+            </p>
+          </div>
+          <a
+            href={`/${lang}/proyek`}
+            class="group shrink-0 inline-flex items-center gap-2 border border-ims-red hover:bg-ims-red hover:text-white text-ims-red font-medium px-5 py-2.5 rounded-xl text-sm transition-colors duration-200"
+          >
+            {t("ctaproyek")}
+            <Icon
+              name="local:arrow-right"
+              class="w-4 h-4 group-hover:translate-x-1 transition-transform"
+            />
+          </a>
+        </div>
+
+        <!-- Proyek Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+          {
+            proyekData.slice(0, 6).map((item) => {
+              const proyekImg = getProyekImage(item.image);
+              return (
+                <a
+                  href={`/${lang}/proyek`}
+                  class="group relative block rounded-2xl overflow-hidden h-72 sm:h-68 lg:h-72 bg-gray-900 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                >
+                  {/* FULL IMAGE */}
+                  {proyekImg ? (
+                   <Image
+                  src={proyekImg}
+                  alt={item.title}
+                  widths={[640, 960]}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  format="webp"
+                  quality={75}
+                  loading="lazy"
+                  decoding="async"
+                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                  ) : (
+                    <div class="absolute inset-0 bg-gray-700 flex items-center justify-center">
+                      <span class="text-gray-400 text-sm">{item.title}</span>
+                    </div>
+                  )}
+
+                  {/* GRADIENT OVERLAY — always visible, stronger at bottom */}
+                  <div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent" />
+
+                  {/* CONTENT — pinned to bottom */}
+                  <div class="absolute bottom-0 left-0 right-0 p-5 space-y-2">                 
+                    {/* Title */}
+                    <h3 class="text-base sm:text-lg font-bold text-white leading-snug line-clamp-2">
+                      {item.title}
+                    </h3>
+
+                    {/* Location */}
+                    <div class="flex items-center gap-1.5">
+                      <svg class="w-3.5 h-3.5 shrink-0 text-ims-red" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      <span class="text-xs text-gray-300 truncate">{item.location}</span>
+                    </div>
+
+                    {/* Description — only show on hover via opacity */}
+                    <p class="text-xs text-gray-300 leading-relaxed line-clamp-2 max-h-0 overflow-hidden opacity-0 group-hover:max-h-20 group-hover:opacity-100 transition-all duration-300">
+                      {item.description}
+                    </p>
+                  </div>
+                </a>
+              );
+            })
+          }
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="bg-white border-t border-gray-100">
+    <div class="w-full px-4 py-20 md:py-28">
+      <div class="mx-auto max-w-7xl">
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start">
+
+          <!-- Left Column: sticky label + heading + desc + CTA -->
+          <div class="lg:col-span-2 lg:sticky lg:top-28 space-y-5">
+             <div class="inline-block">
+              <span
+                class="text-ims-red font-normal text-base sm:text-base tracking-wide border-b border-ims-red"
+              >
+            {t("faq_label") ?? "Pertanyaan & Jawaban"}
+              </span>
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight">
+              {t("faq_heading_1") ?? "Pertanyaan Umum"}
+              <span class="text-ims-red"> {t("faq_heading_2") ?? "Seputar IMS"}</span>
+            </h2>
+            <p class="text-gray-500 text-sm sm:text-base leading-relaxed max-w-sm">
+              {t("faqdescription")}
+            </p>
+            <a
+              href={`/${lang}/faq`}
+              class="inline-flex items-center gap-2 mt-2 border border-ims-red hover:border-ims-red hover:text-ims-red text-ims-red text-sm font-medium px-5 py-2.5 rounded-xl transition-colors duration-200"
+            >
+              <Icon name="local:help-circle" class="w-4 h-4" />
+              {t("faq_cta") ?? "Lihat Semua FAQ"}
+            </a>
+          </div>
+
+          <!-- Right Column: accordion -->
+          <div class="lg:col-span-3">
+            <div
+              id="accordion-flush"
+              data-accordion="collapse"
+              data-active-classes="text-ims-red"
+              data-inactive-classes="text-gray-500"
+              class="border-t border-gray-200"
+            >
+          <!-- Item 1 -->
+          <h2 id="accordion-flush-heading-1">
+            <button
+              type="button"
+              class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-800 border-b border-gray-200 gap-3 hover:text-ims-red transition-colors duration-200"
+              data-accordion-target="#accordion-flush-body-1"
+              aria-expanded="true"
+              aria-controls="accordion-flush-body-1"
+            >
+              <span class="text-base sm:text-lg">{t("faqask_1")}</span>
+              <svg
+                data-accordion-icon
+                class="w-4 h-4 shrink-0 transition-transform duration-200"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="m5 15 7-7 7 7"
+                ></path>
+              </svg>
+            </button>
+          </h2>
+          <div
+            id="accordion-flush-body-1"
+            class="hidden"
+            aria-labelledby="accordion-flush-heading-1"
+          >
+            <div class="py-5 border-b border-gray-200">
+              <p class="text-gray-500 text-sm sm:text-base leading-relaxed">
+                {t("faqaskdescription_1")}
+              </p>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <h2 id="accordion-flush-heading-2">
+            <button
+              type="button"
+              class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-800 border-b border-gray-200 gap-3 hover:text-ims-red transition-colors duration-200"
+              data-accordion-target="#accordion-flush-body-2"
+              aria-expanded="false"
+              aria-controls="accordion-flush-body-2"
+            >
+              <span class="text-base sm:text-lg">{t("faqask_2")}</span>
+              <svg
+                data-accordion-icon
+                class="w-4 h-4 shrink-0 transition-transform duration-200"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="m5 15 7-7 7 7"
+                ></path>
+              </svg>
+            </button>
+          </h2>
+          <div
+            id="accordion-flush-body-2"
+            class="hidden"
+            aria-labelledby="accordion-flush-heading-2"
+          >
+            <div class="py-5 border-b border-gray-200 space-y-2">
+              <p class="text-gray-500 text-sm sm:text-base leading-relaxed">
+                {t("faqaskdescription_2")}
+                <a
+                  href={`/${lang}/produk`}
+                  class="text-ims-red hover:underline font-medium"
+                  >{t("faqaskdescription_3")}</a
+                > Intisukses Mitra Sejati
+              </p>
+              <p class="text-gray-500 text-sm sm:text-base leading-relaxed">
+                {t("faqaskdescription_4")}
+                <a
+                  href={`/${lang}/contact`}
+                  class="text-ims-red hover:underline font-medium"
+                  >{t("faqaskdescription_5")}</a
+                >
+                {t("faqaskdescription_6")}
+              </p>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <h2 id="accordion-flush-heading-3">
+            <button
+              type="button"
+              class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-800 border-b border-gray-200 gap-3 hover:text-ims-red transition-colors duration-200"
+              data-accordion-target="#accordion-flush-body-3"
+              aria-expanded="false"
+              aria-controls="accordion-flush-body-3"
+            >
+              <span class="text-base sm:text-lg">{t("faqask_3")}</span>
+              <svg
+                data-accordion-icon
+                class="w-4 h-4 shrink-0 transition-transform duration-200"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="m5 15 7-7 7 7"
+                ></path>
+              </svg>
+            </button>
+          </h2>
+          <div
+            id="accordion-flush-body-3"
+            class="hidden"
+            aria-labelledby="accordion-flush-heading-3"
+          >
+            <div class="py-5 border-b border-gray-200">
+              <p class="text-gray-500 text-sm sm:text-base leading-relaxed">
+                {t("faqaskdescription_7")}
+              </p>
+            </div>
+          </div>
+           <!-- Item 4 -->
+          <h2 id="accordion-flush-heading-4">
+            <button
+              type="button"
+              class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-800 border-b border-gray-200 gap-3 hover:text-ims-red transition-colors duration-200"
+              data-accordion-target="#accordion-flush-body-4"
+              aria-expanded="false"
+              aria-controls="accordion-flush-body-4"
+            >
+              <span class="text-base sm:text-lg">{t("faqask_4")}</span>
+              <svg
+                data-accordion-icon
+                class="w-4 h-4 shrink-0 transition-transform duration-200"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="m5 15 7-7 7 7"
+                ></path>
+              </svg>
+            </button>
+          </h2>
+          <div
+            id="accordion-flush-body-4"
+            class="hidden"
+            aria-labelledby="accordion-flush-heading-4"
+          >
+            <div class="py-5 border-b border-gray-200">
+              <p class="text-gray-500 text-sm sm:text-base leading-relaxed">
+                {t("faqaskdescription_8")}
+              </p>
+            </div>
+          </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    //@ts-nocheck
+    import Swiper from "swiper";
+    import {
+      EffectFade,
+      Navigation,
+      Pagination,
+      Autoplay,
+    } from "swiper/modules";
+    import "swiper/css";
+    import "swiper/css/navigation";
+    import "swiper/css/pagination";
+    import "swiper/css/effect-fade";
+
+    function initSwiper() {
+      const swiperEl = document.querySelector(".mySwiper");
+      if (!swiperEl) return;
+
+      new Swiper(".mySwiper", {
+        modules: [EffectFade, Navigation, Pagination, Autoplay],
+        effect: "fade",
+        fadeEffect: { crossFade: true },
+        loop: true,
+        autoplay: { delay: 5000, disableOnInteraction: false },
+        pagination: { el: ".swiper-pagination", clickable: true },
+        speed: 800,
+        breakpoints: {
+          // Saat layar >= 320px (Mobile)
+          320: {
+            slidesPerView: 1,
+            spaceBetween: 10,
+          },
+          // Saat layar >= 768px (Tablet/Desktop)
+          768: {
+            slidesPerView: 1,
+            spaceBetween: 20,
+          },
+        },
+      });
+    }
+
+    function initCounter() {
+      const counters = document.querySelectorAll(".stat-number");
+      if (counters.length === 0) return;
+
+      const startCount = (el) => {
+        const target = +el.getAttribute("data-target");
+        const current = +el.innerText.replace("+", ""); // Bersihkan karakter non-angka
+        const inc = target / 50;
+
+        if (current < target) {
+          el.innerText = Math.ceil(current + inc);
+          setTimeout(() => startCount(el), 20);
+        } else {
+          el.innerText = target + "+";
+        }
+      };
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              startCount(entry.target);
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.5 },
+      );
+
+      counters.forEach((counter) => observer.observe(counter));
+    }
+
+    // Gunakan astro:page-load untuk mendukung View Transitions
+    document.addEventListener("astro:page-load", () => {
+      initSwiper();
+      initCounter();
+    });
+  </script>
+</Layout>

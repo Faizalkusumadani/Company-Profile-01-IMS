@@ -1,0 +1,97 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import Banner from "../../../components/Banner.astro";
+import { Image } from "astro:assets";
+import ImsGedung from "../../../assets/Banner/Kantor_IMS.png";
+import Img10 from "../../../assets/Salesman_meeting.png";
+import { languages } from "../../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../../i18n/utils";
+
+export async function getStaticPaths() {
+  return Object.keys(languages).map((l) => ({
+    params: { lang: l },
+  }));
+}
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const breadcrumbs = [
+  { label: t("home"), href: `/${lang}/`, key: "home" },
+  { label: t("about"), href: `/${lang}/`, key: "about" },
+  { label: t("about_profile"), current: true, key: "about_profile" },
+];
+
+const title = t("about_profile"),
+  description = t("aboutprofiledescription");
+---
+
+<Layout title={title} description={description}>
+  <!-- Banner Section -->
+  <Banner title={{ key: "about_profile" }} breadcrumbs={breadcrumbs} />
+
+  <!-- About Section -->
+  <section id="About" class="relative w-full h-screen">
+    <!-- Background Image -->
+    <Image
+      src={Img10}
+      width={700}
+      height={500}
+      decoding="async"
+      loading="lazy"
+      alt="Gedung IMS"
+      class="absolute inset-0 w-full h-full object-cover"
+    />
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-black/70"></div>
+
+    <!-- Content -->
+    <div class="relative z-10 h-full flex items-center">
+      <div class="container mx-auto px-6 lg:px-20">
+        <div class="max-w-xl ml-auto text-white">
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
+            <span class="text-ims-red"> {t("about_1")}</span>
+            {t("about_2")}
+          </h2>
+
+          <p class="text-white/70 text-lg leading-relaxed mb-6">
+            {t("aboutprofiledescription")}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Office Section -->
+  <section id="Office" class="relative">
+    <div class="grid grid-cols-1 lg:grid-cols-2 items-center">
+      <!-- Content -->
+      <div class="px-6 lg:px-16 py-12">
+        <h2
+          class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight"
+        >
+          IMS <span class="text-ims-red">{t("contactoffice")}</span>
+        </h2>
+        <div class="space-y-4 mt-3">
+          <p class="text-base md:text-lg text-gray-500 leading-relaxed">
+            {t("aboutdescription_1")}
+          </p>
+          <p class="text-base md:text-lg text-gray-500 leading-relaxed">
+            {t("aboutdescription_2")}
+          </p>
+        </div>
+      </div>
+
+      <!-- Image -->
+      <div class="h-87.5 lg:h-150">
+        <Image
+          src={ImsGedung}
+          width={700}
+          height={500}
+          decoding="async"
+          loading="lazy"
+          alt="Gedung IMS"
+          class="w-full h-full object-cover"
+        />
+      </div>
+    </div>
+  </section>
+</Layout>

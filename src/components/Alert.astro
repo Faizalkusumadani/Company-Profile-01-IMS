@@ -1,0 +1,22 @@
+---
+import { Icon } from "astro-icon/components";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<div class="bg-blue-50 border border-blue-200 rounded-lg p-4 flex gap-4">
+  <div class="items-center text-center">
+    <Icon
+      name="local:alert"
+      class="w-12 h-12 text-red-600/70 flex-shrink-0 font-normal"
+    />
+  </div>
+  <div>
+    <h3 class="font-semibold text-blue-900">{t("information")}</h3>
+    <p class="text-sm text-blue-800 mt-1">
+      {t("informationdesc")}
+    </p>
+  </div>
+</div>

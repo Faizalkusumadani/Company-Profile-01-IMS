@@ -1,0 +1,265 @@
+---
+import "../styles/global.css";
+import { ClientRouter } from "astro:transitions";
+import PageLoader from "../components/Pageloader.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import { pwaInfo } from "virtual:pwa-info";
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  url?: string;
+}
+
+const SITE_URL = "https://intisukses-ms.com";
+
+const {
+  title,
+  description,
+  image = `${SITE_URL}/og-default.png`,
+  url = Astro.url.href,
+} = Astro.props;
+
+// Pastikan og:image selalu berupa URL absolut
+const ogImage = image.startsWith("http") ? image : `${SITE_URL}${image}`;
+const ogTitle = `${title} | Intisukses Mitra Sejati`;
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Intisukses Mitra Sejati | {title}</title>
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta name="author" content="Intisukses Mitra Sejati" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- ─── Open Graph (Facebook, WhatsApp, LinkedIn, Telegram) ─────────── -->
+    <meta property="og:site_name" content="Intisukses Mitra Sejati" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:title" content={ogTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={url} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:secure_url" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogTitle} />
+
+    <!-- ─── Twitter / X Card ─────────────────────────────────────────────── -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={ogTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogTitle} />
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G8R54H54VV"
+    ></script>
+    <script is:inline data-astro-rerun>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+
+      // Inisialisasi hanya sekali
+      if (!window._gtagInitialized) {
+        window._gtagInitialized = true;
+        gtag("js", new Date());
+      }
+
+      // Track pageview (termasuk setiap navigasi View Transitions)
+      gtag("config", "G-G8R54H54VV", {
+        page_path: window.location.pathname,
+      });
+    </script>
+
+    <!-- ─── Favicon ──────────────────────────────────────────────────────── -->
+    <link rel="canonical" href={url} />
+    <link rel="icon" type="image/svg+xml" href="/favicon-ims.svg" />
+    <link rel="apple-touch-icon" href="/ims-touch-icon.png" />
+    <meta name="theme-color" content="#0f172a" />
+
+    <style is:global>
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+
+      /* ── Scroll Progress Bar ── */
+      #scroll-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 2px;
+        width: 0%;
+        z-index: 9999;
+        background: #d23439;
+        transition: width 0.1s linear;
+        pointer-events: none;
+      }
+
+      /* Hide scrollbar (Chrome, Safari, Opera) */
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Hide scrollbar (IE, Edge, Firefox) */
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      /* Animasi-product */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animate-fade-in {
+        animation: fadeIn 0.4s ease-out;
+      }
+
+      .product-item {
+        transition:
+          opacity 0.3s ease,
+          transform 0.3s ease;
+      }
+
+      .product-item.hidden {
+        opacity: 0;
+        transform: scale(0.95);
+        pointer-events: none;
+      }
+
+      /* ======= Search ========== */
+      .search-result-item {
+        display: flex;
+        gap: 1rem;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        transition: background-color 0.2s;
+        cursor: pointer;
+      }
+
+      .search-result-item:hover {
+        background-color: #f9fafb;
+      }
+
+      /* Key */
+      @keyframes slideIn {
+        from {
+          transform: translateX(150%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      .animate-slide-in {
+        animation: slideIn 0.5s ease-out;
+      }
+
+      /* Toast */
+      .toast.show {
+        display: flex !important;
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+        pointer-events: auto !important;
+      }
+
+      /* Swiper */
+      .swiper-pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 5rem !important;
+        position: relative;
+        gap: 8px;
+      }
+
+      .swiper-pagination-bullet {
+        width: 12px !important;
+        height: 12px !important;
+        background-color: #d1d5db !important;
+        opacity: 1 !important;
+        transition: all 0.3s ease !important;
+      }
+      .swiper-pagination-bullet-active {
+        background-color: #dc2626 !important;
+        width: 32px !important;
+        border-radius: 6px !important;
+      }
+    </style>
+
+    <ClientRouter />
+    {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
+
+    <!-- Ganti <PwaRegister /> dengan ini: -->
+    <script src="/registerSW.js" is:inline></script>
+  </head>
+
+  <body class="bg-zinc-100 min-h-screen scroll-smooth">
+    <PageLoader />
+
+    <div id="scroll-progress"></div>
+
+    <Navbar />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      import { initUI } from "../assets/tools/initflowbite";
+
+      document.addEventListener("DOMContentLoaded", initUI);
+      document.addEventListener("astro:after-swap", initUI);
+    </script>
+
+    <!-- Scroll progress logic — pakai is:inline agar jalan setelah View Transitions -->
+    <script is:inline>
+      function initScrollProgress() {
+        const bar = document.getElementById("scroll-progress");
+        if (!bar) return;
+
+        function updateProgress() {
+          const scrolled = window.scrollY;
+          const total =
+            document.documentElement.scrollHeight - window.innerHeight;
+          bar.style.width = total > 0 ? (scrolled / total) * 100 + "%" : "0%";
+        }
+
+        // Reset ke 0 saat halaman baru dimuat
+        bar.style.width = "0%";
+
+        window.addEventListener("scroll", updateProgress, { passive: true });
+        updateProgress();
+      }
+
+      // Load pertama
+      document.addEventListener("DOMContentLoaded", initScrollProgress);
+
+      // Setelah navigasi View Transitions
+      document.addEventListener("astro:page-load", initScrollProgress);
+    </script>
+  </body>
+</html>

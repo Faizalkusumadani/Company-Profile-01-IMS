@@ -1,0 +1,80 @@
+---
+import { Swiper, SwiperWrapper, SwiperSlide } from "astro-swiper";
+
+import { Image } from "astro:assets";
+
+export interface ProjectItem {
+  imageSrc: string;
+  title: string;
+  location: string;
+  description: string;
+}
+
+export interface Props {
+  data: ProjectItem[];
+}
+
+const { data } = Astro.props;
+---
+
+<div class="relative">
+  <Swiper
+    options={{
+      spaceBetween: 30,
+      slidesPerView: 1,
+      loop: true,
+      autoplay: { delay: 6000, disableOnInteraction: false },
+      pagination: {
+        el: ".custom-pagination",
+        clickable: true,
+      },
+      breakpoints: {
+        768: { slidesPerView: 1 },
+        1024: { slidesPerView: 2 },
+      },
+    }}
+  >
+    <SwiperWrapper>
+      {
+        data.map((item) => (
+          <SwiperSlide>
+            <div class="bg-white shadow-xl hover:shadow-2xl transition duration-300 overflow-hidden border-2 border-gray-100 rounded-2xl">
+              {/* IMAGE */}
+              <div class="relative">
+                <Image
+                  src={item.imageSrc}
+                  alt={item.title}
+                  width={800}
+                  height={450}
+                  class="object-cover"
+                />
+              </div>
+
+              <div class="p-6">
+                <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-10">
+                  {/* LEFT : TITLE & LOCATION */}
+                  <div class="md:w-1/2 text-start">
+                    <h3 class="text-lg font-bold text-gray-900 leading-snug">
+                      {item.title}
+                    </h3>
+                    <p class="text-sm text-ims-red font-medium">
+                      {item.location}
+                    </p>
+                  </div>
+
+                  {/* RIGHT : DESCRIPTION */}
+                  <div class="md:w-1/2 md:text-right">
+                    <p class="text-xs text-gray-500 leading-relaxed">
+                      {item.description}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </SwiperSlide>
+        ))
+      }
+    </SwiperWrapper>
+  </Swiper>
+  <div class="custom-pagination swiper-pagination !static !mt-8"></div>
+</div>

@@ -1,0 +1,79 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import Banner from "../../../components/Banner.astro";
+import coreValues from "../../../assets/tools/core.js";
+import reddmasBg from "../../../assets/Reddmas.png";
+import { languages } from "../../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../../i18n/utils";
+
+export async function getStaticPaths() {
+  return Object.keys(languages).map((l) => ({
+    params: { lang: l },
+  }));
+}
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const breadcrumbs = [
+  { label: t("home"), href: `/${lang}/`, key: "home" },
+  { label: t("about"), href: `/${lang}/`, key: "about" },
+  { label: t("about_values"), current: true, key: "about_values" },
+];
+
+const title = t("about_values"),
+  description = t("aboutvaluesdescription");
+---
+
+<Layout title={title} description={description}>
+  <!-- Banner Section -->
+  <Banner title={{ key: "about_values" }} breadcrumbs={breadcrumbs} />
+  <section
+    id="nilai"
+    class="relative bg-cover bg-center bg-no-repeat"
+    style={`background-image: url('${reddmasBg.src}');`}
+  >
+    <div class="absolute inset-0 bg-white/70 dark:bg-black/30"></div>
+    <!-- Section : Core-Values -->
+    <div class="relative z-10 w-full px-4 py-15 md:py-20">
+      <div class="mx-auto max-w-6xl">
+        <div class="space-y-6 py-10 md:py-17 text-center">
+          <h2 class="text-3xl md:text-5xl font-bold text-ims-red">
+            Core<span class="text-gray-800"> Values</span>
+          </h2>
+          <p class="text-gray-500 text-base md:text-lg">
+            {t("aboutvaluesdescription")}
+          </p>
+        </div>
+        <!-- Values List -->
+        <div class="grid gap-12 grid-cols-1">
+          {
+            coreValues.map((value) => (
+              <div class="flex gap-4 items-start group hover:translate-x-2 transition-transform duration-300">
+                {/* <!-- Letter --> */}
+                <div
+                  class={`shrink-0 w-20 h-20 md:w-24 md:h-24
+                          rounded-full flex items-center justify-center
+                          text-4xl md:text-5xl font-extrabold
+                          ${value.color}
+                          bg-blue-300/50 ring-1 ring-black/10
+                          group-hover:ring-red-600/50 transition`}
+                >
+                  {value.letter}
+                </div>
+                {/* <!-- Content --> */}
+                <div class="flex-1 space-y-2">
+                  <h3 class={`text-2xl md:text-3xl font-bold ${value.color}`}>
+                    {value.title}
+                  </h3>
+                  <p class="text-gray-500 leading-relaxed text-base">
+                    {t(value.key as any)}
+                  </p>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

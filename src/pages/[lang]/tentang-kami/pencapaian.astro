@@ -1,0 +1,165 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import Banner from "../../../components/Banner.astro";
+import Piala from "../../../assets/Banner/PIALA.png";
+import sertifikatData from "../../../assets/tools/sertifikasi";
+import { Image } from "astro:assets";
+import { languages } from "../../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../../i18n/utils";
+
+export async function getStaticPaths() {
+  return Object.keys(languages).map((l) => ({
+    params: { lang: l },
+  }));
+}
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const sertifikatImages = import.meta.glob<{ default: ImageMetadata }>(
+  "../../../assets/Sertifikasi/*.png",
+  { eager: true },
+);
+
+// ✅ Helper: cari image berdasarkan nama file (case-insensitive)
+function getSertifikatImage(filename: string): ImageMetadata | undefined {
+  const key = Object.keys(sertifikatImages).find((k) =>
+    k.toLowerCase().endsWith("/" + filename.toLowerCase()),
+  );
+  return key ? sertifikatImages[key]?.default : undefined;
+}
+
+const breadcrumbs = [
+  { label: t("home"), href: `/${lang}/`, key: "home" },
+  { label: t("about"), href: `/${lang}/`, key: "about" },
+  {
+    label: t("about_achievements"),
+    current: true,
+    key: "about_achievements",
+  },
+];
+
+const title = t("about_achievements");
+const description = t("achievementsdescription");
+---
+
+<Layout title={title} description={description}>
+  <!-- Banner Section -->
+  <Banner title={{ key: "about_achievements" }} breadcrumbs={breadcrumbs} />
+
+  <!-- Section: Pencapaian & Penghargaan -->
+  <section id="Pencapaian">
+    <div class="w-full px-4 py-13 sm:py-15 md:py-17 lg:py-19">
+      <div class="max-w-6xl mx-auto">
+        <div class="space-y-6 mb-6">
+          <h2
+            class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-wide text-gray-900"
+          >
+            {t("headerachievements")}
+          </h2>
+          <p class="text-base md:text-lg text-gray-500 leading-relaxed">
+            {t("achievementsdescription")}
+          </p>
+
+          <!-- Gambar dengan Overlay Teks -->
+          <div
+            class="relative rounded-4xl overflow-hidden bg-gray-200 w-full h-100 md:h-112.5"
+          >
+            <Image
+              src={Piala}
+              alt="Tim Intisukses Mitra Sejati dalam pelatihan"
+              width={1600}
+              height={900}
+              transition:name="piala-ims"
+              decoding="async"
+              loading="lazy"
+              class="w-full h-full p-4 object-cover"
+            />
+            <!-- Overlay Teaser -->
+            <div
+              class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 via-black/50 to-transparent p-6"
+            >
+              <h3 class="text-white text-xl md:text-2xl font-semibold mb-2">
+                {t("templateachievements")}
+              </h3>
+              <p class="text-white text-sm md:text-base opacity-90 mb-3">
+                {t("dateachievements")}
+              </p>
+              <a
+                href={`/${lang}/tentang-kami/detailpencapaian`}
+                class="text-blue-400 hover:text-blue-300 underline transition-colors"
+              >
+                {t("ctaarchievements")}
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sertifikasi -->
+        <div class="py-15">
+          <div class="mx-auto max-w-6xl">
+            <h2
+              class="text-gray-900 text-2xl lg:text-4xl font-semibold tracking-wide"
+            >
+              {t("achievementscertification")}
+            </h2>
+            <div class="h-px bg-gray-300 dark:bg-gray-700 my-9"></div>
+
+            <div
+              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
+            >
+              {
+                sertifikatData.map((item) => {
+                  const img = getSertifikatImage(item.image);
+
+                  return (
+                    // ✅ Hapus item.href karena tidak ada di data — gunakan div atau tambahkan href ke data
+                    <div class="group transition-all duration-300 overflow-hidden transform hover:-translate-y-2 block cursor-default">
+                      <div class="relative h-48 sm:h-56 md:h-64 overflow-hidden bg-gray-100 border-2 border-gray-200 rounded-md">
+                        {img ? (
+                          <Image
+                            src={img}
+                            alt={item.title}
+                            width={350}
+                            height={250}
+                            transition:name={`${item.id}-image`}
+                            decoding="async"
+                            loading="lazy"
+                            class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                          />
+                        ) : (
+                          <div class="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                            Gambar tidak tersedia
+                          </div>
+                        )}
+                      </div>
+                      <div class="mt-4">
+                        <h4 class="text-gray-900 font-semibold text-sm leading-snug mb-2 line-clamp-3">
+                          {item.title}
+                        </h4>
+                        <div class="flex items-center text-gray-500 text-xs">
+                          <svg
+                            class="w-3.5 h-3.5 mr-1.5 shrink-0"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                              clip-rule="evenodd"
+                            />
+                          </svg>
+                          <span>{item.date}</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

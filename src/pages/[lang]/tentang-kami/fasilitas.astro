@@ -1,0 +1,167 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import Banner from "../../../components/Banner.astro";
+import { Icon } from "astro-icon/components";
+import { Image } from "astro:assets";
+import Fleet from "../../../assets/Fle.png";
+import warehouseData from "../../../assets/tools/warehousegallery";
+import { languages } from "../../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../../i18n/utils";
+
+export async function getStaticPaths() {
+  return Object.keys(languages).map((l) => ({
+    params: { lang: l },
+  }));
+}
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const warehouseImages = import.meta.glob<{ default: ImageMetadata }>(
+  "../../../assets/Warehouse/*.png",
+  { eager: true },
+);
+
+// ✅ Helper: cari image berdasarkan nama file (case-insensitive)
+function getWarehouseImage(filename: string): ImageMetadata | undefined {
+  const key = Object.keys(warehouseImages).find((k) =>
+    k.toLowerCase().endsWith("/" + filename.toLowerCase()),
+  );
+  return key ? warehouseImages[key]?.default : undefined;
+}
+
+const breadcrumbs = [
+  { label: t("home"), href: `/${lang}/`, key: "home" },
+  { label: t("about"), href: `/${lang}/`, key: "about" },
+  { label: t("about_facilities"), current: true, key: "about_facilities" },
+];
+
+const title = t("about_facilities");
+const description = t("facilitiesdescription");
+---
+
+<Layout title={title} description={description}>
+  <!-- Banner Section -->
+  <Banner title={{ key: "about_facilities" }} breadcrumbs={breadcrumbs} />
+
+  <!-- Warehouse Section -->
+  <section id="fasilitas" class="relative py-15 lg:py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <!-- Section Header -->
+      <div class="space-y-6 py-10">
+        <h2
+          class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight"
+        >
+          IMS <span class="text-transparent bg-clip-text bg-ims-red">
+            {t("warehouse")}
+          </span>
+        </h2>
+        <p class="text-lg text-gray-500 leading-relaxed">
+          {t("facilitiesdescription")}
+        </p>
+      </div>
+
+      <!-- Warehouse Gallery -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {
+          // ✅ Gunakan map dengan parameter (item, index) agar index tersedia
+          warehouseData.map((item, index) => {
+            // ✅ Pakai helper, bukan item.image langsung (string bukan ImageMetadata)
+            const img = getWarehouseImage(item.image);
+
+            return (
+              <div
+                class={`group relative overflow-hidden rounded-2xl ${
+                  index === 0 ? "md:col-span-2 md:row-span-2" : ""
+                }`}
+              >
+                {/* ✅ Gunakan img dari helper, dengan fallback jika undefined */}
+                {img ? (
+                  <Image
+                    src={img}
+                    alt={t(item.title as any)}
+                    width={700}
+                    height={500}
+                    decoding="async"
+                    loading="lazy"
+                    class={`w-full object-cover transition-all duration-700 group-hover:scale-110 ${
+                      index === 0 ? "h-full min-h-125" : "h-64"
+                    }`}
+                  />
+                ) : (
+                  <div
+                    class={`w-full bg-gray-200 flex items-center justify-center text-gray-400 text-sm ${
+                      index === 0 ? "h-full min-h-125" : "h-64"
+                    }`}
+                  >
+                    Gambar tidak tersedia
+                  </div>
+                )}
+
+                {/* Gradient Overlay */}
+                <div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-500" />
+
+                {/* Content */}
+                <div class="absolute inset-0 p-6 flex flex-col justify-end">
+                  <div class="transform translate-y-6 group-hover:translate-y-0 transition-transform duration-500">
+                    <div class="flex items-center gap-2 text-white/80 text-sm mb-2">
+                      <Icon name="local:maps" class="w-5 h-5" />
+                      <span>{item.location}</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">
+                      {t(item.title as any)}
+                    </h3>
+                    <div class="w-12 h-1 bg-ims-red rounded-full opacity-0 group-hover:opacity-100 group-hover:w-20 transition-all duration-500" />
+                  </div>
+                </div>
+
+                {/* Hover Border Effect */}
+                <div class="absolute inset-0 border border-gray-200 group-hover:border-ims-red rounded-2xl transition-all duration-500" />
+              </div>
+            );
+          })
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Fleet Section -->
+  <section id="fleet" class="relative w-full h-screen">
+    <Image
+      src={Fleet}
+      width={700}
+      height={500}
+      decoding="async"
+      loading="lazy"
+      alt="Armada Fleet IMS"
+      class="absolute inset-0 w-full h-full object-cover"
+    />
+
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-black/70"></div>
+
+    <!-- Content -->
+    <div class="relative z-10 h-full flex items-center">
+      <div class="container mx-auto px-6 lg:px-20">
+        <div class="max-w-xl ml-auto text-white">
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
+            <span class="text-ims-red"> IMS </span>
+            {t("facilities_fleet")}
+          </h2>
+          <p class="text-white/70 text-lg leading-relaxed mb-6">
+            {t("facilities_fleetdesc")}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .bg-grid-slate-100 {
+      background-image:
+        linear-gradient(to right, rgb(241 245 249 / 0.5) 1px, transparent 1px),
+        linear-gradient(to bottom, rgb(241 245 249 / 0.5) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+  </style>
+</Layout>

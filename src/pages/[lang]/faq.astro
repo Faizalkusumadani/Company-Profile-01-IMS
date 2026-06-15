@@ -1,0 +1,11 @@
+---
+import { languages } from "../../i18n/ui";
+
+export async function getStaticPaths() {
+  return Object.keys(languages).map((l) => ({
+    params: { lang: l },
+  }));
+}
+
+return Astro.redirect(`/${Astro.params.lang}/maintenance`, 302);
+---

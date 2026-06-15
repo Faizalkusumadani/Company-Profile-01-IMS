@@ -1,0 +1,134 @@
+---
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+import bannerImg from "../assets/Banner/1.png";
+interface Props {
+  title: {
+    key: string;
+  };
+  breadcrumbs: Array<{ label: string; href?: string; current?: boolean }>;
+}
+
+const { title, breadcrumbs } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<div class="relative overflow-hidden group h-55 sm:h-62.5 md:h-87.5">
+  <div
+    class="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-transform duration-1000 group-hover:scale-105"
+    style={`background-image: url('${bannerImg.src}');`}
+  >
+  </div>
+  <div
+    class="absolute inset-0 bg-linear-to-r from-blue-100 via-white/90 to-white/20 z-10"
+  >
+  </div>
+  <div
+    class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px] z-10 mask-image-gradient"
+  >
+  </div>
+  <div
+    class="absolute top-0 left-0 w-full h-full overflow-hidden z-10 pointer-events-none"
+  >
+    <div
+      class="absolute -top-24 -left-24 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl animate-blob mix-blend-multiply"
+    >
+    </div>
+    <div
+      class="absolute top-1/2 right-1/4 w-96 h-96 bg-red-400/10 rounded-full blur-3xl animate-blob animation-delay-2000 mix-blend-multiply"
+    >
+    </div>
+  </div>
+
+  <!-- Content Container -->
+  <div
+    class="relative z-20 flex flex-col justify-center pt-20 h-full px-6 md:px-16 max-w-7xl mx-auto"
+  >
+    <div class="relative pl-8 md:pl-12 py-6 border-l-4 border-transparent">
+      <div
+        class="absolute left-0 top-0 bottom-0 w-1.5 bg-linear-to-b from-red-700 via-red-500 to-transparent rounded-full shadow-[0_0_15px_rgba(220,38,38,0.5)]"
+      >
+      </div>
+      <h2
+        class="text-2xl sm:text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-lg max-w-4xl text-ims-red"
+      >
+        {t(title.key as any)}
+      </h2>
+      <ol class="inline-flex items-center text-gray-600">
+        {
+          breadcrumbs.map((crumb, index) => (
+            <li class="inline-flex items-center">
+              {index > 0 && (
+                <svg
+                  class="w-3 h-3 text-gray-400 mx-2.5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 6 10"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="m1 9 4-4-4-4"
+                  />
+                </svg>
+              )}
+              {crumb.href && !crumb.current ? (
+                <a
+                  href={crumb.href}
+                  class="inline-flex items-center text-xs md:text-lg font-medium text-gray-500 hover:text-ims-red transition-colors"
+                >
+                  {crumb.label}
+                </a>
+              ) : (
+                <span class="text-xs md:text-lg font-medium text-ims-red">
+                  {crumb.label}
+                </span>
+              )}
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Custom Animations */
+  @keyframes blob {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+  }
+  .animate-blob {
+    animation: blob 10s infinite;
+  }
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .mask-image-gradient {
+    mask-image: linear-gradient(to right, black 40%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, black 40%, transparent 100%);
+  }
+</style>

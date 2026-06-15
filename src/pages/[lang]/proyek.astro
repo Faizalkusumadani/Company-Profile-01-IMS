@@ -1,0 +1,159 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Banner from "../../components/Banner.astro";
+import proyekData from "../../assets/tools/proyekdata";
+import { Image } from "astro:assets";
+import { languages } from "../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+
+export async function getStaticPaths() {
+  return Object.keys(languages).map((l) => ({
+    params: { lang: l },
+  }));
+}
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const proyekImages = import.meta.glob<{ default: ImageMetadata }>(
+  "../../assets/Proyek/*.png",
+  { eager: true },
+);
+
+function getProyekImage(filename: string): ImageMetadata | undefined {
+  const key = Object.keys(proyekImages).find((k) =>
+    k.toLowerCase().endsWith(filename.toLowerCase()),
+  );
+  return key ? proyekImages[key].default : undefined;
+}
+
+const breadcrumbs = [
+  { label: t("home"), href: `/${lang}/`, key: "home" },
+  { label: t("project"), current: true, key: "project" },
+];
+
+const title = t("project"),
+  description = t("projectdesc");
+---
+
+<Layout title={title} description={description}>
+  <!-- Banner Section -->
+  <Banner title={{ key: "project" }} breadcrumbs={breadcrumbs} />
+
+  <!-- Proyek Section -->
+  <section id="Proyek" class="py-20 bg-white">
+    <div class="max-w-7xl px-4 mx-auto">
+      {/* ── Section Header ── */}
+      <div class="text-center space-y-4 pb-14">
+        <div class="inline-block">
+          <span
+            class="text-ims-red font-normal text-base sm:text-base tracking-wide border-b border-ims-red"
+          >
+            {t("project")}
+          </span>
+        </div>
+
+        <h2
+          class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight"
+        >
+          {t("projectheader_1")}<span class="text-ims-red">
+            {t("projectheader_2")}</span
+          >
+        </h2>
+
+        <p
+          class="text-gray-500 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed"
+        >
+          {t("projectdescription")}
+        </p>
+      </div>
+
+      {/* ── Project Grid ── */}
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">
+        {
+          proyekData.map((item, index) => {
+            const proyekImg = getProyekImage(item.image);
+            return (
+              <a
+                href={`/${lang}/proyek`}
+                class="group relative block rounded-2xl overflow-hidden bg-gray-900 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ims-red"
+              >
+                <div class="relative aspect-16/7 w-full overflow-hidden">
+                  {proyekImg ? (
+                    <Image
+                      src={proyekImg}
+                      alt={item.title}
+                      width={1600}
+                      height={678}
+                      format="webp"
+                      quality={85}
+                      loading={index < 2 ? "eager" : "lazy"}
+                      decoding="async"
+                      class="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.06]"
+                    />
+                  ) : (
+                    <div class="w-full h-full bg-gray-700 flex items-center justify-center">
+                      <span class="text-gray-400 text-sm">{item.title}</span>
+                    </div>
+                  )}
+
+                  {/* Gradient: tipis di atas untuk badge, tebal di bawah untuk teks */}
+                  <div class="absolute inset-0 bg-linear-to-t from-black/85 via-black/20 to-transparent" />
+
+                  {/* Badge nomor proyek — kiri atas */}
+                  <span class="absolute top-4 left-4 inline-flex items-center justify-center w-8 h-8 rounded-full bg-ims-red text-white text-xs font-bold shadow-md">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+
+                  {/* CONTENT — pinned to bottom */}
+                  <div class="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
+                    <div class="text-start space-y-2">
+                      {/* Title */}
+                      <h3 class="text-base sm:text-lg font-bold text-white leading-snug line-clamp-2">
+                        {item.title}
+                      </h3>
+
+                      {/* Location */}
+                      <div class="flex items-center gap-1.5">
+                        <svg
+                          class="w-3.5 h-3.5 shrink-0 text-ims-red"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                          />
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
+                        </svg>
+                        <span class="text-xs sm:text-sm text-gray-300 truncate">
+                          {item.location}
+                        </span>
+                      </div>
+
+                      {/* Description — muncul saat hover dengan smooth transition */}
+                      <p
+                        class="text-xs sm:text-sm text-gray-300 leading-relaxed line-clamp-2
+                               grid transition-all duration-300 ease-in-out
+                               grid-rows-[0fr] opacity-0
+                               group-hover:grid-rows-[1fr] group-hover:opacity-100"
+                      >
+                        <span class="overflow-hidden">{item.description}</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            );
+          })
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

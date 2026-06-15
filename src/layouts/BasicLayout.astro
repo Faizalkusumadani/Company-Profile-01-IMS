@@ -1,0 +1,93 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  url?: string;
+}
+
+const SITE_URL = "https://intisukses-ms.com";
+
+const {
+  title,
+  description,
+  image = `${SITE_URL}/og-default.png`,
+  url = Astro.url.href,
+} = Astro.props;
+
+// Pastikan og:image selalu berupa URL absolut
+const ogImage = image.startsWith("http") ? image : `${SITE_URL}${image}`;
+const ogTitle = `${title} | Intisukses Mitra Sejati`;
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Intisukses Mitra Sejati | {title}</title>
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta name="author" content="Intisukses Mitra Sejati" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- ─── Open Graph (Facebook, WhatsApp, LinkedIn, Telegram) ─────────── -->
+    <meta property="og:site_name" content="Intisukses Mitra Sejati" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:title" content={ogTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={url} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:secure_url" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogTitle} />
+
+    <!-- ─── Twitter / X Card ─────────────────────────────────────────────── -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={ogTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogTitle} />
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G8R54H54VV"
+    ></script>
+    <script is:inline data-astro-rerun>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+
+      // Inisialisasi hanya sekali
+      if (!window._gtagInitialized) {
+        window._gtagInitialized = true;
+        gtag("js", new Date());
+      }
+
+      // Track pageview (termasuk setiap navigasi View Transitions)
+      gtag("config", "G-G8R54H54VV", {
+        page_path: window.location.pathname,
+      });
+    </script>
+
+    <!-- ─── Favicon ──────────────────────────────────────────────────────── -->
+    <link rel="canonical" href={url} />
+    <link rel="icon" type="image/svg+xml" href="/favicon-ims.svg" />
+    <link rel="apple-touch-icon" href="/ims-touch-icon.png" />
+    <meta name="theme-color" content="#0f172a" />
+  </head>
+  <body class="bg-zinc-100">
+    <div>
+      <main>
+        <div class="mx-auto w-full">
+          <slot />
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

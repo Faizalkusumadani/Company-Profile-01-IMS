@@ -1,0 +1,32 @@
+---
+import { languages } from "../i18n/ui";
+import { getLangFromUrl } from "../i18n/utils";
+import { Icon } from "astro-icon/components";
+
+const lang = getLangFromUrl(Astro.url);
+const pathname = Astro.url.pathname;
+const pathWithoutLang = pathname.replace(`/${lang}`, "") || "/";
+
+// Hitung nextLang langsung di server
+const langCodes = Object.keys(languages);
+const currentIndex = langCodes.indexOf(lang);
+const nextLang = langCodes[(currentIndex + 1) % langCodes.length];
+const nextHref = `/${nextLang}${pathWithoutLang}`;
+---
+
+<a
+  href={nextHref}
+  class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-300
+hover:bg-red-50 hover:border-red-200 group transition-all duration-200"
+  aria-label={`Switch to ${languages[nextLang as keyof typeof languages]}`}
+>
+  <Icon
+    name="local:globe"
+    class="w-4 h-4 text-gray-500 group-hover:text-red-600 transition-colors"
+  />
+  <span
+    class="text-xs sm:text-base font-normal uppercase tracking-wide text-gray-700 group-hover:text-red-600 transition-colors w-5 text-center"
+  >
+    {lang}
+  </span>
+</a>
