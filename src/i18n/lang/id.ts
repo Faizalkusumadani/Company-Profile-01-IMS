@@ -1,5 +1,13 @@
 const _id = {
   home: "Beranda",
+  desc_subprofile: "Sejarah dan identitas perusahaan kami",
+  desc_subvisi: "Arah dan tujuan jangka panjang kami",
+  desc_subnilai: "Prinsip yang menjadi landasan kami",
+  desc_subfasilitias: "Jaringan distribusi dan gudang kami",
+  desc_subpendiri: "Tim pemimpin di balik perusahaan",
+  desc_subpencapaian: "Penghargaan dan tonggak pencapaian",
+  desc_subnews: "Update terbaru seputar produk dan industri",
+  desc_subactivities: "Dokumentasi kegiatan dan event perusahaan",
   homedesc:
     "PT.Intisukses Mitra Sejati adalah Perusahan yang bergerak di bidang penjualan Bahan Bangunan dan berbagai produk Mekanikal, Elektrikal serta penyediaan dan pemeliharaan Air Conditioner (AC) Untuk Retail & Proyek Besar",
   hero_part1: "Membangun Negeri",
@@ -595,6 +603,8 @@ const _id = {
   // Ruang Informasi
   info_room: "Ruang Informasi",
   activities: "Kegiatan",
+  head_activities: "Arsip Kegiatan",
+  length_activities: "Artikel",
   activitiesdesc:
     "Ikuti rangkaian kegiatan terbaru dari PT Intisukses Mitra Sejati",
   activitiesdesc_new: "Kegiatan Terbaru",
@@ -651,17 +661,31 @@ const _id = {
     "Suasana acara berlangsung interaktif dan penuh semangat. Berbagai games menarik dan sesi ice breaking membuat peserta lebih antusias, kompak, serta membangun chemistry tim yang lebih solid. Tidak hanya belajar, seluruh peserta juga menikmati coffee break dan makan siang bersama, yang menjadi momen kebersamaan dan mempererat kolaborasi antar tim. Melalui training ini, Reddmas Group menegaskan komitmennya untuk terus berkembang dan siap terbang melampaui batas di tahun 2026 dengan energi baru, strategi baru, dan semangat juang yang lebih besar. ",
   posted: "Dipost pada tanggal",
   news: "Berita",
+  news_others: "Berita Lainnya",
+  head_news: "Arsip Berita",
+  length_news: "Artikel",
+  news_others_empty_title: "Berita Lain belum tersedia",
+  news_others_empty_subtitle: "Berita Lain segera hadir",
+  news_view_all: "Lihat semua berita",
   newsdesc: "Ikuti perkembangan Berita terbaru dari PT Intisukses Mitra Sejati",
   news_agreement_category: "Perjanjian kerjasama",
   news_agreement_title:
-    "Sinergi Strategis PT Intisukses Mitra Sejati dan PT Wavin Indonesia Perkuat Fondasi Infrastruktur Nasional",
-  news_agreement_date: "20 Februari 2025",
+    "PT Intisukses Mitra Sejati Resmi Ditunjuk sebagai Authorized Dealer ZORA EV Charger",
+  news_agreement_date: "06 Januari 2026",
   news_agreement_content_1:
-    "PT Intisukses Mitra Sejati secara resmi menjalin kemitraan strategis dengan PT Wavin Indonesia untuk memperluas jangkauan solusi sistem perpipaan berkualitas tinggi di pasar domestik. Kerja sama ini bertujuan untuk mendukung percepatan berbagai proyek infrastruktur vital di Indonesia, mulai dari sistem pengelolaan air bersih hingga sanitasi perkotaan. Sinergi ini diharapkan mampu menjawab kebutuhan material konstruksi yang efisien dan berkelanjutan demi mendukung pertumbuhan ekonomi nasional.",
+    "PT Intisukses Mitra Sejati dan PT Mentari Energi Bersih Indonesia secara resmi menandatangani Perjanjian Kerja Sama yang menetapkan PT Intisukses Mitra Sejati sebagai Authorized Dealer untuk produk ZORA EV Charger. Penunjukan ini merupakan langkah strategis dalam memperluas jaringan distribusi dan mempercepat penyediaan solusi infrastruktur pengisian kendaraan listrik (Electric Vehicle Charging Solutions) di Indonesia, sejalan dengan pertumbuhan ekosistem kendaraan listrik nasional.",
   news_agreement_content_2:
-    "Dalam pernyataannya, manajemen menekankan bahwa kolaborasi ini merupakan komitmen jangka panjang terhadap pembangunan bangsa.`Visi kami adalah menjadi bagian integral dari kemajuan infrastruktur Indonesia dengan menghadirkan teknologi perpipaan kelas dunia yang tahan lama. Kami percaya bahwa fondasi negara yang kuat dimulai dari sistem utilitas yang handal,` ungkap perwakilan perusahaan. Kemitraan ini akan mengintegrasikan kekuatan distribusi lokal yang luas dengan inovasi produk global.",
+    "Melalui kerja sama ini, PT Intisukses Mitra Sejati memperoleh kewenangan untuk memasarkan, mendistribusikan, serta memberikan dukungan penjualan dan layanan kepada pelanggan untuk seluruh lini produk ZORA EV Charger sesuai dengan ketentuan yang telah disepakati kedua belah pihak. Kemitraan ini juga mencerminkan komitmen bersama dalam menghadirkan produk berkualitas, layanan profesional, serta dukungan teknis yang andal guna memenuhi kebutuhan pasar kendaraan listrik yang terus berkembang.",
   news_agreement_content_3:
-    "Dengan adanya kerja sama ini, ketersediaan produk-produk unggulan Wavin di berbagai daerah diprediksi akan meningkat signifikan. Langkah ini sejalan dengan agenda pemerintah untuk meningkatkan akses air minum layak bagi seluruh lapisan masyarakat. Kedua perusahaan optimis bahwa kolaborasi ini akan memberikan dampak positif yang masif bagi efisiensi pengerjaan proyek konstruksi di masa depan.",
+    "Dengan ditandatanganinya perjanjian ini, PT Intisukses Mitra Sejati dan PT Mentari Energi Bersih Indonesia berharap dapat membangun kemitraan jangka panjang yang berlandaskan profesionalisme, integritas, dan inovasi. Sinergi kedua perusahaan diharapkan mampu memperkuat pengembangan infrastruktur EV Charging di Indonesia serta memberikan nilai tambah bagi pelanggan, mitra bisnis, dan seluruh pemangku kepentingan dalam mendukung percepatan transisi menuju energi yang lebih bersih dan berkelanjutan.",
+  news_gathering_category: "Gathering Trilliun",
+  news_gathering_title:
+    "PT Intisukses Mitra Sejati dan PT Matahari Putra Makmur Gelar Gathering untuk Memperkuat Kolaborasi Produk TRILLIUN",
+  news_gathering_date: "04 juni 2026",
+  news_gathering_content_1:
+    "PT Intisukses Mitra Sejati bersama PT Matahari Putra Makmur menyelenggarakan kegiatan Corporate Gathering pada 4 Juni 2026 sebagai bentuk apresiasi atas kemitraan yang telah terjalin sekaligus memperkuat sinergi bisnis dalam pengembangan dan pemasaran produk TRILLIUN. Kegiatan ini menjadi momentum bagi kedua perusahaan untuk mempererat hubungan profesional, bertukar wawasan, serta membahas peluang kolaborasi dalam menghadirkan solusi yang lebih baik bagi pelanggan.",
+  news_gathering_content_2:
+    "Melalui gathering ini, kedua perusahaan menegaskan komitmen untuk terus membangun kerja sama yang berlandaskan kepercayaan, profesionalisme, dan inovasi. Dengan mengedepankan kualitas layanan serta dukungan terhadap produk TRILLIUN, PT Intisukses Mitra Sejati dan PT Matahari Putra Makmur optimistis dapat menciptakan nilai tambah bagi pelanggan serta memperkuat posisi kedua perusahaan dalam mendukung pertumbuhan bisnis yang berkelanjutan.",
 
   // Karir
   career: "Karir",

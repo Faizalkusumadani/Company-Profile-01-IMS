@@ -34,6 +34,23 @@ const breadcrumbs = [
 
 const title = t("products"),
   description = t("productsdescription");
+
+// Data filter kategori - dipisah agar mudah di-loop untuk versi mobile & desktop
+const filterCategories = [
+  { category: "all", icon: "local:all-category", label: "All" },
+  {
+    category: "Building Materials",
+    icon: "local:wheelbarrow",
+    label: "Building Materials",
+  },
+  {
+    category: "MEP Systems",
+    icon: "local:electrical-spark",
+    label: "MEP Systems",
+  },
+  { category: "Sanitary", icon: "local:bathroom", label: "Sanitary" },
+  { category: "EV Charger", icon: "local:ev-charger", label: "EV Charger" },
+];
 ---
 
 <Layout title={title} description={description}>
@@ -43,9 +60,9 @@ const title = t("products"),
   <!-- Produk -->
   <section id="produk">
     <div class="w-full px-4 py-13 sm:py-16 md:py-20 lg:py-24">
-      <div class="mx-auto max-w-6xl space-x-4">
+      <div class="mx-auto max-w-6xl">
         <h2
-          class="text-3xl sm:text-4xl md:text-5xl font-semibold text-gray-900 text-center"
+          class="text-2xl sm:text-4xl md:text-5xl font-semibold text-gray-900 text-center leading-tight"
         >
           {t("headerproducts_1")}<span class="text-red-600/70">
             {t("headerproducts_2")}</span
@@ -53,86 +70,62 @@ const title = t("products"),
           {t("headerproducts_3")}
         </h2>
         <p
-          class="text-gray-500 text-base sm:text-lg md:text-lg max-w-2xl mx-auto text-center mt-6"
+          class="text-gray-500 text-sm sm:text-lg md:text-lg max-w-2xl mx-auto text-center mt-4 sm:mt-6"
         >
           {t("headerproductsdescription")}
         </p>
-        <!-- Filter -->
+
+        <!-- Filter: Mobile - Horizontal Scroll Chips -->
         <div
-          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 py-6 md:py-10 justify-items-center"
+          class="flex sm:hidden gap-2.5 overflow-x-auto py-6 px-1 -mx-1 snap-x snap-mandatory scrollbar-hide"
+          id="filter-mobile"
         >
-          <button
-            type="button"
-            data-category="all"
-            class="filter-btn w-full p-6 flex flex-col items-center justify-center
-           rounded-2xl border border-gray-200
-           transition-all duration-300 text-gray-500"
-          >
-            <Icon
-              name="local:all-category"
-              class="w-18 h-18 text-red-600/70 mb-4"
-            />
-            <span class="text-lg font-medium">All</span>
-          </button>
-          <button
-            type="button"
-            data-category="Building Materials"
-            class="filter-btn w-full p-6 flex flex-col items-center justify-center
-           rounded-2xl border border-gray-200
-           transition-all duration-300 text-gray-500"
-          >
-            <Icon
-              name="local:wheelbarrow"
-              class="w-18 h-18 text-red-600/70 mb-4"
-            />
-            <span class="text-lg font-medium">Building Materials</span>
-          </button>
+          {
+            filterCategories.map((cat) => (
+              <button
+                type="button"
+                data-category={cat.category}
+                class="filter-btn snap-start shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full border border-gray-200 text-sm font-medium text-gray-600 whitespace-nowrap transition-all duration-300"
+              >
+                <Icon
+                  name={cat.icon}
+                  class="w-4 h-4 text-red-600/70 shrink-0"
+                />
+                {cat.label}
+              </button>
+            ))
+          }
+        </div>
 
-          <button
-            type="button"
-            data-category="MEP Systems"
-            class="filter-btn w-full p-6 flex flex-col items-center justify-center
-           rounded-2xl border border-gray-200
-           transition-all duration-300 text-gray-500"
-          >
-            <Icon
-              name="local:electrical-spark"
-              class="w-18 h-18 text-red-600/70 mb-4"
-            />
-            <span class="text-lg font-medium">MEP Systems</span>
-          </button>
-          <button
-            type="button"
-            data-category="Sanitary"
-            class="filter-btn w-full p-6 flex flex-col items-center justify-center
-           rounded-2xl border border-gray-200
-           transition-all duration-300 text-gray-500"
-          >
-            <Icon
-              name="local:bathroom"
-              class="w-18 h-18 text-red-600/70 mb-4"
-            />
-            <span class="text-lg font-medium">Sanitary</span>
-          </button>
-
-          <button
-            type="button"
-            data-category="EV Charger"
-            class="filter-btn w-full p-6 flex flex-col items-center justify-center
-           rounded-2xl border border-gray-200
-           transition-all duration-300 text-gray-500"
-          >
-            <Icon
-              name="local:EV Charger"
-              class="w-18 h-18 text-red-600/70 mb-4"
-            />
-            <span class="text-lg font-medium">EV Charger</span>
-          </button>
+        <!-- Filter: Desktop - Grid Cards -->
+        <div
+          class="hidden sm:grid sm:grid-cols-3 md:grid-cols-5 gap-4 py-6 md:py-10 justify-items-center"
+          id="filter-desktop"
+        >
+          {
+            filterCategories.map((cat) => (
+              <button
+                type="button"
+                data-category={cat.category}
+                class="filter-btn w-full p-4 md:p-6 flex flex-col items-center justify-center
+               rounded-2xl border border-gray-200
+               transition-all duration-300 text-gray-500"
+              >
+                <Icon
+                  name={cat.icon}
+                  class="w-10 h-10 md:w-14 md:h-14 lg:w-18 lg:h-18 text-red-600/70 mb-2 md:mb-4"
+                />
+                <span class="text-sm md:text-base lg:text-lg font-medium text-center">
+                  {cat.label}
+                </span>
+              </button>
+            ))
+          }
         </div>
 
         <!-- Product Count Info -->
-        <div class="text-center py-4 md:py-6">
-          <p class="text-gray-500 text-normal">
+        <div class="text-center py-2 md:py-6">
+          <p class="text-gray-500 text-sm sm:text-base">
             {t("displayproducts_1")}
             <span id="product-count" class="font-semibold text-red-600">0</span>
             {t("displayproducts_2")}
@@ -147,11 +140,11 @@ const title = t("products"),
           {
             Products.map((product) => (
               <div
-                class="h-112.5 product-item group rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2 border border-gray-200 "
+                class="product-item group flex flex-col rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2 border border-gray-200"
                 data-category={product.category}
               >
                 {/* Image */}
-                <div class="relative h-48 sm:h-56 bg-linear-to-br from-blue-50 to-blue-100 overflow-hidden">
+                <div class="relative h-44 sm:h-56 bg-linear-to-br from-blue-50 to-blue-100 overflow-hidden shrink-0">
                   <Image
                     src={product.image}
                     alt={product.name}
@@ -159,30 +152,31 @@ const title = t("products"),
                     height={370}
                     decoding="async"
                     loading="lazy"
+                    fetchpriority="auto"
                     class="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-500"
                   />
 
                   {/* Badges */}
                   {product.variants && (
-                    <div class="absolute top-3 left-3">
-                      <span class="bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-semibold text-gray-500 shadow-md">
+                    <div class="absolute top-2 left-2 sm:top-3 sm:left-3">
+                      <span class="bg-white/95 backdrop-blur-sm px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold text-gray-500 shadow-md">
                         {product.variants}
                       </span>
                     </div>
                   )}
                   {product.discount && product.discount > 0 && (
-                    <div class="absolute top-3 right-3">
-                      <div class="bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg animate-pulse">
+                    <div class="absolute top-2 right-2 sm:top-3 sm:right-3">
+                      <div class="bg-red-500 text-white text-[10px] sm:text-xs font-bold px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full shadow-lg animate-pulse">
                         -{product.discount}%
                       </div>
                     </div>
                   )}
 
-                  {/* Quick View Overlay */}
-                  <div class="absolute inset-0 bg-black/40 md:bg-black/50 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  {/* Quick View Overlay - Desktop only (hover) */}
+                  <div class="absolute inset-0 bg-black/50 opacity-0 hidden md:flex md:group-hover:opacity-100 transition-opacity duration-300 items-center justify-center">
                     <a
                       href={`/${lang}${product.href}`}
-                      class="bg-white border border-red-600 text-red-700 px-6 py-2.5 rounded-full font-semibold text-sm transform translate-y-0 md:translate-y-4 md:group-hover:translate-y-0 transition-transform duration-300 hover:bg-gray-100"
+                      class="bg-white border border-red-600 text-red-700 px-6 py-2.5 rounded-full font-semibold text-sm translate-y-4 group-hover:translate-y-0 transition-transform duration-300 hover:bg-gray-100"
                     >
                       {t("ctaarchievements")}
                     </a>
@@ -190,19 +184,27 @@ const title = t("products"),
                 </div>
 
                 {/* Content */}
-                <div class="p-4 sm:p-5">
-                  <h3 class="font-bold mb-2 text-gray-900 text-base sm:text-lg line-clamp-2 group-hover:text-red-600/70 transition-colors leading-snug">
+                <div class="p-3.5 sm:p-5 flex flex-col grow">
+                  <h3 class="font-bold mb-1.5 sm:mb-2 text-gray-900 text-sm sm:text-lg line-clamp-2 group-hover:text-red-600/70 transition-colors leading-snug">
                     {product.name}
                   </h3>
 
                   {/* Category Badge */}
-                  <span class="inline-block text-xs font-medium text-blue-600 mb-3">
+                  <span class="inline-block text-[11px] sm:text-xs font-medium text-blue-600 mb-2 sm:mb-3">
                     {product.category}
                   </span>
 
-                  <p class="text-gray-500 text-sm line-clamp-4 leading-relaxed">
+                  <p class="text-gray-500 text-xs sm:text-sm line-clamp-3 sm:line-clamp-4 leading-relaxed grow">
                     {t(product.key as any)}
                   </p>
+
+                  {/* CTA - Mobile only */}
+                  <a
+                    href={`/${lang}${product.href}`}
+                    class="md:hidden mt-3 inline-flex items-center justify-center w-full py-2 border border-red-600 text-red-600 rounded-full text-xs font-semibold active:bg-red-50 transition-colors"
+                  >
+                    {t("ctaarchievements")}
+                  </a>
                 </div>
               </div>
             ))
@@ -213,7 +215,7 @@ const title = t("products"),
         <div id="no-products" class="hidden text-center py-12">
           <div class="inline-flex flex-col items-center gap-4">
             <svg
-              class="w-20 h-20 text-gray-300"
+              class="w-16 h-16 sm:w-20 sm:h-20 text-gray-300"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -226,10 +228,10 @@ const title = t("products"),
               ></path>
             </svg>
             <div>
-              <h3 class="text-xl font-semibold text-gray-500 mb-2">
+              <h3 class="text-lg sm:text-xl font-semibold text-gray-500 mb-2">
                 {t("notificationproducts_1")}
               </h3>
-              <p class="text-gray-500">
+              <p class="text-gray-500 text-sm sm:text-base px-4">
                 {t("notificationproducts_2")}
               </p>
             </div>
@@ -249,20 +251,18 @@ const title = t("products"),
 
     class ProductFilter {
       private state: FilterState;
+      // Active state classes - dipakai untuk kedua versi (mobile chip & desktop card)
       private readonly ACTIVE_CLASSES = [
         "bg-red-50",
         "border-red-400",
-        "text-red-400",
+        "text-red-500",
       ];
-      private readonly INACTIVE_CLASSES = [
-        "bg-gray-100",
-        "border-gray-200",
-        "text-gray-500",
-      ];
+      private readonly INACTIVE_CLASSES = ["border-gray-200", "text-gray-500"];
       private readonly ANIMATION_CLASS = "animate-fade-in";
 
       constructor() {
         this.state = {
+          // Pilih SEMUA filter button (mobile chips + desktop cards) yang punya data-category sama
           buttons: document.querySelectorAll<HTMLButtonElement>(".filter-btn"),
           products: document.querySelectorAll<HTMLElement>(".product-item"),
           counter: document.getElementById("product-count"),
@@ -295,19 +295,17 @@ const title = t("products"),
         });
       }
 
-      // Set initial state - aktifkan button "all" dan tampilkan semua produk
+      // Set initial state - aktifkan button "all" (mobile & desktop) dan tampilkan semua produk
       private setInitialState(): void {
-        const allButton = Array.from(this.state.buttons).find(
+        const allButtons = Array.from(this.state.buttons).filter(
           (btn) => btn.dataset.category === "all",
         );
 
-        if (allButton) {
-          this.setActiveButton(allButton);
-          this.filterProducts("all");
-        }
+        allButtons.forEach((btn) => this.setButtonActiveClass(btn, true));
+        this.filterProducts("all");
       }
 
-      //  Handle klik pada filter button
+      //  Handle klik pada filter button (sync mobile & desktop)
       private handleFilterClick(button: HTMLButtonElement): void {
         const category = button.dataset.category;
 
@@ -316,28 +314,32 @@ const title = t("products"),
           return;
         }
 
-        this.setActiveButton(button);
+        this.setActiveButtons(category);
         this.filterProducts(category);
       }
 
       /**
-       * Set button sebagai active dan nonaktifkan button lainnya
+       * Set semua button dengan data-category yang sama menjadi active
+       * (sinkronisasi antara versi mobile chip dan desktop card)
        */
-      private setActiveButton(activeButton: HTMLButtonElement): void {
+      private setActiveButtons(activeCategory: string): void {
         this.state.buttons.forEach((button) => {
-          const isActive = button === activeButton;
-
-          // Remove semua class terlebih dahulu
-          button.classList.remove(
-            ...this.ACTIVE_CLASSES,
-            ...this.INACTIVE_CLASSES,
-          );
-
-          // Tambahkan class sesuai state
-          button.classList.add(
-            ...(isActive ? this.ACTIVE_CLASSES : this.INACTIVE_CLASSES),
-          );
+          const isActive = button.dataset.category === activeCategory;
+          this.setButtonActiveClass(button, isActive);
         });
+      }
+
+      private setButtonActiveClass(
+        button: HTMLButtonElement,
+        isActive: boolean,
+      ): void {
+        button.classList.remove(
+          ...this.ACTIVE_CLASSES,
+          ...this.INACTIVE_CLASSES,
+        );
+        button.classList.add(
+          ...(isActive ? this.ACTIVE_CLASSES : this.INACTIVE_CLASSES),
+        );
       }
 
       // Filter produk berdasarkan kategori
@@ -454,6 +456,16 @@ const title = t("products"),
 
     .filter-btn:active {
       transform: translateY(0);
+    }
+
+    /* Sembunyikan scrollbar untuk filter chips di mobile */
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
     }
   </style>
 </Layout>

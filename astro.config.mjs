@@ -9,22 +9,31 @@ const isDev = process.env.NODE_ENV !== "production";
 
 export default defineConfig({
   site: "https://intisukses-ms.com/",
-  trailingSlash: "ignore",
+  trailingSlash: "never",
   vite: {
     plugins: [tailwindcss()],
   },
+
+  // PERBAIKAN BAGIAN INI
+  image: {
+    service: {
+      entrypoint: "astro/assets/services/sharp",
+      config: {
+        format: ["webp", "avif"],
+        quality: 65,
+      },
+    },
+  },
+
+  // Kemudian baru array integrations
   integrations: [
     react(),
     icon(),
     sitemap(),
     AstroPWA({
-      // Mode otomatis ikut environment (dev/production)
       mode: isDev ? "development" : "production",
-
-      // Auto update SW saat ada versi baru
       registerType: "autoUpdate",
-
-      // Asset statis kecil yang di-precache langsung
+      injectRegister: "script-defer",
       includeAssets: [
         "favicon-ims.svg",
         "robots.txt",
@@ -32,11 +41,10 @@ export default defineConfig({
         "pwa-512x512.png",
         "ims-touch-icon.png",
       ],
-
       manifest: {
-        name: "Inti Sukses Mitra Sejati",
-        short_name: "IntiSukses",
-        description: "Solusi sukses untuk kebutuhan Anda",
+        name: "Intisukses Mitra Sejati",
+        short_name: "Intisukses",
+        description: "Solusi Terpercaya untuk kebutuhan proyek anda",
         theme_color: "#0f172a",
         background_color: "#0f172a",
         display: "standalone",
@@ -57,8 +65,6 @@ export default defineConfig({
             purpose: "any",
           },
           {
-            // Maskable icon: pisah dari "any" sesuai spec terbaru
-            // Idealnya file berbeda dengan safe zone padding
             src: "pwa-512x512.png",
             sizes: "512x512",
             type: "image/png",
@@ -66,26 +72,19 @@ export default defineConfig({
           },
         ],
       },
-
       workbox: {
-        // Hanya precache asset kecil: JS, CSS, HTML, font
-        // Gambar besar ditangani runtimeCaching di bawah
+        cleanupOutdatedCaches: true,
         globPatterns: ["**/*.{js,css,html,ico,woff,woff2,txt}"],
-
-        // Naikkan sedikit dari default 2MB untuk handle font/svg kecil
-        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3 MB
-
-        // Strategi cache runtime untuk gambar & asset besar
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
         runtimeCaching: [
           {
-            // Gambar produk & hero (PNG, JPG, WebP) — CacheFirst: load dari cache dulu
             urlPattern: /\/_astro\/.*\.(png|jpg|jpeg|webp)$/i,
             handler: "CacheFirst",
             options: {
               cacheName: "product-images",
               expiration: {
-                maxEntries: 80, // Maksimal 80 gambar tersimpan
-                maxAgeSeconds: 60 * 60 * 24 * 30, // Expired setelah 30 hari
+                maxEntries: 80,
+                maxAgeSeconds: 60 * 60 * 24 * 30,
               },
               cacheableResponse: {
                 statuses: [0, 200],
@@ -93,7 +92,6 @@ export default defineConfig({
             },
           },
           {
-            // SVG besar (diagram produk, ilustrasi) — CacheFirst
             urlPattern: /\/_astro\/.*\.svg$/i,
             handler: "CacheFirst",
             options: {
@@ -108,14 +106,13 @@ export default defineConfig({
             },
           },
           {
-            // Gambar di folder public/ selain _astro (misal: Founders/M.png)
             urlPattern: /\/(?!_astro).*\.(png|jpg|jpeg|webp|svg)$/i,
             handler: "CacheFirst",
             options: {
               cacheName: "public-images",
               expiration: {
                 maxEntries: 30,
-                maxAgeSeconds: 60 * 60 * 24 * 14, // 14 hari
+                maxAgeSeconds: 60 * 60 * 24 * 14,
               },
               cacheableResponse: {
                 statuses: [0, 200],
@@ -123,20 +120,18 @@ export default defineConfig({
             },
           },
           {
-            // Halaman HTML — NetworkFirst: selalu coba ambil fresh dari server
             urlPattern: /\.html$/i,
             handler: "NetworkFirst",
             options: {
               cacheName: "html-pages",
               expiration: {
                 maxEntries: 20,
-                maxAgeSeconds: 60 * 60 * 24 * 7, // 7 hari
+                maxAgeSeconds: 60 * 60 * 24 * 7,
               },
-              networkTimeoutSeconds: 5, // Fallback ke cache kalau server > 5 detik
+              networkTimeoutSeconds: 5,
             },
           },
           {
-            // Google Fonts stylesheet
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
             handler: "StaleWhileRevalidate",
             options: {
@@ -144,14 +139,13 @@ export default defineConfig({
             },
           },
           {
-            // Google Fonts file
             urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
             handler: "CacheFirst",
             options: {
               cacheName: "google-fonts-webfonts",
               expiration: {
                 maxEntries: 20,
-                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 tahun
+                maxAgeSeconds: 60 * 60 * 24 * 365,
               },
               cacheableResponse: {
                 statuses: [0, 200],
@@ -160,9 +154,7 @@ export default defineConfig({
           },
         ],
       },
-
       devOptions: {
-        // Aktif di dev agar bisa test manifest & SW
         enabled: isDev,
         type: "module",
       },

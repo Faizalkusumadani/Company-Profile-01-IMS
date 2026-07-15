@@ -144,32 +144,34 @@ const description = t("activitiesdesc");
   <Banner title={{ key: "activities" }} breadcrumbs={breadcrumbs} />
 
   <section id="Kegiatan">
-    <div class="w-full px-4 py-13 sm:py-16 md:py-20 lg:py-24">
+    <div class="w-full px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:py-24">
       <div class="max-w-6xl mx-auto">
         {
           activities.length === 0 ? (
             /* ── Empty State ── */
-            <div class="flex flex-col items-center justify-center py-24 text-gray-400">
-              <svg
-                class="w-16 h-16 mb-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="1.5"
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-              <p class="text-lg font-medium text-gray-500">
+            <div class="flex flex-col items-center justify-center py-16 sm:py-24 px-4 text-center">
+              <div class="flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 mb-4 rounded-full bg-gray-50">
+                <svg
+                  class="w-8 h-8 sm:w-9 sm:h-9 text-gray-300"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+              </div>
+              <p class="text-base sm:text-lg font-medium text-gray-500">
                 {t("activities")} belum tersedia.
               </p>
             </div>
           ) : (
             <>
-              <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
                 {/* ══ Carousel (kiri 2/3) ══ */}
                 <div class="order-2 lg:order-1 lg:col-span-2">
                   <div
@@ -177,7 +179,7 @@ const description = t("activitiesdesc");
                     class="relative w-full"
                     data-carousel="slide"
                   >
-                    <div class="relative h-56 overflow-hidden rounded-lg md:h-102">
+                    <div class="relative h-60 sm:h-80 md:h-102 overflow-hidden rounded-xl">
                       {carouselItems.map((activity, index) => (
                         <div
                           class="hidden duration-700 ease-in-out"
@@ -186,45 +188,62 @@ const description = t("activitiesdesc");
                           <Image
                             src={activity.image}
                             alt={activity.title}
+                            densities={[1, 1.5, 2]}
                             loading={index === 0 ? "eager" : "lazy"}
                             class="absolute block max-w-full h-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 object-cover w-full"
                           />
-                          <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 via-black/50 to-transparent p-6">
-                            <div class="flex items-center gap-2 mb-3">
-                              <span class="inline-block bg-ims-red text-white text-xs font-bold px-3 py-1 rounded">
+                          <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/85 via-black/45 to-transparent p-4 sm:p-6">
+                            <div class="flex items-center gap-2 mb-2 sm:mb-3 flex-wrap">
+                              <span class="inline-block bg-ims-red text-white text-[10px] sm:text-xs font-bold px-2.5 sm:px-3 py-1 rounded">
                                 {activity.category}
                               </span>
                               {activity.isNew && (
-                                <span class="inline-block bg-green-500 text-white text-xs font-bold px-3 py-1 rounded">
+                                <span class="inline-block bg-green-500 text-white text-[10px] sm:text-xs font-bold px-2.5 sm:px-3 py-1 rounded">
                                   Terbaru
                                 </span>
                               )}
                             </div>
-                            <a href={`/${lang}${activity.href}`}>
-                              <h2 class="text-white text-2xl font-semibold mb-2 leading-tight hover:underline">
+                            <a
+                              href={`/${lang}${activity.href}`}
+                              class="focus:outline-none"
+                            >
+                              <h2 class="text-white text-base sm:text-xl md:text-2xl font-semibold mb-1.5 sm:mb-2 leading-snug sm:leading-tight line-clamp-2 hover:underline">
                                 {activity.title}
                               </h2>
                             </a>
                             {activity.excerpt && (
-                              <p class="text-gray-300 text-sm line-clamp-2">
+                              <p class="hidden sm:block text-gray-300 text-sm line-clamp-2">
                                 {activity.excerpt}
                               </p>
                             )}
                           </div>
                         </div>
                       ))}
+
+                      {/* Indicators */}
+                      <div class="absolute z-30 flex -translate-x-1/2 bottom-3 left-1/2 space-x-1.5">
+                        {carouselItems.map((_, index) => (
+                          <button
+                            type="button"
+                            class="w-1.5 h-1.5 rounded-full bg-white/50 aria-current:bg-white transition-colors"
+                            aria-current={index === 0 ? "true" : "false"}
+                            aria-label={`Slide ${index + 1}`}
+                            data-carousel-slide-to={index}
+                          />
+                        ))}
+                      </div>
                     </div>
 
                     {/* Carousel Controls */}
-                    <div class="flex justify-center items-center pt-4 gap-4">
+                    <div class="flex justify-center items-center pt-4 sm:pt-5 gap-3">
                       <button
                         type="button"
-                        class="flex justify-center items-center h-full cursor-pointer group focus:outline-none"
+                        class="flex justify-center items-center w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-gray-200 hover:border-ims-red hover:bg-red-50 cursor-pointer group transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ims-red/40"
                         data-carousel-prev
                       >
-                        <span class="text-body hover:text-heading group-focus:text-heading">
+                        <span class="text-gray-500 group-hover:text-ims-red">
                           <svg
-                            class="rtl:rotate-180 w-6 h-6"
+                            class="rtl:rotate-180 w-5 h-5"
                             aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -245,12 +264,12 @@ const description = t("activitiesdesc");
                       </button>
                       <button
                         type="button"
-                        class="flex justify-center items-center h-full cursor-pointer group focus:outline-none"
+                        class="flex justify-center items-center w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-gray-200 hover:border-ims-red hover:bg-red-50 cursor-pointer group transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ims-red/40"
                         data-carousel-next
                       >
-                        <span class="text-body hover:text-heading group-focus:text-heading">
+                        <span class="text-gray-500 group-hover:text-ims-red">
                           <svg
-                            class="rtl:rotate-180 w-6 h-6"
+                            class="rtl:rotate-180 w-5 h-5"
                             aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -275,30 +294,31 @@ const description = t("activitiesdesc");
 
                 {/* ══ Sidebar: Kegiatan Terbaru  ══ */}
                 <div class="order-1 lg:order-2 lg:col-span-1">
-                  <div class="overflow-hidden rounded-lg border border-gray-200">
-                    <div class="bg-linear-to-r from-red-600 to-red-700 px-6 py-3">
-                      <h3 class="text-white text-lg font-semibold">
+                  <div class="overflow-hidden rounded-xl border border-gray-200 ">
+                    <div class="bg-linear-to-r from-red-600 to-red-700 px-5 sm:px-6 py-3.5 sm:py-4">
+                      <h3 class="text-white text-base sm:text-lg font-semibold">
                         {t("activitiesdesc_new")}
                       </h3>
                     </div>
-                    <div class="divide-y divide-gray-200">
+                    <div class="divide-y divide-gray-100">
                       {sidebarItems.length === 0 ? (
-                        <p class="text-gray-400 text-sm p-4">
+                        <p class="text-gray-400 text-sm p-5 text-center">
                           Belum ada kegiatan terbaru.
                         </p>
                       ) : (
                         sidebarItems.map((activity) => (
                           <a
                             href={`/${lang}${activity.href}`}
-                            class="block p-4 hover:bg-gray-50 transition cursor-pointer"
+                            class="block p-4 hover:bg-gray-50 active:bg-gray-100 transition-colors cursor-pointer"
                           >
                             <article>
-                              <div class="flex gap-3">
+                              <div class="flex gap-3.5">
                                 <Image
                                   src={activity.image}
                                   alt={activity.title}
+                                  densities={[1, 1.5, 2]}
                                   loading="lazy"
-                                  class="w-24 h-16 object-cover rounded shrink-0"
+                                  class="w-20 h-16 sm:w-24 sm:h-16 object-cover rounded-lg shrink-0"
                                 />
                                 <div class="flex-1 min-w-0">
                                   <div class="flex items-center gap-1.5 mb-1">
@@ -311,16 +331,16 @@ const description = t("activitiesdesc");
                                       </span>
                                     )}
                                   </div>
-                                  <span class="font-semibold text-sm text-gray-900 line-clamp-2 leading-snug block mb-1">
-                                    {activity.title}
-                                  </span>
-                                  <div class="flex items-center text-gray-500 text-xs">
+                                  <div class="flex items-center text-gray-500 text-xs mb-1">
                                     <Icon
                                       name="local:calendar"
                                       class="w-3.5 h-3.5 mr-1.5 shrink-0"
                                     />
                                     <span>{activity.date}</span>
                                   </div>
+                                  <span class="font-semibold text-sm text-gray-900 line-clamp-2 leading-snug block mb-1">
+                                    {activity.title}
+                                  </span>
                                 </div>
                               </div>
                             </article>
@@ -333,52 +353,53 @@ const description = t("activitiesdesc");
               </div>
 
               {/* ══ Grid Semua Kegiatan ══ */}
-              <div class="py-10">
-                <h2 class="text-gray-700 text-2xl font-semibold tracking-wide">
-                  {t("activities")}
-                  <span class="text-ims-red">Eksklusif</span>
-                </h2>
-                <div class="h-px bg-gray-200 my-9" />
+              <div class="py-10 sm:py-12">
+                <div class="flex items-center justify-between mb-12 border-b border-gray-200 pb-4">
+                  <h3 class="text-sm font-bold uppercase tracking-widest text-gray-400">
+                    {t("head_activities")}
+                  </h3>
+                  <span class="text-xs text-gray-400">
+                    {activities.length} {t("length_activities")}
+                  </span>
+                </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 sm:gap-x-8 lg:gap-x-10 gap-y-10 sm:gap-y-12">
                   {activities.map((activity, i) => (
-                    <a
-                      href={`/${lang}${activity.href}`}
-                      class="group transition-all duration-300 overflow-hidden transform hover:-translate-y-2 block"
-                    >
-                      <div class="relative h-48 sm:h-56 overflow-hidden bg-gray-100 rounded-lg">
+                    <a href={`/${lang}${activity.href}`} class="group block">
+                      <div class="relative aspect-16/10 overflow-hidden rounded-xl bg-gray-100">
                         <Image
                           src={activity.image}
                           alt={activity.title}
                           loading={i < 6 ? "eager" : "lazy"}
-                          class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                           transition:name={`activity-${activity.id}-image`}
                         />
                         {activity.isNew && (
-                          <span class="absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded shadow">
+                          <span class="absolute top-3 left-3 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-md shadow-sm">
                             Terbaru
                           </span>
                         )}
                       </div>
-                      <div class="mt-4">
-                        <span class="text-xs text-ims-red font-medium uppercase tracking-wide">
-                          {activity.category}
-                        </span>
-                        <h4 class="text-gray-900 font-semibold text-sm leading-snug mb-2 line-clamp-2">
+                      <div class="mt-4 sm:mt-5">
+                        <div class="flex items-center gap-1.5 text-gray-500 text-xs sm:text-sm">
+                          <span>{activity.date}</span>
+                          {activity.category && (
+                            <>
+                              <span aria-hidden="true">&middot;</span>
+                              <span class="text-ims-red font-medium">
+                                {activity.category}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                        <h4 class="mt-1.5 sm:mt-2 text-gray-900 font-bold text-lg sm:text-xl leading-snug line-clamp-2 group-hover:text-ims-red transition-colors">
                           {activity.title}
                         </h4>
                         {activity.excerpt && (
-                          <p class="text-gray-500 text-xs line-clamp-2 mb-2">
+                          <p class="mt-2 text-gray-500 text-sm leading-relaxed line-clamp-2">
                             {activity.excerpt}
                           </p>
                         )}
-                        <div class="flex items-center text-gray-500 text-xs">
-                          <Icon
-                            name="local:calendar"
-                            class="w-3.5 h-3.5 mr-1.5 shrink-0"
-                          />
-                          <span>{activity.date}</span>
-                        </div>
                       </div>
                     </a>
                   ))}

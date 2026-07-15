@@ -16,9 +16,9 @@ author: "Admin"
 isNew: false
 
 # ─── Gambar ──────────────────────────────────────────────────────────────────
-cover: "../../assets/Ruanginformasi/Berita/perjanjian_wavin/gambar-01.JPEG"
+cover: "../../assets/Ruanginformasi/Berita/perjanjian_sama_zora/gambar-01.JPEG"
 gallery:
-  - "../../assets/Ruanginformasi/Berita/perjanjian_wavin/gambar-01.JPEG"
+  - "../../assets/Ruanginformasi/Berita/perjanjian_sama_zora/gambar-01.JPEG"
   - ""
   - ""
   - ""

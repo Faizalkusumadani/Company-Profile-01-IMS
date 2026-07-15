@@ -2,6 +2,15 @@ import type { TranslationKeys } from "./id";
 export const en = {
   // Home
   home: "Home",
+  desc_subprofile: "Our company history and identity",
+  desc_subvisi: "Our long-term direction and goals",
+  desc_subnilai: "The principles we are based on",
+  desc_subfasilitias: "Our distribution and warehouse network",
+  desc_subpendiri: "The leadership team behind the company",
+  desc_subpencapaian: "Awards and milestones",
+  desc_subnews: "Latest updates on products and industry",
+  desc_subactivities: "Documentation of company activities and events",
+
   homedesc:
     "PT. Intisukses Mitra Sejati is a company engaged in the sale of building materials and various mechanical and electrical products as well as the provision and maintenance of air conditioners (AC) for retail and large projects",
   hero_part1: "Building the Country",
@@ -591,9 +600,12 @@ export const en = {
   featuredostradesc_8: "Prepared for both 1 phase and 3 phase",
   ostradesc:
     "Ostra Charging is an Indonesia-based provider of a network of smart and modular electric vehicle (EV) charging stations. Using Dutch technology, Ostra offers fast charging solutions up to 1000 kW. Ostra is supported by a partnership with PLN and focuses on reliable EV infrastructure.",
+
   // Room Information
   info_room: "Information Room",
   activities: "Activities",
+  head_activities: "Activity Archive",
+  length_activities: "Articles",
   activitiesdesc:
     "Follow the latest series of activities from PT Intisukses Mitra Sejati",
   activities_tag: "Posted by",
@@ -650,17 +662,32 @@ export const en = {
     "The event was interactive and lively. Various engaging games and icebreaker sessions heightened participants' enthusiasm, cohesion, and fostered stronger team chemistry. In addition to learning, all participants also enjoyed coffee breaks and lunch together, providing moments of togetherness and strengthening team collaboration. Through this training, Reddmas Group affirmed its commitment to continuous growth and readiness to soar beyond boundaries in 2026 with renewed energy, new strategies, and a greater fighting spirit.",
   posted: "Posted on the date",
   news: "News",
+  news_others: "Other News",
+  head_news: "News Archive",
+  length_news: "Articles",
+  news_others_empty_title: "No other news available",
+  news_others_empty_subtitle: "More news coming soon",
+  news_view_all: "View all news",
   newsdesc: "Follow the latest news from PT Intisukses Mitra Sejati",
   news_agreement_category: "Cooperation agreement",
   news_agreement_title:
-    "Strategic Synergy between PT Intisukses Mitra Sejati and PT Wavin Indonesia Strengthens the Foundation of National Infrastructure",
-  news_agreement_date: "February 20, 2025",
+    "PT Intisukses Mitra Sejati Officially Appointed as Authorized Dealer for ZORA EV Chargers",
+  news_agreement_date: "January 06, 2026",
   news_agreement_content_1:
-    "PT Intisukses Mitra Sejati has officially established a strategic partnership with PT Wavin Indonesia to expand the reach of high-quality piping system solutions in the domestic market. This collaboration aims to support the acceleration of various vital infrastructure projects in Indonesia, from clean water management systems to urban sanitation. This synergy is expected to address the need for efficient and sustainable construction materials to support national economic growth.",
+    "PT Intisukses Mitra Sejati and PT Mentari Energi Bersih Indonesia have officially signed a cooperation agreement appointing PT Intisukses Mitra Sejati as an authorized dealer for ZORA EV Charger products. This appointment represents a strategic move to expand the distribution network and accelerate the provision of electric vehicle (EV) charging infrastructure solutions in Indonesia, aligning with the growth of the national electric vehicle ecosystem.",
   news_agreement_content_2:
-    "In its statement, management emphasized that this collaboration represents a long-term commitment to national development. `Our vision is to be an integral part of Indonesia's infrastructure progress by delivering world-class, durable piping technology. We believe that the foundation of a strong nation begins with a reliable utility system,` stated a company representative. This partnership will integrate extensive local distribution strength with global product innovation.",
+    "Through this collaboration, PT Intisukses Mitra Sejati is authorized to market and distribute the entire ZORA EV Charger product line, as well as provide sales support and customer service, in accordance with the terms agreed upon by both parties. This partnership also reflects a shared commitment to delivering high-quality products, professional service, and reliable technical support to meet the needs of the rapidly growing electric vehicle market.",
   news_agreement_content_3:
-    "With this collaboration, the availability of Wavin's superior products in various regions is predicted to increase significantly. This step aligns with the government's agenda to increase access to safe drinking water for all levels of society. Both companies are optimistic that this collaboration will have a massive positive impact on efficiency of future construction projects.",
+    "With the signing of this agreement, PT Intisukses Mitra Sejati and PT Mentari Energi Bersih Indonesia aim to establish a long-term partnership grounded in professionalism, integrity, and innovation. The synergy between the two companies is expected to strengthen the development of EV charging infrastructure in Indonesia and deliver added value to customers, business partners, and all stakeholders, thereby supporting the accelerated transition toward cleaner and more sustainable energy.",
+  news_gathering_category: "Gathering Trilliun",
+  news_gathering_title:
+    "PT Intisukses Mitra Sejati and PT Matahari Putra Makmur Hold Gathering to Strengthen Collaboration on TRILLIUN Products",
+  news_gathering_date: "June 04, 2026",
+  news_gathering_content_1:
+    "PT Intisukses Mitra Sejati and PT Matahari Putra Makmur held a corporate gathering on June 4, 2026, to express appreciation for their established partnership and to strengthen business synergy regarding the development and marketing of TRILLIUN products. The event served as an opportunity for both companies to deepen professional ties, exchange insights, and discuss collaborative prospects for delivering superior solutions to customers.",
+  news_gathering_content_2:
+    "Through this gathering, both companies reaffirmed their commitment to fostering a partnership grounded in trust, professionalism, and innovation. By prioritizing service quality and support for TRILLIUN products, PT Intisukses Mitra Sejati and PT Matahari Putra Makmur are optimistic about creating added value for customers and strengthening their respective positions to support sustainable business growth.",
+
   // Career
   career: "Career",
   careerdescription: "The latest job fair from PT Intisukses Mitra Sejati",

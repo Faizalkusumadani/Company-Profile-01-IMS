@@ -30,6 +30,7 @@ const localizedNavItems = navItems.map((item) => {
       subItems: item.subItems.map((sub) => ({
         ...sub,
         text: t(sub.key as SubItemKey) || sub.text,
+        desc: t(sub.desc as any) || sub.desc,
         href: `/${lang}${sub.href}`,
       })),
     };
@@ -39,7 +40,6 @@ const localizedNavItems = navItems.map((item) => {
 });
 
 // ─── 4. Data Produk untuk Search ──────────────────────────────────────────────
-// Data ini di-serialize ke JSON dan dibaca oleh JavaScript di browser
 const productSearchData = Product.map((p) => ({
   id: p.id,
   translatedName: t(p.name as any) || p.name,
@@ -138,22 +138,63 @@ function isSubItemActive(href: string): boolean {
                 {item.subItems && (
                   <div
                     role="menu"
-                    class="absolute left-0 mt-2 w-56 py-2 rounded-lg shadow-xl bg-white/95 ring-1 ring-gray-300/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20"
+                    class="absolute left-0 mt-2 py-3 rounded-xl shadow-xl bg-white ring-1 ring-gray-200/80 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20"
+                    style={`width: ${item.subItems.length > 3 ? "760px" : "560px"}`}
                   >
-                    {item.subItems.map((sub) => (
-                      <a
-                        href={sub.href}
-                        role="menuitem"
-                        class:list={[
-                          "block px-4 py-3 text-sm transition-colors",
-                          isSubItemActive(sub.href)
-                            ? "bg-red-50 text-red-600 font-medium"
-                            : "text-gray-700 hover:bg-red-50 hover:text-red-600",
-                        ]}
-                      >
-                        {sub.text}
-                      </a>
-                    ))}
+                    <div
+                      class:list={[
+                        "grid gap-1 px-3",
+                        item.subItems.length > 3
+                          ? "grid-cols-2"
+                          : "grid-cols-1",
+                      ]}
+                    >
+                      {item.subItems.map((sub) => (
+                        <a
+                          href={sub.href}
+                          role="menuitem"
+                          class:list={[
+                            "flex items-start gap-3 px-3 py-3 rounded-lg transition-colors group/item",
+                            isSubItemActive(sub.href)
+                              ? "bg-red-50 text-red-600"
+                              : "text-gray-700 hover:bg-gray-50 hover:text-red-600",
+                          ]}
+                        >
+                          {"icon" in sub && (
+                            <span
+                              class:list={[
+                                "mt-0.5 shrink-0 w-8 h-8 rounded-md flex items-center justify-center transition-colors",
+                                isSubItemActive(sub.href)
+                                  ? "bg-red-100 text-red-600"
+                                  : "bg-gray-100 text-gray-500 group-hover/item:bg-red-100 group-hover/item:text-red-600",
+                              ]}
+                            >
+                              <Icon
+                                name={`local:${sub.icon}`}
+                                class="w-4 h-4"
+                              />
+                            </span>
+                          )}
+                          <span class="flex flex-col min-w-0">
+                            <span class="text-sm font-medium leading-snug">
+                              {sub.text}
+                            </span>
+                            {"desc" in sub && sub.desc && (
+                              <span
+                                class:list={[
+                                  "text-xs leading-snug mt-0.5 truncate",
+                                  isSubItemActive(sub.href)
+                                    ? "text-red-400"
+                                    : "text-gray-400 group-hover/item:text-red-400",
+                                ]}
+                              >
+                                {sub.desc}
+                              </span>
+                            )}
+                          </span>
+                        </a>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
@@ -245,13 +286,25 @@ function isSubItemActive(href: string): boolean {
                       <a
                         href={sub.href}
                         class:list={[
-                          "block px-10 py-3 text-sm transition-colors border-l-4",
+                          "flex items-center gap-3 px-6 py-3 text-sm transition-colors border-l-4",
                           isSubItemActive(sub.href)
                             ? "text-red-600 font-medium bg-red-50 border-red-600"
                             : "text-gray-600 hover:bg-gray-100 hover:text-red-600 border-transparent hover:border-red-300",
                         ]}
                       >
-                        {sub.text}
+                        {"icon" in sub && (
+                          <span
+                            class:list={[
+                              "shrink-0 w-7 h-7 rounded-md flex items-center justify-center",
+                              isSubItemActive(sub.href)
+                                ? "bg-red-100 text-red-600"
+                                : "bg-gray-200 text-gray-500",
+                            ]}
+                          >
+                            <Icon name={`local:${sub.icon}`} class="w-4 h-4" />
+                          </span>
+                        )}
+                        <span>{sub.text}</span>
                       </a>
                     ))}
                   </div>
@@ -326,11 +379,6 @@ function isSubItemActive(href: string): boolean {
     // ─────────────────────────────────────────────────────────────────────────
     // BAGIAN 2: FUNGSI DOM (DOM Utilities)
     // ─────────────────────────────────────────────────────────────────────────
-
-    /**
-     * Membuat elemen HTML dengan atribut-atribut yang ditentukan.
-     * Lebih aman daripada menulis innerHTML langsung untuk struktur kompleks.
-     */
     function createElement<K extends keyof HTMLElementTagNameMap>(
       tag: K,
       attrs: Record<string, string> = {},
@@ -378,7 +426,7 @@ function isSubItemActive(href: string): boolean {
 
       // Container gambar
       const imgWrapper = createElement("div", {}, [
-        "flex-shrink-0",
+        "shrink-0",
         "w-16",
         "h-16",
         "bg-gray-50",
@@ -625,14 +673,14 @@ function isSubItemActive(href: string): boolean {
 
       function updateNavbarOnScroll(): void {
         if (!navbar) return;
-        const isScrolled = window.scrollY > 50;
+        const isScrolled = window.scrollY > 70;
         navbar.classList.toggle("bg-white/95", isScrolled);
         navbar.classList.toggle("shadow-md", isScrolled);
         navbar.classList.toggle("backdrop-blur-md", isScrolled);
-        navbar.classList.toggle("bg-blue-200/5", !isScrolled);
+        navbar.classList.toggle("bg-transparent", !isScrolled);
       }
 
-      updateNavbarOnScroll(); // jalankan sekali saat load
+      updateNavbarOnScroll();
       window.addEventListener("scroll", updateNavbarOnScroll, {
         passive: true,
       });

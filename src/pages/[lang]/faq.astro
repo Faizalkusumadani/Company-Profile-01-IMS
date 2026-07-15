@@ -7,5 +7,19 @@ export async function getStaticPaths() {
   }));
 }
 
-return Astro.redirect(`/${Astro.params.lang}/maintenance`, 302);
+const { lang } = Astro.params;
+const targetUrl = `/${lang}/maintenance`;
 ---
+
+<div
+  class="flex items-center justify-center min-h-screen bg-[#161616] text-white"
+>
+  <p class="text-sm text-gray-400">
+    Mengalihkan ke halaman maintenance... Jika tidak berpindah,
+    <a href={targetUrl} class="text-blue-400 underline">klik di sini</a>.
+  </p>
+</div>
+
+<script define:vars={{ targetUrl }}>
+  window.location.replace(targetUrl);
+</script>

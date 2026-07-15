@@ -5,12 +5,15 @@ import PageLoader from "../components/Pageloader.astro";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 import { pwaInfo } from "virtual:pwa-info";
+import JsonLd from "../components/JsonLd.astro";
+import { organizationSchema } from "../assets/tools/schema";
 
 interface Props {
   title: string;
   description: string;
   image?: string;
   url?: string;
+  schema?: Record<string, any> | Record<string, any>[];
 }
 
 const SITE_URL = "https://intisukses-ms.com";
@@ -20,11 +23,16 @@ const {
   description,
   image = `${SITE_URL}/og-default.png`,
   url = Astro.url.href,
+  schema,
 } = Astro.props;
 
-// Pastikan og:image selalu berupa URL absolut
 const ogImage = image.startsWith("http") ? image : `${SITE_URL}${image}`;
-const ogTitle = `${title} | Intisukses Mitra Sejati`;
+const ogTitle = `Intisukses Mitra Sejati | ${title}`;
+
+// Organization schema selalu tampil + schema tambahan per-halaman (kalau ada)
+const jsonLdData = schema
+  ? [organizationSchema, ...(Array.isArray(schema) ? schema : [schema])]
+  : organizationSchema;
 ---
 
 <!doctype html>
@@ -38,7 +46,7 @@ const ogTitle = `${title} | Intisukses Mitra Sejati`;
     <meta name="author" content="Intisukses Mitra Sejati" />
     <meta name="robots" content="index, follow" />
 
-    <!-- ─── Open Graph (Facebook, WhatsApp, LinkedIn, Telegram) ─────────── -->
+    <!-- ─── Open Graph ────────────────────────────────────────────────────── -->
     <meta property="og:site_name" content="Intisukses Mitra Sejati" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="id_ID" />
@@ -59,32 +67,49 @@ const ogTitle = `${title} | Intisukses Mitra Sejati`;
     <meta name="twitter:image" content={ogImage} />
     <meta name="twitter:image:alt" content={ogTitle} />
 
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G8R54H54VV"
-    ></script>
-    <script is:inline data-astro-rerun>
+    <!-- ─── Favicon & Theme ───────────────────────────────────────────────── -->
+    <link rel="canonical" href={url} />
+    <link rel="icon" type="image/x-icon" href="/favicon_ims_03.ico" />
+    <link rel="apple-touch-icon" href="/ims-touch-icon.png" />
+    <meta name="theme-color" content="#0f172a" />
+
+    <!-- ─── Structured Data (JSON-LD) ─────────────────────────────────────── -->
+    <JsonLd data={jsonLdData} />
+
+    <!-- Langkah 1: Inisialisasi dataLayer sebelum gtag.js load -->
+    <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
       }
-
-      // Inisialisasi hanya sekali
+      // Inisialisasi waktu hanya sekali (bukan tiap navigasi View Transitions)
       if (!window._gtagInitialized) {
         window._gtagInitialized = true;
         gtag("js", new Date());
+        gtag("config", "G-G8R54H54VV", {
+          send_page_view: false,
+        });
       }
-
-      // Track pageview (termasuk setiap navigasi View Transitions)
-      gtag("config", "G-G8R54H54VV", {
-        page_path: window.location.pathname,
-      });
     </script>
 
-    <!-- ─── Favicon ──────────────────────────────────────────────────────── -->
-    <link rel="canonical" href={url} />
-    <link rel="icon" type="image/svg+xml" href="/favicon-ims.svg" />
-    <link rel="apple-touch-icon" href="/ims-touch-icon.png" />
-    <meta name="theme-color" content="#0f172a" />
+    <!-- Langkah 2: Load library GA secara async (non-blocking) -->
+    <script
+      is:inline
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-G8R54H54VV"></script>
+
+    <!-- Langkah 3: Track pageview setiap navigasi (termasuk View Transitions) -->
+    <script is:inline data-astro-rerun>
+      document.addEventListener("astro:page-load", () => {
+        if (typeof gtag === "function") {
+          gtag("event", "page_view", {
+            page_location: window.location.href,
+            page_path: window.location.pathname,
+          });
+        }
+      });
+    </script>
+    <!-- ─── End Google Analytics ──────────────────────────────────────────── -->
 
     <style is:global>
       body {
@@ -212,11 +237,7 @@ const ogTitle = `${title} | Intisukses Mitra Sejati`;
 
     <ClientRouter />
     {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
-
-    <!-- Ganti <PwaRegister /> dengan ini: -->
-    <script src="/registerSW.js" is:inline></script>
   </head>
-
   <body class="bg-zinc-100 min-h-screen scroll-smooth">
     <PageLoader />
 

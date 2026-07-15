@@ -194,7 +194,9 @@ const currentPath = Astro.url.pathname;
                     alt={`${title} — foto 1`}
                     width={800}
                     height={500}
+                    densities={[1, 1.5, 2]}
                     format="webp"
+                    quality={80}
                     loading="eager"
                     decoding="async"
                     class="w-full h-75 sm:h-105 object-cover"
@@ -210,7 +212,9 @@ const currentPath = Astro.url.pathname;
                           alt={`${title} — foto ${i + 1}`}
                           width={800}
                           height={500}
+                          densities={[1, 1.5, 2]}
                           format="webp"
+                          quality={80}
                           loading={i === 0 ? "eager" : "lazy"}
                           decoding="async"
                           class="w-full h-75 sm:h-105 object-cover"
@@ -236,7 +240,9 @@ const currentPath = Astro.url.pathname;
                           alt={`Thumbnail ${i + 1}`}
                           width={160}
                           height={80}
+                          densities={[1, 1.5, 2]}
                           format="webp"
+                          quality={80}
                           loading="lazy"
                           decoding="async"
                           class="w-full h-20 object-cover rounded-lg cursor-pointer"
@@ -271,80 +277,122 @@ const currentPath = Astro.url.pathname;
             >
               <div class="bg-linear-to-r from-red-500 to-red-600 px-6 py-2">
                 <h3 class="text-white text-base font-semibold">
-                  {t("activities_others")}
+                  {t("news_others")}
                 </h3>
               </div>
 
-              <div class="divide-y divide-gray-100">
-                {
-                  otherNews.map((item: NewsEntry) => {
-                    const itemSlug = toSlug(item.id);
-                    const itemPath = `/${lang}/ruang-informasi/berita/${itemSlug}`;
-                    const isActive = currentPath === itemPath;
-                    const itemCover = resolveImage(item.data.cover);
-
-                    const itemCategory =
-                      t(item.data.category as any) || item.data.category || "";
-
-                    const itemTitle =
-                      (item.data.titleKey
-                        ? t(item.data.titleKey as any)
-                        : null) ||
-                      item.data.title ||
-                      "Berita";
-
-                    const itemDate =
-                      (item.data.dateKey
-                        ? t(item.data.dateKey as any)
-                        : null) ||
-                      (item.data.date ? formatDate(item.data.date, lang) : "");
-
-                    return (
-                      <article
-                        class={`transition ${isActive ? "bg-gray-100" : "hover:bg-gray-50"}`}
+              {
+                otherNews.length === 0 ? (
+                  <div class="flex flex-col items-center text-center px-6 py-12">
+                    <div class="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mb-4">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="w-7 h-7 text-red-400"
                       >
-                        <a href={itemPath} class="flex gap-3 p-4">
-                          {itemCover ? (
-                            <Image
-                              src={itemCover}
-                              alt={itemTitle}
-                              width={112}
-                              height={80}
-                              format="webp"
-                              loading="lazy"
-                              decoding="async"
-                              class={`w-28 h-20 object-cover rounded shrink-0 ${isActive ? "ring-2 ring-red-400" : ""}`}
-                            />
-                          ) : (
-                            <div
-                              class={`w-28 h-20 bg-gray-100 rounded shrink-0 flex items-center justify-center ${isActive ? "ring-2 ring-red-400" : ""}`}
-                            >
-                              <span class="text-gray-300 text-xs">—</span>
-                            </div>
-                          )}
-                          <div class="flex-1 min-w-0">
-                            <span class="text-gray-400 font-normal text-xs leading-snug block mb-1">
-                              {itemCategory}
-                            </span>
-                            <h4
-                              class={`font-semibold text-sm line-clamp-3 leading-snug mb-2 ${isActive ? "text-red-600" : "text-gray-900"}`}
-                            >
-                              {itemTitle}
-                            </h4>
-                            <div class="flex items-center text-gray-400 text-xs gap-1">
-                              <Icon
-                                name="local:calendar"
-                                class="w-3.5 h-3.5 shrink-0"
+                        <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2" />
+                        <path d="M18 14h-8" />
+                        <path d="M15 18h-5" />
+                        <path d="M10 6h8v4h-8V6Z" />
+                      </svg>
+                    </div>
+                    <p class="text-gray-700 font-semibold text-sm">
+                      {t("news_others_empty_title") ||
+                        "Belum ada berita lainnya"}
+                    </p>
+                    <p class="text-gray-400 text-xs mt-1 leading-relaxed">
+                      {t("news_others_empty_subtitle") ||
+                        "Berita terbaru akan tampil di sini"}
+                    </p>
+                    <a
+                      href={`/${lang}/ruang-informasi/berita/`}
+                      class="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-red-600 border border-red-200 rounded-full px-4 py-2 hover:bg-red-50 transition"
+                    >
+                      {t("news_view_all") || "Lihat Semua Berita"}
+                    </a>
+                  </div>
+                ) : (
+                  <div class="divide-y divide-gray-100">
+                    {otherNews.map((item: NewsEntry) => {
+                      const itemSlug = toSlug(item.id);
+                      const itemPath = `/${lang}/ruang-informasi/berita/${itemSlug}`;
+                      const isActive = currentPath === itemPath;
+                      const itemCover = resolveImage(item.data.cover);
+
+                      const itemCategory =
+                        t(item.data.category as any) ||
+                        item.data.category ||
+                        "";
+
+                      const itemTitle =
+                        (item.data.titleKey
+                          ? t(item.data.titleKey as any)
+                          : null) ||
+                        item.data.title ||
+                        "Berita";
+
+                      const itemDate =
+                        (item.data.dateKey
+                          ? t(item.data.dateKey as any)
+                          : null) ||
+                        (item.data.date
+                          ? formatDate(item.data.date, lang)
+                          : "");
+
+                      return (
+                        <article
+                          class={`transition ${isActive ? "bg-gray-100" : "hover:bg-gray-50"}`}
+                        >
+                          <a href={itemPath} class="flex gap-3 p-4">
+                            {itemCover ? (
+                              <Image
+                                src={itemCover}
+                                alt={itemTitle}
+                                width={128}
+                                height={96}
+                                densities={[1, 1.5, 2]}
+                                format="webp"
+                                quality={80}
+                                loading="lazy"
+                                decoding="async"
+                                class={`w-32 h-24 object-cover rounded shrink-0 ${isActive ? "ring-2 ring-red-400" : ""}`}
                               />
-                              <span>{itemDate}</span>
+                            ) : (
+                              <div
+                                class={`w-32 h-24 bg-gray-100 rounded shrink-0 flex items-center justify-center ${isActive ? "ring-2 ring-red-400" : ""}`}
+                              >
+                                <span class="text-gray-300 text-xs">—</span>
+                              </div>
+                            )}
+                            <div class="flex-1 min-w-0">
+                              <span class="text-gray-400 font-normal text-xs leading-snug block mb-1">
+                                {itemCategory}
+                              </span>
+                              <div class="flex items-center text-gray-400 text-xs gap-1 mb-1">
+                                <Icon
+                                  name="local:calendar"
+                                  class="w-3.5 h-3.5 shrink-0"
+                                />
+                                <span>{itemDate}</span>
+                              </div>
+                              <h4
+                                class={`font-semibold text-sm line-clamp-3 leading-snug mb-2 ${isActive ? "text-red-600" : "text-gray-900"}`}
+                              >
+                                {itemTitle}
+                              </h4>
                             </div>
-                          </div>
-                        </a>
-                      </article>
-                    );
-                  })
-                }
-              </div>
+                          </a>
+                        </article>
+                      );
+                    })}
+                  </div>
+                )
+              }
             </div>
           </div>
         </div>

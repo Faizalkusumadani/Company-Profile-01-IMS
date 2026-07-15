@@ -307,7 +307,9 @@ const currentPath = Astro.url.pathname;
                               alt={itemTitle}
                               width={112}
                               height={80}
+                              densities={[1, 1.5, 2]}
                               format="webp"
+                              quality={80}
                               loading="lazy"
                               decoding="async"
                               class={`w-28 h-20 object-cover rounded shrink-0 ${isActive ? "ring-2 ring-red-400" : ""}`}
@@ -323,18 +325,18 @@ const currentPath = Astro.url.pathname;
                             <span class="text-gray-400 font-normal text-xs leading-snug block mb-1">
                               {itemCategory}
                             </span>
-                            <h4
-                              class={`font-semibold text-sm line-clamp-3 leading-snug mb-2 ${isActive ? "text-red-600" : "text-gray-900"}`}
-                            >
-                              {itemTitle}
-                            </h4>
-                            <div class="flex items-center text-gray-400 text-xs gap-1">
+                            <div class="flex items-center text-gray-400 text-xs gap-1 mb-1">
                               <Icon
                                 name="local:calendar"
                                 class="w-3.5 h-3.5 shrink-0"
                               />
                               <span>{itemDate}</span>
                             </div>
+                            <h4
+                              class={`font-semibold text-sm line-clamp-3 leading-snug mb-2 ${isActive ? "text-red-600" : "text-gray-900"}`}
+                            >
+                              {itemTitle}
+                            </h4>
                           </div>
                         </a>
                       </article>

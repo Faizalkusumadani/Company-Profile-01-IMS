@@ -7,6 +7,7 @@ import { Icon } from "astro-icon/components";
 import { languages } from "../../../i18n/ui";
 import { getLangFromUrl, useTranslations } from "../../../i18n/utils";
 import Products from "../../../assets/tools/data";
+import { productGroupSchema } from "../../../assets/tools/schema";
 
 // ─── TYPES ───────────────────────────────────────────────────────────────────
 
@@ -68,7 +69,6 @@ export async function getStaticPaths() {
 
 const { product } = Astro.props as Props;
 const { data } = product;
-
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const title = t(data.nameKey as any);
@@ -83,9 +83,30 @@ const breadcrumbs = [
   { label: t("products"), href: `/${lang}/produk/`, key: "products" },
   { label: title, current: true, key: data.nameKey },
 ];
+
+// ─── JSON-LD SCHEMA ───────────────────────────────────────────────────────────
+const SITE_URL = "https://intisukses-ms.com";
+const slug = Astro.params.slug as string;
+
+// Ambil kategori dari data.ts (satu-satunya sumber yang punya field category)
+const productMeta = Products.find(
+  (p) => p.href.replace("/produk/", "") === slug,
+);
+
+const pageUrl = `${SITE_URL}/${lang}/produk/${slug}`;
+const imageUrl = heroImage ? `${SITE_URL}${heroImage.src}` : undefined;
+
+const schema = productGroupSchema({
+  name: title,
+  description,
+  url: pageUrl,
+  image: imageUrl,
+  category: productMeta?.category,
+  variantNames: data.variants?.map((v: ProductVariant) => v.name),
+});
 ---
 
-<Layout {title} {description}>
+<Layout {title} {description} url={pageUrl} image={imageUrl} schema={schema}>
   <Banner title={{ key: data.nameKey }} breadcrumbs={breadcrumbs} />
 
   <!-- ─── HERO ─────────────────────────────────────────────────────────── -->
