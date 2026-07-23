@@ -1,5 +1,7 @@
 const _id = {
   home: "Beranda",
+  home_pages:
+    "Distributor MEP sistem, Bahan Bangunan, Sanitary & EV Charger untuk wilayah Jabodetabek.",
   desc_subprofile: "Sejarah dan identitas perusahaan kami",
   desc_subvisi: "Arah dan tujuan jangka panjang kami",
   desc_subnilai: "Prinsip yang menjadi landasan kami",
@@ -9,11 +11,11 @@ const _id = {
   desc_subnews: "Update terbaru seputar produk dan industri",
   desc_subactivities: "Dokumentasi kegiatan dan event perusahaan",
   homedesc:
-    "PT.Intisukses Mitra Sejati adalah Perusahan yang bergerak di bidang penjualan Bahan Bangunan dan berbagai produk Mekanikal, Elektrikal serta penyediaan dan pemeliharaan Air Conditioner (AC) Untuk Retail & Proyek Besar",
+    "PT.Intisukses Mitra Sejati adalah Distributor MEP sistem, Bahan Bangunan, Sanitary & EV Charger serta pemeliharaan Air Conditioner (AC) Untuk Retail & Proyek Besar wilayah Jabodetabek.",
   hero_part1: "Membangun Negeri",
   hero_part2: "Dengan Solusi Terpercaya",
   hero_description:
-    " Sejak 2008, kami menjadi mitra andal dalam penyediaan produk Mechanical, Electrical, dan Building Material dari brand ternama untuk kebutuhan rumah, industri, hingga proyek skala besar.",
+    "Sejak 2008, kami menjadi mitra andal dalam penyediaan produk dari brand ternama untuk kebutuhan rumah, industri, hingga proyek skala besar.",
   cta_1: "Hubungi Kami",
   cta_2: "Produk Kami",
   stats_brand: "Brand Ternama",
@@ -56,7 +58,7 @@ const _id = {
   headerabout: "Distributor Resmi",
   ctaabout: "Lihat semua",
   headeraboutdescription:
-    "Sebagai perusahaan yang bergerak di bidang penjualan dan distribusi produk Mechanical, Electrical & Building Materials, kami berkomitmen untuk menjadi mitra terpercaya dalam memenuhi kebutuhan pelanggan di berbagai sektor. ",
+    "Sebagai perusahaan yang bergerak di bidang penjualan dan distribusi produk MEP sistem, Bahan Bangunan, Sanitary & Electric Vehicle (EV) Charger kami berkomitmen untuk menjadi mitra terpercaya dalam memenuhi kebutuhan pelanggan di berbagai sektor. ",
   faq_label: "FAQ",
   faq_heading_1: "Pertanyaan Umum",
   faq_heading_2: "Seputar IMS",
@@ -122,7 +124,7 @@ const _id = {
   about_2: "Kami",
   about_profile: "Profil Perusahaan",
   aboutprofiledescription:
-    " Didirikan pada tahun 2008, PT Intisukses Mitra Sejati adalah Perusahan yang bergerak di bidang penjualan bahan bangunan dan berbagai produk Mekanikal, Elektrikal serta penyediaan dan pemeliharaan Air Conditioner (AC)",
+    "Didirikan pada tahun 2008, PT Intisukses Mitra Sejati merupakan perusahaan yang bergerak di bidang penjualan dan distribusi produk Mechanical, Electrical & Plumbing (MEP) sistem, Bahan Bangunan, Sanitary, serta EV Charger. Selain itu, perusahaan juga menyediakan layanan pemeliharaan Air Conditioner (AC) untuk memenuhi kebutuhan pelanggan ritel maupun proyek berskala besar di wilayah Jabodetabek.",
   aboutdescription_1:
     " PT Intisukses Mitra Sejati memiliki sebuah kantor distributor yang terletak di Jakarta. Lokasi ini dipilih dengan cermat untuk memastikan akses yang mudah dan cepat bagi pelanggan serta mitra bisnis kami.",
   aboutdescription_2:
@@ -249,6 +251,10 @@ const _id = {
   title_product_3: "untuk setiap Kebutuhan",
   desc_product:
     "Empat kategori produk utama yang dirancang untuk mendukung proyek modern—dari hunian hingga gedung komersial dan industri.",
+  category_1: "MEP Sistem",
+  category_2: "Bahan Bangunan",
+  category_3: "Sanitary",
+  category_4: "EV Charger",
   ev_desc: "Solusi pengisian kendaraan listrik modern & efisien",
   mep_desc: "Mechanical, Electrical & Plumbing terintegrasi",
   buildingmaterial_desc: "Material konstruksi berkualitas tinggi & presisi",

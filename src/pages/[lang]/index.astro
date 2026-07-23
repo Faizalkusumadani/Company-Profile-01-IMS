@@ -48,7 +48,7 @@ function getProyekImage(filename: string): ImageMetadata | undefined {
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-const title = t("home"),
+const title = t("home_pages"),
   description = t("homedesc");
 ---
 
@@ -492,23 +492,23 @@ const title = t("home"),
               {
                 [
                   {
-                    icon: "local:wheelbarrow",
-                    title: "Building Materials",
-                    desc: t("buildingmaterial_desc"),
-                  },
-                  {
                     icon: "local:electrical-spark",
-                    title: "MEP Systems",
+                    title: t("category_1"),
                     desc: t("mep_desc"),
                   },
                   {
+                    icon: "local:wheelbarrow",
+                    title: t("category_2"),
+                    desc: t("buildingmaterial_desc"),
+                  },
+                  {
                     icon: "local:bathroom",
-                    title: "Sanitary",
+                    title: t("category_3"),
                     desc: t("sanitary_desc"),
                   },
                   {
                     icon: "local:ev-charger",
-                    title: "EV Charger",
+                    title: t("category_4"),
                     desc: t("ev_desc"),
                   },
                 ].map((item) => (
@@ -588,6 +588,7 @@ const title = t("home"),
                             height={600}
                             format="webp"
                             quality={80}
+                            densities={[1, 1.5, 2]}
                             loading="lazy"
                             decoding="async"
                             class="w-full h-full object-cover"

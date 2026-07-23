@@ -2,6 +2,8 @@ import type { TranslationKeys } from "./id";
 export const en = {
   // Home
   home: "Home",
+  home_pages:
+    "Distributor of MEP systems,  Building Materials, Sanitary ware, and Electric Vehicle (EV) Chargers for the Jabodetabek region.",
   desc_subprofile: "Our company history and identity",
   desc_subvisi: "Our long-term direction and goals",
   desc_subnilai: "The principles we are based on",
@@ -12,11 +14,11 @@ export const en = {
   desc_subactivities: "Documentation of company activities and events",
 
   homedesc:
-    "PT. Intisukses Mitra Sejati is a company engaged in the sale of building materials and various mechanical and electrical products as well as the provision and maintenance of air conditioners (AC) for retail and large projects",
+    "PT Intisukses Mitra Sejati is a distributor of MEP systems, building materials, sanitary ware, and EV chargers, as well as a provider of air conditioner (AC) maintenance services for the retail and large-scale project sectors in the Jabodetabek area.",
   hero_part1: "Building the Country",
   hero_part2: "With Trusted Solutions",
   hero_description:
-    "Since 2008, we have been a reliable partner in providing Mechanical, Electrical, and Building Material products from well-known brands for home, industrial, and large-scale project needs.",
+    "Since 2008, we have been a reliable partner in supplying products from renowned brands for residential, industrial, and large-scale project needs.",
   cta_1: "Contact US",
   cta_2: "Products",
   stats_brand: "Famous Brands",
@@ -58,7 +60,7 @@ export const en = {
   headerabout: "Official Distributor",
   ctaabout: "See More",
   headeraboutdescription:
-    "As a company engaged in the sales and distribution of Mechanical, Electrical & Building Materials products, we are committed to being a trusted partner in meeting customer needs in various sectors.",
+    "As a company engaged in the sales and distribution of MEP Systems, Building Materials, Sanitary ware, and Electric Vehicle (EV) Chargers, we are committed to being a trusted partner in meeting the needs of customers across various sectors.",
 
   faq_label: "FAQ",
   faq_heading_1: "Frequently Asked Questions ",
@@ -125,7 +127,7 @@ export const en = {
   about_2: "Us",
   about_profile: "Company Profile",
   aboutprofiledescription:
-    "Founded in 2008, PT Intisukses Mitra Sejati is a company engaged in the sale of building materials and various mechanical and electrical products as well as the provision and maintenance of air conditioners (AC)",
+    "Established in 2008, PT Intisukses Mitra Sejati is a company engaged in the sales and distribution of Mechanical, Electrical & Plumbing (MEP) systems, Building materials, Sanitary, and EV chargers. Additionally, the company provides air conditioner (AC) maintenance services to meet the needs of both retail customers and large-scale projects in the Jabodetabek area.",
   aboutdescription_1:
     "PT Intisukses Mitra Sejati has a distribution office located in Jakarta. This location was carefully selected to ensure easy and fast access for our customers and business partners.",
   aboutdescription_2:
@@ -252,6 +254,10 @@ export const en = {
   title_product_3: "for every need",
   desc_product:
     "Four main product categories designed to support modern projects—from residential to commercial and industrial buildings.",
+  category_1: "MEP Systems",
+  category_2: "Building Materials",
+  category_3: "Sanitary Ware",
+  category_4: "EV Chargers",
   ev_desc: "Modern & efficient electric vehicle charging solutions",
   mep_desc: "Integrated mechanical, electrical & plumbing",
   buildingmaterial_desc: "High-quality & precision construction materials",
