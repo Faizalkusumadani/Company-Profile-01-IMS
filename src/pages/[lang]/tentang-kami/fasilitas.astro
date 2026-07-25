@@ -45,82 +45,84 @@ const description = t("facilitiesdescription");
   <Banner title={{ key: "about_facilities" }} breadcrumbs={breadcrumbs} />
 
   <!-- Warehouse Section -->
-  <section id="fasilitas" class="relative py-15 lg:py-20">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <!-- Section Header -->
-      <div class="space-y-6 py-10">
-        <h2
-          class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight"
-        >
-          IMS <span class="text-transparent bg-clip-text bg-ims-red">
-            {t("warehouse")}
-          </span>
-        </h2>
-        <p class="text-lg text-gray-500 leading-relaxed">
-          {t("facilitiesdescription")}
-        </p>
-      </div>
+  <section id="fasilitas">
+    <div class="w-full px-4 py-13 sm:py-15 md:py-17 lg:py-20">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <!-- Section Header -->
+        <div class="py-6 space-y-6">
+          <h1
+            class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight"
+          >
+            IMS <span class="text-transparent bg-clip-text bg-ims-red">
+              {t("warehouse")}
+            </span>
+          </h1>
+          <p class="text-lg text-gray-500 leading-relaxed">
+            {t("facilitiesdescription")}
+          </p>
+        </div>
 
-      <!-- Warehouse Gallery -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {
-          // ✅ Gunakan map dengan parameter (item, index) agar index tersedia
-          warehouseData.map((item, index) => {
-            // ✅ Pakai helper, bukan item.image langsung (string bukan ImageMetadata)
-            const img = getWarehouseImage(item.image);
+        <!-- Warehouse Gallery -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {
+            // ✅ Gunakan map dengan parameter (item, index) agar index tersedia
+            warehouseData.map((item, index) => {
+              // ✅ Pakai helper, bukan item.image langsung (string bukan ImageMetadata)
+              const img = getWarehouseImage(item.image);
 
-            return (
-              <div
-                class={`group relative overflow-hidden rounded-2xl ${
-                  index === 0 ? "md:col-span-2 md:row-span-2" : ""
-                }`}
-              >
-                {/* ✅ Gunakan img dari helper, dengan fallback jika undefined */}
-                {img ? (
-                  <Image
-                    src={img}
-                    alt={t(item.title as any)}
-                    width={700}
-                    height={500}
-                    decoding="async"
-                    loading="lazy"
-                    class={`w-full object-cover transition-all duration-700 group-hover:scale-110 ${
-                      index === 0 ? "h-full min-h-125" : "h-64"
-                    }`}
-                  />
-                ) : (
-                  <div
-                    class={`w-full bg-gray-200 flex items-center justify-center text-gray-400 text-sm ${
-                      index === 0 ? "h-full min-h-125" : "h-64"
-                    }`}
-                  >
-                    Gambar tidak tersedia
-                  </div>
-                )}
-
-                {/* Gradient Overlay */}
-                <div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-500" />
-
-                {/* Content */}
-                <div class="absolute inset-0 p-6 flex flex-col justify-end">
-                  <div class="transform translate-y-6 group-hover:translate-y-0 transition-transform duration-500">
-                    <div class="flex items-center gap-2 text-white/80 text-sm mb-2">
-                      <Icon name="local:maps" class="w-5 h-5" />
-                      <span>{item.location}</span>
+              return (
+                <div
+                  class={`group relative overflow-hidden rounded-2xl ${
+                    index === 0 ? "md:col-span-2 md:row-span-2" : ""
+                  }`}
+                >
+                  {/* ✅ Gunakan img dari helper, dengan fallback jika undefined */}
+                  {img ? (
+                    <Image
+                      src={img}
+                      alt={t(item.title as any)}
+                      width={700}
+                      height={500}
+                      decoding="async"
+                      loading="lazy"
+                      class={`w-full object-cover transition-all duration-700 group-hover:scale-110 ${
+                        index === 0 ? "h-full min-h-125" : "h-64"
+                      }`}
+                    />
+                  ) : (
+                    <div
+                      class={`w-full bg-gray-200 flex items-center justify-center text-gray-400 text-sm ${
+                        index === 0 ? "h-full min-h-125" : "h-64"
+                      }`}
+                    >
+                      Gambar tidak tersedia
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2">
-                      {t(item.title as any)}
-                    </h3>
-                    <div class="w-12 h-1 bg-ims-red rounded-full opacity-0 group-hover:opacity-100 group-hover:w-20 transition-all duration-500" />
-                  </div>
-                </div>
+                  )}
 
-                {/* Hover Border Effect */}
-                <div class="absolute inset-0 border border-gray-200 group-hover:border-ims-red rounded-2xl transition-all duration-500" />
-              </div>
-            );
-          })
-        }
+                  {/* Gradient Overlay */}
+                  <div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-500" />
+
+                  {/* Content */}
+                  <div class="absolute inset-0 p-6 flex flex-col justify-end">
+                    <div class="transform translate-y-6 group-hover:translate-y-0 transition-transform duration-500">
+                      <div class="flex items-center gap-2 text-white/80 text-sm mb-2">
+                        <Icon name="local:maps" class="w-5 h-5" />
+                        <span>{item.location}</span>
+                      </div>
+                      <h3 class="text-xl font-bold text-white mb-2">
+                        {t(item.title as any)}
+                      </h3>
+                      <div class="w-12 h-1 bg-ims-red rounded-full opacity-0 group-hover:opacity-100 group-hover:w-20 transition-all duration-500" />
+                    </div>
+                  </div>
+
+                  {/* Hover Border Effect */}
+                  <div class="absolute inset-0 border border-gray-200 group-hover:border-ims-red rounded-2xl transition-all duration-500" />
+                </div>
+              );
+            })
+          }
+        </div>
       </div>
     </div>
   </section>

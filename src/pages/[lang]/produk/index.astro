@@ -61,14 +61,14 @@ const filterCategories = [
   <section id="produk">
     <div class="w-full px-4 py-13 sm:py-16 md:py-20 lg:py-24">
       <div class="mx-auto max-w-6xl">
-        <h2
+        <h1
           class="text-2xl sm:text-4xl md:text-5xl font-semibold text-gray-900 text-center leading-tight"
         >
           {t("headerproducts_1")}<span class="text-red-600/70">
             {t("headerproducts_2")}</span
           >
           {t("headerproducts_3")}
-        </h2>
+        </h1>
         <p
           class="text-gray-500 text-sm sm:text-lg md:text-lg max-w-2xl mx-auto text-center mt-4 sm:mt-6"
         >
@@ -108,7 +108,7 @@ const filterCategories = [
                 type="button"
                 data-category={cat.category}
                 class="filter-btn w-full p-4 md:p-6 flex flex-col items-center justify-center
-               rounded-2xl border border-gray-200
+               rounded-2xl bg-white border border-gray-200 
                transition-all duration-300 text-gray-500"
               >
                 <Icon

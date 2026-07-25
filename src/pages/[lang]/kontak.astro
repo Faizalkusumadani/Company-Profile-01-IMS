@@ -184,10 +184,10 @@ const zodMessages = {
                 return (
                   <div class="grid sm:grid-cols-2 gap-4">
                     {cards.map((item) => (
-                      <div class="group relative border border-gray-200 rounded-2xl p-5 hover:border-red-600/40 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer">
+                      <div class="group relative bg-white border border-gray-200 rounded-2xl p-5 hover:border-red-600/40 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer">
                         <div class="relative z-10">
                           <div class="flex items-center gap-3 mb-3">
-                            <div class="w-12 h-12 border border-gray-200 flex items-center justify-center group-hover:bg-ims-red group-hover:border-ims-red transition-all duration-300 rounded-xl">
+                            <div class="w-12 h-12 bg-red-50 border border-gray-100 flex items-center justify-center group-hover:bg-ims-red group-hover:border-ims-red transition-all duration-300 rounded-xl">
                               <Icon
                                 name={item.icon}
                                 class="w-6 h-6 text-ims-red group-hover:text-white transition-colors duration-300"
@@ -715,9 +715,7 @@ const zodMessages = {
         // Validasi inline per field (blur)
         FIELD_NAMES.forEach((field) => {
           const input = form.elements.namedItem(field) as
-            | HTMLInputElement
-            | HTMLTextAreaElement
-            | null;
+            HTMLInputElement | HTMLTextAreaElement | null;
           input?.addEventListener("blur", () => {
             const partial = contactSchema.shape[field].safeParse(input.value);
             if (!partial.success) {

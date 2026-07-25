@@ -134,6 +134,10 @@ export const en = {
     "Our three-story office building not only provides a comfortable and modern workspace but also reflects our dedication to the company's long-term growth and existence. With comprehensive facilities and a conducive working environment, we are committed to providing the best service.",
 
   // Vision & Mission
+  head_pages_highlight: "Core Foundation",
+  head_pages_rest: "and the Company's Strategic Direction",
+  desc_pages:
+    "Our journey is driven by a clear vision and guided by a measurable mission. We are committed to continuous adaptation and innovation—without ever compromising on integrity or quality—to create long-term value for all our stakeholders.",
   about_vision: "Vision & Mission",
   aboutvisiondescription: "Vision & Mission PT Intisukses Mitra Sejati",
   vision: "Vision",
@@ -189,6 +193,10 @@ export const en = {
     "Our modern fleet of vehicles ensures timely and secure delivery across Indonesia. Equipped with GPS tracking and temperature control for specialized cargo.",
 
   // Management
+  header_management: "Behind",
+  header_management_01: "Our Leadership",
+  desc_management:
+    "The success of our company's journey is driven by the guidance and dedication of our highly committed leadership team. Fueled by extensive experience, a sharp vision, and a commitment to integrity, our Board of Directors is poised to steer the company toward further sustainable growth.",
   about_management: "Management",
   aboutmanagementdescription:
     "Behind every major step and innovation we create is a board of directors who dare to think differently. Our leadership team combines deep industry expertise with a visionary spirit to navigate future challenges. We are here to inspire our team, break boundaries, and take PT Intisukses Mitra Sejati to the next level.",
@@ -219,7 +227,8 @@ export const en = {
   about_achievements: "Achievements",
   achievementsdescription:
     "Intisukses Mitra Sejati has received numerous awards for its commitment to implementing sustainability principles in its business operations. These awards reflect the Company's efforts to create a positive impact on the environment, society, and responsible governance.",
-  headerachievements: "Our Awards",
+  headerachievements: "Our",
+  headerachievements_01: "Awards",
   achievementscertification: "Certificate",
   templateachievements: "The awards we got",
   dateachievements: "Posted on August 9, 2025",

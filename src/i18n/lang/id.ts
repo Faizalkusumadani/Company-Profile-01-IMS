@@ -131,6 +131,10 @@ const _id = {
     "Gedung kantor kami terdiri dari tiga lantai, yang tidak hanya menyediakan ruang kerja yang nyaman dan modern tetapi juga mencerminkan dedikasi kami terhadap pertumbuhan dan eksistensi jangka panjang perusahaan. Dengan fasilitas yang lengkap dan suasana kerja yang kondusif, kami berkomitmen untuk memberikan layanan terbaik.",
 
   //  Visi & Misi
+  head_pages_highlight: "Fondasi Utama",
+  head_pages_rest: "dan Arah Strategis Perusahaan",
+  desc_pages:
+    "Perjalanan kami digerakkan oleh visi yang jelas dan dipandu oleh misi yang terukur. Kami berkomitmen untuk terus beradaptasi dan berinovasi tanpa pernah mengesampingkan integritas serta kualitas, demi menciptakan nilai jangka panjang bagi seluruh stakeholder kami.",
   about_vision: "Visi & Misi",
   aboutvisiondescription: "Visi & Misi PT Intisukses Mitra Sejati",
   vision: "Visi",
@@ -187,6 +191,10 @@ const _id = {
     "Armada kendaraan modern kami memastikan pengiriman tepat waktu dan aman di seluruh Indonesia. Dilengkapi dengan pelacakan GPS dan kontrol suhu untuk kargo khusus.",
 
   // Management
+  header_management: "Di Balik",
+  header_management_01: "Kepemimpinan Kami",
+  desc_management:
+    "Keberhasilan perjalanan perusahaan kami tak lepas dari arahan dan dedikasi jajaran kepemimpinan yang berdedikasi tinggi. Digerakkan oleh pengalaman mendalam, visi yang tajam, dan komitmen terhadap integritas, jajaran Direksi kami siap membawa perusahaan melangkah lebih jauh menuju pertumbuhan yang berkelanjutan",
   about_management: "Manajemen",
   aboutmanagementdescription:
     "Di balik setiap langkah besar dan inovasi yang kami ciptakan, ada jajaran direksi yang berani berpikir beda. Tim kepemimpinan kami menggabungkan keahlian mendalam di industri dengan semangat visioner untuk menavigasi tantangan masa depan. Kami hadir untuk menginspirasi tim, mendobrak batasan, dan membawa PT Intisukses Mitra Sejati ke level berikutnya.",
@@ -217,7 +225,8 @@ const _id = {
   about_achievements: "Pencapaian",
   achievementsdescription:
     "Intisukses Mitra Sejati meraih berbagai penghargaan atas komitmennya dalam menerapkan prinsip keberlanjutan dalam operasi bisnisnya. Penghargaan-penghargaan ini mencerminkan upaya Perusahaan dalam menciptakan dampak positif bagi lingkungan, masyarakat, dan tata kelola yang bertanggung jawab. ",
-  headerachievements: "Berbagai Penghargaan Kami",
+  headerachievements: "Berbagai",
+  headerachievements_01: " Penghargaan Kami",
   achievementscertification: "Sertifikasi ",
   ctaarchievements: "Lihat Detail",
   aboutdetailachievements: "detail penghargaan yang PT Intisukses Mitra Sejati",
