@@ -164,19 +164,19 @@ export const en = {
   aboutvaluesdescription:
     "the foundation of our work culture that fosters integrity and excellence in every aspect of our business",
   values_responsibility_desc:
-    "the foundation of our work culture that fosters integrity and excellence in every aspect of our business.",
+    "Specific duties, obligations, or actions expected of an individual within their scope of work",
   values_excellent_desc:
-    "Specific duties, obligations, or actions expected of a person within the scope of his or her employment.",
+    "A high and consistent standard of quality in carrying out tasks or work performance",
   values_dedicated_desc:
-    "A person's level of commitment, enthusiasm, and seriousness toward their task or job.",
+    "The level of commitment, enthusiasm, and seriousness a person has toward their tasks or work",
   values_detailoriented_desc:
-    "The ability to notice and understand small details or things that others might miss.",
+    "The ability to notice and understand small details or things that others might overlook",
   values_modernization_desc:
-    "The process or effort to update, modernize, or adopt new technology, methods or processes that are more efficient and in line with the latest developments.",
+    "The process or effort to update, modernize, or adopt new technology, methods or processes that are more efficient and in line with the latest developments",
   values_agility_desc:
-    "The ability of an individual or organization to adapt quickly to change and respond to changing situations with flexibility and responsiveness.",
+    "The ability of an individual or organization to adapt quickly to change and respond to shifting situations with flexibility and responsiveness",
   values_senseofbelonging_desc:
-    "The feeling that one is an integral part of the team or organization in which they work.",
+    "The feeling that one is an integral part of the team or organization they work in",
 
   //Facilities
   about_facilities: "Distribution Facilities",

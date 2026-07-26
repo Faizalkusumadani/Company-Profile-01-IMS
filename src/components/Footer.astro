@@ -38,15 +38,21 @@ const t = useTranslations(lang);
         <a
           href="https://www.instagram.com/intisuksesmitrasejati/?igsh=aG1rbDV3NWE5MW9v"
           class="hover:text-ims-red"
+          aria-label="Instagram"
         >
           <Icon name="local:instagram" class="w-12 h-12 shrink-0" />
         </a>
-        <a href="#" class="hover:text-ims-red">
+        <a
+          href="https://www.linkedin.com/company/reddmas-group/"
+          class="hover:text-ims-red"
+          aria-label="LinkedIn"
+        >
           <Icon name="local:linkedin" class="w-10 h-10 shrink-0" />
         </a>
         <a
           href="https://www.youtube.com/@reddmasgroup"
           class="hover:text-ims-red"
+          aria-label="YouTube"
         >
           <Icon name="local:youtube" class="w-12 h-12 shrink-0" />
         </a>
@@ -59,9 +65,12 @@ const t = useTranslations(lang);
         {t("footertitle_2")}
       </h3>
 
-      <ul class="space-y-4 text-base text-gray-500">
+      <ul class="space-y-4 text-base not-italic text-gray-500">
         <li class="flex items-start gap-3">
-          <Icon name="local:map" class="w-5 h-5 mt-0.5 shrink-0 text-ims-red" />
+          <Icon
+            name="local:map"
+            class="w-5 h-5 mt-0.5 shrink-0 text-gray-500"
+          />
           Business Park Kebon Jeruk Blok C-2 No.8 <br />
           Jl. Meruya Ilir Raya No. 88 <br />
           Meruya Utara, Kembangan
@@ -70,7 +79,7 @@ const t = useTranslations(lang);
 
         <li class="flex items-center gap-3">
           <svg
-            class="w-5 h-5 mt-0.5 shrink-0 text-ims-red"
+            class="w-5 h-5 mt-0.5 shrink-0 text-gray-500"
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -83,7 +92,7 @@ const t = useTranslations(lang);
 
         <li class="flex items-center gap-3">
           <svg
-            class="w-5 h-5 mt-0.5 shrink-0 text-ims-red"
+            class="w-5 h-5 mt-0.5 shrink-0 text-gray-500"
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -98,7 +107,7 @@ const t = useTranslations(lang);
 
         <li class="flex items-center gap-3">
           <svg
-            class="w-5 h-5 mt-0.5 shrink-0 text-ims-red"
+            class="w-5 h-5 mt-0.5 shrink-0 text-gray-500"
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -148,11 +157,11 @@ const t = useTranslations(lang);
         <Image
           src={csImage}
           width={98}
-          height={98}
+          height={147}
           format="webp"
           quality={80}
           alt="CS"
-          class="w-7 h-7 rounded-full"
+          class="w-10 h-10 rounded-full"
           loading="lazy"
         />
         <div class="ms-3 text-sm font-normal">
