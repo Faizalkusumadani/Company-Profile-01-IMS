@@ -1,0 +1,771 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Slide {
+  image: ImageMetadata | undefined;
+  title: string;
+  description?: string;
+  href?: string;
+  ctaText?: string;
+}
+
+interface Props {
+  slides: Slide[];
+  eyebrow?: string;
+  title?: string;
+  highlight?: string;
+  titleSuffix?: string;
+  description?: string;
+  autoplayDelay?: number;
+  instanceId?: string;
+  aspectRatio?: string;
+}
+
+const {
+  slides,
+  eyebrow,
+  title,
+  highlight,
+  titleSuffix,
+  description,
+  autoplayDelay = 5000,
+  instanceId = "default",
+  aspectRatio = "16/6",
+} = Astro.props;
+
+const hasHeader = Boolean(eyebrow || title || description);
+const hasMultipleSlides = slides.length > 1;
+---
+
+<section class="promo-carousel" data-swiper-id={instanceId}>
+  {
+    hasHeader && (
+      <div class="promo-carousel__header">
+        {eyebrow && <span class="promo-carousel__eyebrow">{eyebrow}</span>}
+        {title && (
+          <h2 class="promo-carousel__title">
+            {title}
+            {highlight && (
+              <span class="promo-carousel__highlight"> {highlight} </span>
+            )}
+            {titleSuffix}
+          </h2>
+        )}
+        {description && <p class="promo-carousel__desc">{description}</p>}
+      </div>
+    )
+  }
+
+  <div class="promo-carousel__wrapper">
+    <div class="promo-carousel__stage" transition:animate="none">
+      <div class="swiper promo-fade-swiper" data-autoplay-delay={autoplayDelay}>
+        <div class="swiper-wrapper">
+          {
+            slides.map((slide, index) => (
+              <div class="swiper-slide">
+                <div
+                  class="promo-slide"
+                  style={`--aspect-ratio: ${aspectRatio}`}
+                >
+                  {slide.image ? (
+                    <div class="promo-slide__image-wrapper">
+                      <Image
+                        src={slide.image}
+                        alt={slide.title}
+                        width={1200}
+                        height={Math.round(1200 / 2.667)}
+                        format="webp"
+                        quality={80}
+                        densities={[1, 1.5, 2]}
+                        loading={index === 0 ? "eager" : "lazy"}
+                        decoding={index === 0 ? "sync" : "async"}
+                        class="promo-slide__img"
+                        fetchpriority={index === 0 ? "high" : "auto"}
+                      />
+                      {slide.href && (
+                        <a
+                          href={slide.href}
+                          class="promo-slide__link"
+                          aria-label={slide.title}
+                        />
+                      )}
+                    </div>
+                  ) : (
+                    <div class="promo-slide__fallback">
+                      <span>{slide.title}</span>
+                    </div>
+                  )}
+
+                  {(slide.title || slide.description) && (
+                    <div class="promo-slide__overlay">
+                      <div class="promo-slide__caption">
+                        {slide.title && (
+                          <p class="promo-slide__caption-title">
+                            {slide.title}
+                          </p>
+                        )}
+                        {slide.description && (
+                          <p class="promo-slide__caption-desc">
+                            {slide.description}
+                          </p>
+                        )}
+                        {slide.href && slide.ctaText && (
+                          <a href={slide.href} class="promo-slide__cta">
+                            {slide.ctaText}
+                            <svg
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              width="16"
+                              height="16"
+                            >
+                              <path d="M5 12h14M12 5l7 7-7 7" />
+                            </svg>
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))
+          }
+        </div>
+
+        <!-- Navigation arrows -->
+        {
+          hasMultipleSlides && (
+            <>
+              <button
+                type="button"
+                class="promo-carousel__nav promo-carousel__nav--prev"
+                aria-label="Previous slide"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                class="promo-carousel__nav promo-carousel__nav--next"
+                aria-label="Next slide"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </button>
+            </>
+          )
+        }
+      </div>
+
+      <!-- Progress indicator (dots + bar digabung jadi satu) -->
+      {
+        hasMultipleSlides && (
+          <div class="promo-carousel__indicators">
+            <div
+              class="promo-carousel__progress-track"
+              role="group"
+              aria-label="Progres slide"
+            >
+              {slides.map((slide, index) => (
+                <button
+                  type="button"
+                  class="promo-carousel__progress-segment"
+                  data-slide-index={index}
+                  aria-label={`Ke slide ${index + 1}${slide.title ? `: ${slide.title}` : ""}`}
+                >
+                  <span class="promo-carousel__progress-fill" />
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Design Tokens */
+  .promo-carousel {
+    --promo-red: var(--ims-red, #d23439);
+    --promo-red-dark: #b91c1c;
+    --promo-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --promo-indicator-gap: clamp(0.75rem, 2.5vw, 1.25rem);
+  }
+
+  /* Header Styles */
+  .promo-carousel__header {
+    text-align: center;
+    max-width: 42rem;
+    margin: 0 auto 2.5rem;
+    padding: 0 1rem;
+  }
+
+  .promo-carousel__eyebrow {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--promo-red);
+    border-bottom: 2px solid var(--promo-red);
+    padding-bottom: 2px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .promo-carousel__title {
+    margin-top: 0.75rem;
+    font-weight: 800;
+    line-height: 1.2;
+    font-size: clamp(1.5rem, 4vw, 2.75rem);
+    color: #111827;
+  }
+
+  .promo-carousel__highlight {
+    color: var(--promo-red);
+  }
+
+  .promo-carousel__desc {
+    margin-top: 1rem;
+    color: #6b7280;
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+
+  /* Wrapper */
+  .promo-carousel__wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .promo-carousel__stage {
+    position: relative;
+  }
+
+  /* Swiper Container */
+  .promo-fade-swiper {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 1.25rem;
+    box-shadow: 0 10px 30px -12px rgb(0 0 0 / 0.15);
+    outline: 1px solid rgb(0 0 0 / 0.06);
+    outline-offset: -1px;
+    background: #f3f4f6;
+    position: relative;
+  }
+
+  /* Slide Styles */
+  .promo-slide {
+    position: relative;
+    aspect-ratio: var(--aspect-ratio, 16/6);
+    background: #f3f4f6;
+    overflow: hidden;
+  }
+
+  .promo-slide__image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .promo-slide__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s var(--promo-ease);
+  }
+
+  .promo-slide:hover .promo-slide__img {
+    transform: scale(1.03);
+  }
+
+  .promo-slide__fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: #9ca3af;
+    font-size: 0.875rem;
+  }
+
+  .promo-slide__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgb(15 23 42 / 0.9) 0%,
+      rgb(15 23 42 / 0.4) 40%,
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.4s var(--promo-ease);
+    pointer-events: none;
+  }
+
+  .promo-slide:hover .promo-slide__overlay {
+    opacity: 1;
+  }
+
+  .promo-slide__caption {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 2rem 2rem 1.75rem;
+    color: #fff;
+    transform: translateY(0.5rem);
+    transition: transform 0.4s var(--promo-ease);
+  }
+
+  .promo-slide:hover .promo-slide__caption {
+    transform: translateY(0);
+  }
+
+  .promo-slide__caption-title {
+    font-weight: 700;
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    margin-bottom: 0.25rem;
+  }
+
+  .promo-slide__caption-desc {
+    font-size: 0.9rem;
+    color: rgb(255 255 255 / 0.85);
+    opacity: 0.9;
+  }
+
+  .promo-slide__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding: 0.5rem 1rem;
+    background: var(--promo-red);
+    color: #fff;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.3s var(--promo-ease);
+    text-decoration: none;
+    pointer-events: auto;
+  }
+
+  .promo-slide__cta:hover {
+    background: var(--promo-red-dark);
+    transform: scale(1.05);
+  }
+
+  .promo-slide__link {
+    position: absolute;
+    inset: 0;
+    pointer-events: auto;
+  }
+
+  /* Navigation Arrows */
+  .promo-carousel__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3rem;
+    height: 3rem;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(255 255 255 / 0.9);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgb(255 255 255 / 0.3);
+    box-shadow: 0 4px 14px -4px rgb(0 0 0 / 0.2);
+    color: #111827;
+    cursor: pointer;
+    transition: all 0.3s var(--promo-ease);
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .promo-carousel__nav svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .promo-carousel__nav:hover {
+    background: #fff;
+    transform: translateY(-50%) scale(1.08);
+    box-shadow: 0 8px 24px -4px rgb(0 0 0 / 0.25);
+  }
+
+  .promo-carousel__nav:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  .promo-carousel__nav--prev {
+    left: 1.25rem;
+  }
+
+  .promo-carousel__nav--next {
+    right: 1.25rem;
+  }
+
+  .promo-fade-swiper:hover .promo-carousel__nav,
+  .promo-carousel__nav:focus-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Indicators — segmented progress bar (dots + progress digabung) */
+  .promo-carousel__indicators {
+    margin-top: var(--promo-indicator-gap);
+    display: flex;
+    justify-content: center;
+  }
+
+  .promo-carousel__progress-track {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+    max-width: min(420px, 90vw);
+  }
+
+  .promo-carousel__progress-segment {
+    flex: 1;
+    height: 4px;
+    padding: 0;
+    border: none;
+    background: #d1d5db;
+    border-radius: 999px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: filter 0.2s var(--promo-ease);
+  }
+
+  .promo-carousel__progress-segment:hover {
+    filter: brightness(0.92);
+  }
+
+  .promo-carousel__progress-fill {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: var(--promo-red);
+    border-radius: 999px;
+    transition: width 0.1s linear;
+  }
+
+  .promo-carousel__progress-segment.is-active {
+    background: color-mix(in srgb, var(--promo-red) 20%, #d1d5db);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .promo-carousel__wrapper {
+      padding: 0 0.75rem;
+    }
+
+    .promo-carousel__nav {
+      width: 2.75rem;
+      height: 2.75rem;
+    }
+
+    .promo-carousel__nav svg {
+      width: 1.1rem;
+      height: 1.1rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .promo-carousel__header {
+      margin-bottom: 1.75rem;
+    }
+
+    .promo-carousel__nav {
+      width: 2.5rem;
+      height: 2.5rem;
+      opacity: 0.7;
+      pointer-events: auto;
+    }
+
+    .promo-carousel__nav--prev {
+      left: 0.75rem;
+    }
+
+    .promo-carousel__nav--next {
+      right: 0.75rem;
+    }
+
+    .promo-slide__caption {
+      padding: 1.5rem 1.25rem 1.25rem;
+    }
+
+    .promo-slide__caption-title {
+      font-size: 1rem;
+    }
+
+    .promo-slide__caption-desc {
+      font-size: 0.8rem;
+    }
+
+    .promo-slide__overlay {
+      opacity: 1;
+    }
+
+    .promo-slide__caption {
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .promo-carousel__wrapper {
+      padding: 0 0.5rem;
+    }
+
+    .promo-carousel__nav {
+      width: 2rem;
+      height: 2rem;
+      opacity: 0.6;
+    }
+
+    .promo-carousel__nav svg {
+      width: 0.9rem;
+      height: 0.9rem;
+    }
+
+    .promo-carousel__nav--prev {
+      left: 0.5rem;
+    }
+
+    .promo-carousel__nav--next {
+      right: 0.5rem;
+    }
+
+    .promo-slide__caption {
+      padding: 1rem 1rem 0.75rem;
+    }
+
+    .promo-slide__caption-title {
+      font-size: 0.9rem;
+    }
+
+    .promo-slide__caption-desc {
+      font-size: 0.75rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .promo-slide__cta {
+      font-size: 0.75rem;
+      padding: 0.35rem 0.75rem;
+    }
+
+    .promo-carousel__progress-segment {
+      height: 3px;
+    }
+  }
+
+  /* Dark Mode */
+  @media (prefers-color-scheme: dark) {
+    .promo-carousel__title {
+      color: #f9fafb;
+    }
+
+    .promo-carousel__desc {
+      color: #9ca3af;
+    }
+
+    .promo-fade-swiper {
+      background: #1f2937;
+      outline-color: rgb(255 255 255 / 0.06);
+    }
+
+    .promo-slide {
+      background: #1f2937;
+    }
+
+    .promo-slide__fallback {
+      color: #4b5563;
+    }
+
+    .promo-carousel__progress-segment {
+      background: #374151;
+    }
+
+    .promo-carousel__progress-segment.is-active {
+      background: color-mix(in srgb, var(--promo-red) 28%, #374151);
+    }
+
+    .promo-carousel__nav {
+      background: rgb(31 41 55 / 0.9);
+      border-color: rgb(255 255 255 / 0.1);
+      color: #f9fafb;
+    }
+
+    .promo-carousel__nav:hover {
+      background: #374151;
+    }
+  }
+
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    .promo-carousel__progress-fill {
+      transition: none;
+    }
+
+    .promo-carousel__nav {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .promo-slide__img {
+      transition: none;
+    }
+
+    .promo-slide__overlay {
+      opacity: 1;
+    }
+
+    .promo-slide__caption {
+      transform: none;
+    }
+
+    .promo-slide__cta:hover {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  import Swiper from "swiper";
+  import { EffectFade, Navigation, Autoplay } from "swiper/modules";
+  import "swiper/css";
+  import "swiper/css/navigation";
+  import "swiper/css/effect-fade";
+
+  let instances: Swiper[] = [];
+
+  function destroyAll() {
+    instances.forEach((swiper) => {
+      if (!swiper.destroyed) swiper.destroy(true, true);
+    });
+    instances = [];
+  }
+
+  function initAll() {
+    if (instances.length) return;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    document
+      .querySelectorAll<HTMLElement>(".promo-carousel")
+      .forEach((root) => {
+        const swiperEl = root.querySelector<HTMLElement>(".promo-fade-swiper");
+        if (!swiperEl) return;
+
+        const slides = swiperEl.querySelectorAll(".swiper-slide");
+        if (slides.length <= 1) return;
+
+        const delay = Number(swiperEl.dataset.autoplayDelay || 5000);
+        const prevBtn = root.querySelector<HTMLElement>(
+          ".promo-carousel__nav--prev",
+        );
+        const nextBtn = root.querySelector<HTMLElement>(
+          ".promo-carousel__nav--next",
+        );
+        const segments = Array.from(
+          root.querySelectorAll<HTMLButtonElement>(
+            ".promo-carousel__progress-segment",
+          ),
+        );
+
+        const setActiveSegment = (activeIndex: number) => {
+          segments.forEach((segment, i) => {
+            const fill = segment.querySelector<HTMLElement>(
+              ".promo-carousel__progress-fill",
+            );
+            segment.classList.toggle("is-active", i === activeIndex);
+            if (i === activeIndex) {
+              segment.setAttribute("aria-current", "true");
+            } else {
+              segment.removeAttribute("aria-current");
+            }
+            if (!fill) return;
+            fill.style.transition = "none";
+            fill.style.width = i < activeIndex ? "100%" : "0%";
+            if (i === activeIndex) {
+              requestAnimationFrame(() => {
+                fill.style.transition = "width 0.1s linear";
+              });
+            }
+          });
+        };
+
+        const swiper = new Swiper(swiperEl, {
+          modules: [EffectFade, Navigation, Autoplay],
+          effect: "fade",
+          fadeEffect: { crossFade: true },
+          loop: true,
+          speed: 800,
+          autoplay: prefersReducedMotion
+            ? false
+            : {
+                delay,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+              },
+          navigation:
+            prevBtn && nextBtn ? { prevEl: prevBtn, nextEl: nextBtn } : false,
+          on: {
+            autoplayTimeLeft(instance, _time, progress) {
+              const fill = segments[
+                instance.realIndex
+              ]?.querySelector<HTMLElement>(".promo-carousel__progress-fill");
+              if (fill) fill.style.width = `${(1 - progress) * 100}%`;
+            },
+            slideChange(instance) {
+              setActiveSegment(instance.realIndex);
+            },
+          },
+        });
+
+        segments.forEach((segment, index) => {
+          segment.addEventListener("click", () => swiper.slideToLoop(index));
+        });
+
+        setActiveSegment(swiper.realIndex);
+        instances.push(swiper);
+      });
+  }
+
+  document.addEventListener("astro:page-load", initAll);
+  document.addEventListener("astro:before-swap", destroyAll);
+
+  if (typeof document !== "undefined") {
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        destroyAll();
+      }
+    });
+  }
+</script>

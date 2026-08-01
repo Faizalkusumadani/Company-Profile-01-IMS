@@ -11,7 +11,7 @@ const _id = {
   desc_subnews: "Update terbaru seputar produk dan industri",
   desc_subactivities: "Dokumentasi kegiatan dan event perusahaan",
   homedesc:
-    "PT.Intisukses Mitra Sejati adalah Distributor MEP sistem, Bahan Bangunan, Sanitary & EV Charger serta pemeliharaan Air Conditioner (AC) Untuk Retail & Proyek Besar wilayah Jabodetabek.",
+    "PT.Intisukses Mitra Sejati adalah Distributor MEP sistem, Bahan Bangunan, Sanitari & EV Charger serta pemeliharaan Air Conditioner (AC) Untuk Retail & Proyek Besar wilayah Jabodetabek.",
   hero_part1: "Membangun Negeri",
   hero_part2: "Dengan Solusi Terpercaya",
   hero_description:
@@ -22,11 +22,11 @@ const _id = {
   stats_partner: "Mitra Bisnis",
   stats_years: "Tahun Distribusi",
   stats_fleet: "Armada",
-  headerfeatures_1: "Nikmati berbagai ",
-  headerfeatures_2: "keuntungan ",
-  headerfeatures_3: "di IMS",
+  headerfeatures_1: "Keunggulan",
+  headerfeatures_2: "Bermitra",
+  headerfeatures_3: "dengan IMS",
   featuresdescription:
-    "Mengapa mitra bisnis mempercayakan kebutuhan konstruksi mereka kepada kami?",
+    "Nilai lebih yang kami hadirkan untuk mendukung keberhasilan setiap proyek",
   featuresproduct: "Produk Asli, Kualitas Terjamin",
   arcticlefeaturesproduct_1: "Kami menyediakan rangkaian ",
   arcticlefeaturesproduct_2: "produk brand terpercaya lengkap ",
@@ -40,9 +40,9 @@ const _id = {
   articlefeaturesinfra_3: "tanpa kompromi pada kualitas.",
   featuresawards: "Track Record Terpercaya",
   articlefeaturesawards_1: "Berpengalaman dalam bidang ",
-  articlefeaturesawards_2: "Mechanical, Electrical & Building Materials",
+  articlefeaturesawards_2: "Mekanikal, Elektrikal & Bahan Bangunan",
   articlefeaturesawards_3: "sejak 2008 untuk",
-  articlefeaturesawards_4: "Retail & Project. ",
+  articlefeaturesawards_4: "Retail & Proyek. ",
   featuresteam: "Tim Ahli Siap Membantu",
   articlefeaturesteam_1:
     "Tim ahli kami siap membantu Anda memilih kebutuhan baik",
@@ -58,7 +58,7 @@ const _id = {
   headerabout: "Distributor Resmi",
   ctaabout: "Lihat semua",
   headeraboutdescription:
-    "Sebagai perusahaan yang bergerak di bidang penjualan dan distribusi produk MEP sistem, Bahan Bangunan, Sanitary & Electric Vehicle (EV) Charger kami berkomitmen untuk menjadi mitra terpercaya dalam memenuhi kebutuhan pelanggan di berbagai sektor. ",
+    "Sebagai perusahaan yang bergerak di bidang penjualan dan distribusi produk MEP sistem, Bahan Bangunan, Sanitari & (EV) Charger kami berkomitmen untuk menjadi mitra terpercaya dalam memenuhi kebutuhan pelanggan di berbagai sektor. ",
   faq_label: "FAQ",
   faq_heading_1: "Pertanyaan Umum",
   faq_heading_2: "Seputar IMS",
@@ -101,7 +101,7 @@ const _id = {
   ctaproyek: "Lihat Semua Proyek",
   promo: "Promo",
   bulan: "bulan ini",
-  special: "Special",
+  special: "Spesial",
   belanja: "Belanja",
   desc_promo:
     "Manfaatkan promo eksklusif untuk semua kebutuhan proyek Anda dengan harga terbaik.",
@@ -124,7 +124,7 @@ const _id = {
   about_2: "Kami",
   about_profile: "Profil Perusahaan",
   aboutprofiledescription:
-    "Didirikan pada tahun 2008, PT Intisukses Mitra Sejati merupakan perusahaan yang bergerak di bidang penjualan dan distribusi produk Mechanical, Electrical & Plumbing (MEP) sistem, Bahan Bangunan, Sanitary, serta EV Charger. Selain itu, perusahaan juga menyediakan layanan pemeliharaan Air Conditioner (AC) untuk memenuhi kebutuhan pelanggan ritel maupun proyek berskala besar di wilayah Jabodetabek.",
+    "Didirikan pada tahun 2008, PT Intisukses Mitra Sejati merupakan perusahaan yang bergerak di bidang penjualan dan distribusi produk Mekanikal, Elektrikal & Plumbing (MEP) sistem, Bahan Bangunan, Sanitari, serta EV Charger. Selain itu, perusahaan juga menyediakan layanan pemeliharaan Air Conditioner (AC) untuk memenuhi kebutuhan pelanggan ritel maupun proyek berskala besar di wilayah Jabodetabek.",
   aboutdescription_1:
     " PT Intisukses Mitra Sejati memiliki sebuah kantor distributor yang terletak di Jakarta. Lokasi ini dipilih dengan cermat untuk memastikan akses yang mudah dan cepat bagi pelanggan serta mitra bisnis kami.",
   aboutdescription_2:
@@ -262,7 +262,7 @@ const _id = {
     "Empat kategori produk utama yang dirancang untuk mendukung proyek modern—dari hunian hingga gedung komersial dan industri.",
   category_1: "MEP Sistem",
   category_2: "Bahan Bangunan",
-  category_3: "Sanitary",
+  category_3: "Sanitari",
   category_4: "EV Charger",
   ev_desc: "Solusi pengisian kendaraan listrik modern & efisien",
   mep_desc: "Mechanical, Electrical & Plumbing terintegrasi",

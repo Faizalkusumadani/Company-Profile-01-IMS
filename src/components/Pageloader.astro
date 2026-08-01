@@ -1,15 +1,18 @@
 ---
-
+import { Image } from "astro:assets";
+import imsLogo from "../assets/loader-image.png";
 ---
 
 <div id="ims-page-loader" aria-hidden="true">
   <div class="loader-inner">
     <div class="loader-logo">
-      <img
-        src="/ims-touch-icon.png"
+      <Image
+        src={imsLogo}
         alt="IMS Logo"
-        width="120"
-        height="80"
+        width={120}
+        height={80}
+        format="webp"
+        quality={80}
         style="object-fit: contain;"
       />
       <span class="loader-brand">Intisukses Mitra Sejati</span>

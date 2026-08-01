@@ -10,6 +10,9 @@ const isDev = process.env.NODE_ENV !== "production";
 export default defineConfig({
   site: "https://intisukses-ms.com/",
   trailingSlash: "never",
+  redirects: {
+    "/": "/id/",
+  },
   vite: {
     plugins: [tailwindcss()],
   },
@@ -20,7 +23,7 @@ export default defineConfig({
       entrypoint: "astro/assets/services/sharp",
       config: {
         format: ["webp", "avif"],
-        quality: 65,
+        quality: 60,
       },
     },
   },

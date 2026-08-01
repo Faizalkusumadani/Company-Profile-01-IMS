@@ -39,17 +39,21 @@ const title = t("products"),
 const filterCategories = [
   { category: "all", icon: "local:all-category", label: "All" },
   {
-    category: "MEP Systems",
+    category: "category_1",
     icon: "local:electrical-spark",
     label: t("category_1"),
   },
   {
-    category: "Building Materials",
+    category: "category_2",
     icon: "local:wheelbarrow",
     label: t("category_2"),
   },
-  { category: "Sanitary", icon: "local:bathroom", label: t("category_3") },
-  { category: "EV Charger", icon: "local:ev-charger", label: t("category_4") },
+  { category: "category_3", icon: "local:bathroom", label: t("category_3") },
+  {
+    category: "category_4",
+    icon: "local:ev-charger",
+    label: t("category_4"),
+  },
 ];
 ---
 
@@ -191,7 +195,7 @@ const filterCategories = [
 
                   {/* Category Badge */}
                   <span class="inline-block text-[11px] sm:text-xs font-medium text-blue-600 mb-2 sm:mb-3">
-                    {product.category}
+                    {t(product.category as any)}
                   </span>
 
                   <p class="text-gray-500 text-xs sm:text-sm line-clamp-3 sm:line-clamp-4 leading-relaxed grow">
