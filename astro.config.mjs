@@ -16,7 +16,9 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-
+  build: {
+    inlineStylesheets: "auto",
+  },
   // PERBAIKAN BAGIAN INI
   image: {
     service: {

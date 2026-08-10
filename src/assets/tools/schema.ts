@@ -5,8 +5,8 @@ export const organizationSchema = {
   name: "PT. Intisukses Mitra Sejati",
   alternateName: "Intisukses Mitra Sejati",
   description:
-    "Distributor Building Materials, MEP Systems (Mechanical, Electrical, Plumbing), Sanitary, dan EV Charger untuk wilayah Jabodetabek.",
-  knowsAbout: ["MEP Systems", "Building Materials", "Sanitary", "EV Charger"],
+    "Distributor MEP Sistem, Bahan Bangunan, (Mekanikal, Elektrikal, Plumbing), Sanitari, dan EV Charger untuk wilayah Jabodetabek.",
+  knowsAbout: ["MEP Sistem", "Bahan Bangunan", "Sanitari", "EV Charger"],
   url: "https://intisukses-ms.com",
   telephone: "+62-213-0067-868",
   email: "sales@intisukses-ms.com",
@@ -19,6 +19,16 @@ export const organizationSchema = {
     postalCode: "11620",
     addressCountry: "ID",
   },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: -6.197893434146742,
+    longitude: 106.7620502533739,
+  },
+  areaServed: [
+    { "@type": "AdministrativeArea", name: "DKI Jakarta" },
+    { "@type": "AdministrativeArea", name: "Banten" },
+    { "@type": "AdministrativeArea", name: "Jawa Barat" },
+  ],
   sameAs: [
     "https://www.instagram.com/intisuksesmitrasejati/",
     "https://www.facebook.com/intisuksesms/",
@@ -27,7 +37,6 @@ export const organizationSchema = {
 };
 
 // Dipakai untuk halaman brand-hub seperti /produk/[slug] — 1 brand, banyak varian item
-// (contoh: halaman "Daikin" yang isinya 6 varian AC Daikin)
 export function productGroupSchema(opts: {
   name: string;
   description: string;

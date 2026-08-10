@@ -624,6 +624,7 @@ export const en = {
   activitiesdesc:
     "Follow the latest series of activities from PT Intisukses Mitra Sejati",
   activities_tag: "Posted by",
+  news_tag: "Posted by",
   activitiesdesc_new: "Latest Activities",
   activities_others: "Other Activities",
   activities_annual2022_category: "Annual Gathering 2022",

@@ -14,7 +14,7 @@ import SHIMIZU from "../Produk/SHIMIZU.png";
 import SUPREME from "../Produk/SUPREME.png";
 import TOYOODA from "../Produk/TOYOODA.png";
 import INSULFLEX from "../Produk/INSULFLEX.png";
-import MULTIKABEL from "../Produk/MULTIKABEL.png";
+import MULTIKABEL from "../Produk/MULTI KABEL.png";
 import HODA from "../Produk/HODA.png";
 import INABA_DENKO from "../Produk/INABA DENKO.png";
 import DSP from "../Produk/DSP.png";

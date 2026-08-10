@@ -1,6 +1,6 @@
 ---
 import { getCollection, render, type CollectionEntry } from "astro:content";
-import { Image } from "astro:assets";
+import { Image, getImage } from "astro:assets";
 import Layout from "../../../../layouts/Layout.astro";
 import Banner from "../../../../components/Banner.astro";
 import { Icon } from "astro-icon/components";
@@ -144,11 +144,27 @@ const mapped: { path: string; img: ImageMetadata | null }[] = allSlidePaths.map(
 
 const slides: Slide[] = mapped.filter((s): s is Slide => s.img !== null);
 
+// ─── OG IMAGE (untuk share ke sosial media) ─────────────────────────────────
+
+// Ambil gambar dari cover, fallback ke slide pertama kalau cover tidak ada
+const ogSourceImage = resolveImage(data.cover) ?? slides[0]?.img ?? null;
+
+const ogImage = ogSourceImage
+  ? (
+      await getImage({
+        src: ogSourceImage,
+        width: 1200,
+        height: 630,
+        format: "png",
+      })
+    ).src
+  : undefined;
+
 // ─── BREADCRUMBS & PATH ──────────────────────────────────────────────────────
 
 const breadcrumbs = [
   { label: t("home"), href: `/${lang}/` },
-  { label: t("info_room"), href: `/${lang}/ruang-informasi/` },
+  { label: t("info_room"), href: `/${lang}/` },
   { label: t("activities"), href: `/${lang}/ruang-informasi/kegiatan/` },
   { label: header, current: true },
 ];
@@ -156,7 +172,7 @@ const breadcrumbs = [
 const currentPath = Astro.url.pathname;
 ---
 
-<Layout {title} description={description}>
+<Layout {title} description={description} image={ogImage}>
   <Banner title={{ key: data.category ?? "" }} breadcrumbs={breadcrumbs} />
 
   <section id="kegiatan-detail">

@@ -76,8 +76,9 @@ const hasMultipleSlides = slides.length > 1;
                         width={1200}
                         height={Math.round(1200 / 2.667)}
                         format="webp"
-                        quality={80}
-                        densities={[1, 1.5, 2]}
+                        quality={75}
+                        widths={[480, 768, 1024, 1200]}
+                        sizes="(min-width: 1200px) 1168px, 100vw"
                         loading={index === 0 ? "eager" : "lazy"}
                         decoding={index === 0 ? "sync" : "async"}
                         class="promo-slide__img"
@@ -580,48 +581,6 @@ const hasMultipleSlides = slides.length > 1;
 
     .promo-carousel__progress-segment {
       height: 3px;
-    }
-  }
-
-  /* Dark Mode */
-  @media (prefers-color-scheme: dark) {
-    .promo-carousel__title {
-      color: #f9fafb;
-    }
-
-    .promo-carousel__desc {
-      color: #9ca3af;
-    }
-
-    .promo-fade-swiper {
-      background: #1f2937;
-      outline-color: rgb(255 255 255 / 0.06);
-    }
-
-    .promo-slide {
-      background: #1f2937;
-    }
-
-    .promo-slide__fallback {
-      color: #4b5563;
-    }
-
-    .promo-carousel__progress-segment {
-      background: #374151;
-    }
-
-    .promo-carousel__progress-segment.is-active {
-      background: color-mix(in srgb, var(--promo-red) 28%, #374151);
-    }
-
-    .promo-carousel__nav {
-      background: rgb(31 41 55 / 0.9);
-      border-color: rgb(255 255 255 / 0.1);
-      color: #f9fafb;
-    }
-
-    .promo-carousel__nav:hover {
-      background: #374151;
     }
   }
 

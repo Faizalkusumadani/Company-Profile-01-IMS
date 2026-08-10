@@ -625,6 +625,7 @@ const _id = {
   activitiesdesc_new: "Kegiatan Terbaru",
   activities_others: "Kegiatan Lainnya",
   activities_tag: "dipost oleh",
+  news_tag: "dipost oleh",
   activities_annual2022_category: "Gathering 2022",
   activities_annual2022_title: "Gathering Tahunan 2022 di Hotel Brits",
   activities_annual2022_date: "15 Januari 2022",
