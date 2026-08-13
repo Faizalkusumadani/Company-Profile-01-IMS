@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://intisukses-ms.com/sitemap-index.xml

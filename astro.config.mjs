@@ -34,7 +34,15 @@ export default defineConfig({
   integrations: [
     react(),
     icon(),
-    sitemap(),
+    sitemap({
+      i18n: {
+        defaultLocale: "id",
+        locales: {
+          id: "id-ID",
+          en: "en-US",
+        },
+      },
+    }),
     AstroPWA({
       mode: isDev ? "development" : "production",
       registerType: "autoUpdate",
