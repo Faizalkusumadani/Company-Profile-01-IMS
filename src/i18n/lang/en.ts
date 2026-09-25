@@ -263,6 +263,7 @@ export const en = {
   title_product_3: "for every need",
   desc_product:
     "Four main product categories designed to support modern projects—from residential to commercial and industrial buildings.",
+  category_0: "All",
   category_1: "MEP Systems",
   category_2: "Building Materials",
   category_3: "Sanitary Ware",
@@ -753,6 +754,25 @@ export const en = {
   "form.network.title": "There was a problem with your connection",
   "form.network.message":
     "Unable to connect to the server. Check your internet connection and try again.",
+  // Cookie
+  cookietitle: "Cookie Preferences",
+  cookiedesc:
+    "We use cookies to analyze traffic and improve your experience on our site. Do you accept?",
+  cookielearnmore: "Learn more",
+  cookiepreferences: "Manage preferences",
+  cookienecessarytitle: "Essential",
+  cookienecessarydesc:
+    "Required for the site to function properly. Always active.",
+  cookieanalyticstitle: "Analytics & Performance",
+  cookieanalyticsdesc:
+    "Helps us understand how visitors interact with the site",
+  cookiemarketingtitle: "Marketing",
+  cookiemarketingdesc: "Used to display more relevant ads",
+  cookiemanage: "Manage cookie preferences",
+  cookieclosepreferences: "Close preferences",
+  cookiesave: "Save selection",
+  cookieaccept: "Accept All",
+  cookiereject: "Reject All",
 
   // Footer
   footertitle_1: "CONNECT WITH US",

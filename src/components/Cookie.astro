@@ -1,0 +1,423 @@
+---
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+// Fallback ditambahkan agar tidak error jika key belum ada di file i18n
+const textToggleOpen = t("cookiepreferences") || "Atur preferensi";
+const textToggleClose = t("cookieclosepreferences") || "Tutup preferensi";
+---
+
+<div
+  id="cookie-consent-banner"
+  class="fixed bottom-0 left-0 z-50 hidden w-full sm:bottom-4 sm:left-1/2 sm:max-w-2xl sm:-translate-x-1/2"
+>
+  <div
+    class="flex flex-col gap-4 rounded-t-2xl border-t border-zinc-200 bg-zinc-50 p-5 shadow-[0_-10px_30px_rgba(0,0,0,0.1)] transition-all duration-300 sm:rounded-2xl sm:border sm:shadow-2xl"
+  >
+    <!-- Header -->
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-start">
+      <div
+        class="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600 sm:flex"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"></path>
+          <path d="M8.5 8.5v.01"></path><path d="M16 12.5v.01"></path>
+          <path d="M12 16v.01"></path><path d="M11 12.5v.01"></path>
+        </svg>
+      </div>
+
+      <div class="flex-1">
+        <h3 class="text-base font-bold text-zinc-900">
+          {t("cookietitle")}
+        </h3>
+        <p class="mt-1 text-sm leading-relaxed text-zinc-600">
+          {t("cookiedesc")}
+          <a
+            href={`/${lang}/maintenance`}
+            class="font-medium text-blue-600 hover:underline"
+          >
+            {t("cookielearnmore")}
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Panel Preferensi -->
+    <div
+      id="preferences-panel"
+      class="hidden flex-col gap-4 border-t border-zinc-200 pt-4"
+    >
+      <!-- Cookie Wajib -->
+      <div class="flex items-center justify-between gap-4 mb-3">
+        <div>
+          <h4 class="text-sm font-semibold text-zinc-900">
+            {t("cookienecessarytitle")}
+          </h4>
+          <p class="mt-0.5 text-xs text-zinc-500">
+            {t("cookienecessarydesc")}
+          </p>
+        </div>
+        <label
+          class="relative inline-flex cursor-not-allowed items-center opacity-70"
+        >
+          <input type="checkbox" disabled checked class="peer sr-only" />
+          <div
+            class="peer h-6 w-11 rounded-full bg-blue-600 after:absolute after:left-0.5 after:top-0.5 after:h-5 after:w-5 after:translate-x-full after:rounded-full after:border after:border-white after:bg-white after:content-['']"
+          >
+          </div>
+        </label>
+      </div>
+
+      <!-- Cookie Analitik -->
+      <div class="flex items-center justify-between gap-4 mb-3">
+        <div>
+          <h4 class="text-sm font-semibold text-zinc-900">
+            {t("cookieanalyticstitle")}
+          </h4>
+          <p class="mt-0.5 text-xs text-zinc-500">
+            {t("cookieanalyticsdesc")}
+          </p>
+        </div>
+        <label class="relative inline-flex cursor-pointer items-center">
+          <input type="checkbox" id="toggle-analytics" class="peer sr-only" />
+          <div
+            class="peer h-6 w-11 rounded-full bg-zinc-300 after:absolute after:left-0.5 after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300"
+          >
+          </div>
+        </label>
+      </div>
+
+      <!-- Cookie Pemasaran -->
+      <div class="flex items-center justify-between gap-4">
+        <div>
+          <h4 class="text-sm font-semibold text-zinc-900">
+            {t("cookiemarketingtitle")}
+          </h4>
+          <p class="mt-0.5 text-xs text-zinc-500">
+            {t("cookiemarketingdesc")}
+          </p>
+        </div>
+        <label class="relative inline-flex cursor-pointer items-center">
+          <input type="checkbox" id="toggle-marketing" class="peer sr-only" />
+          <div
+            class="peer h-6 w-11 rounded-full bg-zinc-300 after:absolute after:left-0.5 after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300"
+          >
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div
+      class="mt-2 flex flex-col justify-between gap-4 sm:flex-row sm:items-center"
+    >
+      <button
+        id="btn-toggle-pref"
+        type="button"
+        data-text-open={textToggleOpen}
+        data-text-close={textToggleClose}
+        class="flex w-fit items-center gap-1 text-sm font-semibold text-zinc-600 transition-colors hover:text-zinc-900"
+      >
+        <span id="text-toggle-pref">{textToggleOpen}</span>
+        <svg
+          id="icon-toggle-pref"
+          class="transition-transform duration-200"
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m6 9 6 6 6-6"></path>
+        </svg>
+      </button>
+
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <button
+          id="btn-reject-cookie"
+          type="button"
+          class="w-full rounded-lg bg-white border border-gray-400 px-5 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:bg-zinc-900 hover:text-white sm:w-auto sm:py-2"
+        >
+          {t("cookiereject")}
+        </button>
+        <button
+          id="btn-save-cookie"
+          type="button"
+          class="hidden w-full rounded-lg border border-blue-600 bg-blue-50 px-5 py-2.5 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-100 sm:w-auto sm:py-2"
+        >
+          {t("cookiesave")}
+        </button>
+        <button
+          id="btn-accept-cookie"
+          type="button"
+          class="w-full rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 sm:w-auto sm:py-2"
+        >
+          {t("cookieaccept")}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tombol mengambang untuk membuka ulang preferensi cookie kapan saja -->
+<button
+  id="btn-open-cookie-settings"
+  type="button"
+  aria-label={t("cookiemanage")}
+  title={t("cookiemanage")}
+  class="fixed bottom-4 left-4 z-40 hidden h-11 w-11 items-center justify-center rounded-full border border-zinc-200 bg-blue-100 text-zinc-600 shadow-lg transition-colors hover:bg-zinc-100 hover:text-zinc-900"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"></path>
+    <path d="M8.5 8.5v.01"></path><path d="M16 12.5v.01"></path>
+    <path d="M12 16v.01"></path><path d="M11 12.5v.01"></path>
+  </svg>
+</button>
+
+<script>
+  // ============================================
+  // TYPE DEFINITIONS
+  // ============================================
+
+  interface WindowWithGtag extends Window {
+    gtag?: (...args: any[]) => void;
+  }
+
+  // ============================================
+  // BEST PRACTICE: Prosedural & Ringan
+  // ============================================
+
+  function initCookieBanner() {
+    const banner = document.getElementById("cookie-consent-banner");
+    if (!banner) return;
+
+    // Mencegah duplicate event listener saat Astro View Transitions berpindah halaman
+    if (banner.dataset.initialized === "true") return;
+    banner.dataset.initialized = "true";
+
+    const btnAccept = document.getElementById("btn-accept-cookie");
+    const btnReject = document.getElementById("btn-reject-cookie");
+    const btnSave = document.getElementById("btn-save-cookie");
+    const btnToggle = document.getElementById("btn-toggle-pref");
+    const prefPanel = document.getElementById("preferences-panel");
+    const textToggle = document.getElementById("text-toggle-pref");
+    const iconToggle = document.getElementById("icon-toggle-pref");
+    const toggleAnalytics = document.getElementById(
+      "toggle-analytics",
+    ) as HTMLInputElement | null;
+    const toggleMarketing = document.getElementById(
+      "toggle-marketing",
+    ) as HTMLInputElement | null;
+    const btnOpenSettings = document.getElementById("btn-open-cookie-settings");
+
+    interface StoredConsent {
+      analytics: "granted" | "denied";
+      marketing: "granted" | "denied";
+      timestamp: number;
+      version: number;
+    }
+
+    const CONSENT_KEY = "cookie_consent";
+    const CONSENT_VERSION = 1;
+    const CONSENT_MAX_AGE_DAYS = 180; // minta consent ulang tiap ~6 bulan
+    const textOpen = btnToggle?.dataset.textOpen || "Atur preferensi";
+    const textClose = btnToggle?.dataset.textClose || "Tutup preferensi";
+
+    // Update Google Consent Mode v2 (analitik & marketing dipisah)
+    function updateGtag(analyticsStatus: string, marketingStatus: string) {
+      const win = window as WindowWithGtag;
+      if (typeof win.gtag === "function") {
+        win.gtag("consent", "update", {
+          analytics_storage: analyticsStatus,
+          ad_storage: marketingStatus,
+          ad_user_data: marketingStatus,
+          ad_personalization: marketingStatus,
+        });
+      }
+    }
+
+    function saveConsent(analyticsStatus: string, marketingStatus: string) {
+      const payload: StoredConsent = {
+        analytics: analyticsStatus === "granted" ? "granted" : "denied",
+        marketing: marketingStatus === "granted" ? "granted" : "denied",
+        timestamp: Date.now(),
+        version: CONSENT_VERSION,
+      };
+      localStorage.setItem(CONSENT_KEY, JSON.stringify(payload));
+    }
+
+    function readConsent(): StoredConsent | null {
+      try {
+        const raw = localStorage.getItem(CONSENT_KEY);
+        if (!raw) return null;
+        const saved = JSON.parse(raw) as StoredConsent;
+
+        const isExpired =
+          !saved.timestamp ||
+          Date.now() - saved.timestamp >
+            CONSENT_MAX_AGE_DAYS * 24 * 60 * 60 * 1000;
+
+        if (isExpired || saved.version !== CONSENT_VERSION) return null;
+        return saved;
+      } catch {
+        return null;
+      }
+    }
+
+    function closeBanner() {
+      // Non-null assertion aman: fungsi ini hanya dipanggil setelah
+      // guard "if (!banner) return" di atas, jadi banner pasti ada.
+      banner!.classList.add("hidden");
+      prefPanel?.classList.add("hidden");
+      btnSave?.classList.add("hidden");
+      btnReject?.classList.remove("hidden");
+      if (textToggle) textToggle.textContent = textOpen;
+      if (iconToggle) iconToggle.style.transform = "rotate(0deg)";
+      btnOpenSettings?.classList.remove("hidden");
+      btnOpenSettings?.classList.add("flex");
+    }
+
+    function reopenBanner() {
+      btnOpenSettings?.classList.add("hidden");
+      btnOpenSettings?.classList.remove("flex");
+      banner!.classList.remove("hidden");
+      if (prefPanel?.classList.contains("hidden")) {
+        togglePanel();
+      }
+    }
+
+    function togglePanel() {
+      if (!prefPanel || !btnSave || !btnReject || !textToggle || !iconToggle)
+        return;
+
+      const isHidden = prefPanel.classList.contains("hidden");
+      if (isHidden) {
+        // Buka Panel
+        prefPanel.classList.remove("hidden");
+        btnSave.classList.remove("hidden");
+        btnReject.classList.add("hidden");
+        textToggle.textContent = textClose;
+        iconToggle.style.transform = "rotate(180deg)";
+      } else {
+        // Tutup Panel
+        prefPanel.classList.add("hidden");
+        btnSave.classList.add("hidden");
+        btnReject.classList.remove("hidden");
+        textToggle.textContent = textOpen;
+        iconToggle.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // --- 1. Initial State ---
+    const currentConsent = readConsent();
+    if (currentConsent) {
+      banner.classList.add("hidden");
+      if (toggleAnalytics) {
+        toggleAnalytics.checked = currentConsent.analytics === "granted";
+      }
+      if (toggleMarketing) {
+        toggleMarketing.checked = currentConsent.marketing === "granted";
+      }
+      updateGtag(currentConsent.analytics, currentConsent.marketing);
+      btnOpenSettings?.classList.remove("hidden");
+      btnOpenSettings?.classList.add("flex");
+    } else {
+      banner.classList.remove("hidden");
+    }
+
+    // --- 2. Event Listeners ---
+    btnAccept?.addEventListener("click", () => {
+      saveConsent("granted", "granted");
+      updateGtag("granted", "granted");
+      if (toggleAnalytics) toggleAnalytics.checked = true;
+      if (toggleMarketing) toggleMarketing.checked = true;
+      closeBanner();
+    });
+
+    btnReject?.addEventListener("click", () => {
+      saveConsent("denied", "denied");
+      updateGtag("denied", "denied");
+      if (toggleAnalytics) toggleAnalytics.checked = false;
+      if (toggleMarketing) toggleMarketing.checked = false;
+      closeBanner();
+    });
+
+    btnSave?.addEventListener("click", () => {
+      const analyticsStatus = toggleAnalytics?.checked ? "granted" : "denied";
+      const marketingStatus = toggleMarketing?.checked ? "granted" : "denied";
+      saveConsent(analyticsStatus, marketingStatus);
+      updateGtag(analyticsStatus, marketingStatus);
+      closeBanner();
+    });
+
+    btnToggle?.addEventListener("click", (e: Event) => {
+      e.preventDefault();
+      togglePanel();
+    });
+
+    btnOpenSettings?.addEventListener("click", (e: Event) => {
+      e.stopPropagation();
+      reopenBanner();
+    });
+
+    // Tutup panel jika user klik di luar area banner
+    document.addEventListener("click", (e: Event) => {
+      const target = e.target as Node;
+      if (
+        prefPanel &&
+        !prefPanel.classList.contains("hidden") &&
+        banner &&
+        !banner.contains(target)
+      ) {
+        togglePanel();
+      }
+    });
+
+    // Tutup panel dengan tombol Escape keyboard
+    document.addEventListener("keydown", (e: KeyboardEvent) => {
+      if (
+        e.key === "Escape" &&
+        prefPanel &&
+        !prefPanel.classList.contains("hidden")
+      ) {
+        togglePanel();
+      }
+    });
+  }
+
+  // Jalankan saat DOM pertama kali siap
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initCookieBanner);
+  } else {
+    initCookieBanner();
+  }
+
+  // Jalankan ulang setiap kali Astro berpindah halaman (View Transitions)
+  document.addEventListener("astro:page-load", initCookieBanner);
+</script>

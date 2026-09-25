@@ -29,6 +29,12 @@ export const organizationSchema = {
     { "@type": "AdministrativeArea", name: "Banten" },
     { "@type": "AdministrativeArea", name: "Jawa Barat" },
   ],
+  openingHoursSpecification: {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    opens: "08:00",
+    closes: "16:30",
+  },
   sameAs: [
     "https://www.instagram.com/intisuksesmitrasejati/",
     "https://www.facebook.com/intisuksesms/",

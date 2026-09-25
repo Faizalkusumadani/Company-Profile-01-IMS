@@ -23,10 +23,10 @@ const description = t("maintenancedesc");
 ---
 
 <BasicLayout title={title} description={description}>
-  <section class="py-28 bg-white min-h-screen flex items-center">
+  <section class="py-28 flex items-center">
     <div class="max-w-2xl mx-auto px-6 text-center">
       <div
-        class="inline-flex items-center gap-2.5 bg-zinc-50 border border-zinc-200/80 rounded-full px-4 py-1.5 text-xs font-medium text-zinc-600 tracking-wide uppercase mb-8"
+        class="inline-flex items-center gap-2.5 border border-zinc-200/80 rounded-full px-4 py-1.5 text-xs font-medium text-zinc-600 tracking-wide uppercase mb-8"
       >
         <span class="relative flex h-2 w-2">
           <span
@@ -39,13 +39,13 @@ const description = t("maintenancedesc");
       </div>
 
       <h1
-        class="text-3xl sm:text-4xl font-bold text-zinc-900 mb-5 tracking-tight"
+        class="text-3xl sm:text-4xl font-bold text-gray-900 mb-5 tracking-tight"
       >
         {t("headermaintenance")}
       </h1>
 
       <p
-        class="text-base sm:text-lg text-zinc-500 font-normal max-w-lg mx-auto mb-12 leading-relaxed"
+        class="text-base sm:text-lg text-gray-500 font-normal max-w-lg mx-auto mb-12 leading-relaxed"
       >
         {t("maintenancedesc")}
       </p>
@@ -53,7 +53,7 @@ const description = t("maintenancedesc");
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
         <a
           href={`/${lang}/`}
-          class="group inline-flex items-center justify-center gap-3 border-2 border-ims-red hover:bg-red-700 hover:text-white text-ims-red font-medium px-8 py-3 rounded-full text-sm sm:text-base"
+          class="group inline-flex items-center justify-center gap-3 border border-ims-red hover:bg-red-700 hover:text-white text-ims-red font-medium px-8 py-3 rounded-full text-sm sm:text-base"
         >
           {t("ctamaintenance")}
           <Icon

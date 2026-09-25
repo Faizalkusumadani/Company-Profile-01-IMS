@@ -212,14 +212,13 @@ const title = t("home_pages"),
   <section id="features" class="relative w-full py-20 sm:py-28 overflow-hidden">
     <Image
       src={bannerImg}
-      widths={[480, 800, 1280, 1600]}
-      sizes="(max-width: 600px) 480px, (max-width: 1024px) 800px, (max-width: 1440px) 1280px, 1600px"
+      widths={[400, 800, 1280, 1600]}
+      sizes="100vw"
       format="webp"
-      quality={45}
+      quality={30}
       alt="Gedung IMS"
       class="absolute inset-0 w-full h-full object-cover"
-      loading="eager"
-      fetchpriority="high"
+      loading="lazy"
     />
 
     <!-- Overlay gelap — juga langsung child section -->

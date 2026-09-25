@@ -36,6 +36,16 @@ const {
 
 const hasHeader = Boolean(eyebrow || title || description);
 const hasMultipleSlides = slides.length > 1;
+
+// Turunkan width/height sumber gambar dari aspectRatio yang sebenarnya dipakai,
+// supaya atribut width/height <img> (untuk mencegah layout shift) selalu
+// konsisten dengan rasio tampil di CSS, bukan hanya cocok untuk default 16/6.
+const [ratioW, ratioH] = aspectRatio.split("/").map(Number);
+const IMAGE_WIDTH = 1200;
+const IMAGE_HEIGHT =
+  Number.isFinite(ratioW) && Number.isFinite(ratioH) && ratioW > 0
+    ? Math.round(IMAGE_WIDTH * (ratioH / ratioW))
+    : Math.round(IMAGE_WIDTH / 2.667);
 ---
 
 <section class="promo-carousel" data-swiper-id={instanceId}>
@@ -73,12 +83,12 @@ const hasMultipleSlides = slides.length > 1;
                       <Image
                         src={slide.image}
                         alt={slide.title}
-                        width={1200}
-                        height={Math.round(1200 / 2.667)}
+                        width={IMAGE_WIDTH}
+                        height={IMAGE_HEIGHT}
                         format="webp"
                         quality={75}
                         widths={[480, 768, 1024, 1200]}
-                        sizes="(min-width: 1200px) 1168px, 100vw"
+                        sizes="(min-width: 1232px) 1168px, calc(100vw - 2rem)"
                         loading={index === 0 ? "eager" : "lazy"}
                         decoding={index === 0 ? "sync" : "async"}
                         class="promo-slide__img"
@@ -111,23 +121,44 @@ const hasMultipleSlides = slides.length > 1;
                             {slide.description}
                           </p>
                         )}
-                        {slide.href && slide.ctaText && (
-                          <a href={slide.href} class="promo-slide__cta">
-                            {slide.ctaText}
-                            <svg
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              width="16"
-                              height="16"
+                        {slide.href &&
+                          slide.ctaText &&
+                          (slide.image ? (
+                            <span
+                              class="promo-slide__cta promo-slide__cta--label"
+                              aria-hidden="true"
                             >
-                              <path d="M5 12h14M12 5l7 7-7 7" />
-                            </svg>
-                          </a>
-                        )}
+                              {slide.ctaText}
+                              <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                width="16"
+                                height="16"
+                              >
+                                <path d="M5 12h14M12 5l7 7-7 7" />
+                              </svg>
+                            </span>
+                          ) : (
+                            <a href={slide.href} class="promo-slide__cta">
+                              {slide.ctaText}
+                              <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                width="16"
+                                height="16"
+                              >
+                                <path d="M5 12h14M12 5l7 7-7 7" />
+                              </svg>
+                            </a>
+                          ))}
                       </div>
                     </div>
                   )}
@@ -209,7 +240,7 @@ const hasMultipleSlides = slides.length > 1;
   /* Design Tokens */
   .promo-carousel {
     --promo-red: var(--ims-red, #d23439);
-    --promo-red-dark: #b91c1c;
+    --promo-red-dark: color-mix(in srgb, var(--promo-red) 80%, black);
     --promo-ease: cubic-bezier(0.22, 1, 0.36, 1);
     --promo-indicator-gap: clamp(0.75rem, 2.5vw, 1.25rem);
   }
@@ -373,6 +404,12 @@ const hasMultipleSlides = slides.length > 1;
   .promo-slide__cta:hover {
     background: var(--promo-red-dark);
     transform: scale(1.05);
+  }
+
+  /* Varian span (dekoratif, dipakai saat full-slide link sudah ada) —
+     jangan menangkap klik, biarkan tembus ke .promo-slide__link */
+  .promo-slide__cta--label {
+    pointer-events: none;
   }
 
   .promo-slide__link {
@@ -720,11 +757,21 @@ const hasMultipleSlides = slides.length > 1;
   document.addEventListener("astro:page-load", initAll);
   document.addEventListener("astro:before-swap", destroyAll);
 
+  // Saat tab disembunyikan, cukup hentikan autoplay (hemat resource) —
+  // JANGAN destroy instance, karena tidak ada trigger apa pun yang
+  // menginisialisasi ulang saat tab aktif kembali (astro:page-load tidak
+  // fire lagi jika tidak ada navigasi). Destroy permanen di sini akan
+  // membuat carousel mati total setelah user ganti tab lalu kembali.
   if (typeof document !== "undefined") {
     document.addEventListener("visibilitychange", () => {
-      if (document.hidden) {
-        destroyAll();
-      }
+      instances.forEach((swiper) => {
+        if (swiper.destroyed || !swiper.autoplay) return;
+        if (document.hidden) {
+          swiper.autoplay.stop();
+        } else {
+          swiper.autoplay.start();
+        }
+      });
     });
   }
 </script>

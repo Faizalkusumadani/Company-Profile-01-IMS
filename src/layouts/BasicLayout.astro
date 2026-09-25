@@ -1,11 +1,16 @@
 ---
 import "../styles/global.css";
+import { ClientRouter } from "astro:transitions";
+import { pwaInfo } from "virtual:pwa-info";
+import JsonLd from "../components/JsonLd.astro";
+import { organizationSchema } from "../assets/tools/schema";
 
 interface Props {
   title: string;
   description: string;
   image?: string;
   url?: string;
+  schema?: Record<string, any> | Record<string, any>[];
 }
 
 const SITE_URL = "https://intisukses-ms.com";
@@ -15,14 +20,20 @@ const {
   description,
   image = `${SITE_URL}/og-default.png`,
   url = Astro.url.href,
+  schema,
 } = Astro.props;
 
+const lang = (Astro.params.lang as string) || "id";
 const ogImage = image.startsWith("http") ? image : `${SITE_URL}${image}`;
 const ogTitle = `Intisukses Mitra Sejati | ${title}`;
+
+const jsonLdData = schema
+  ? [organizationSchema, ...(Array.isArray(schema) ? schema : [schema])]
+  : organizationSchema;
 ---
 
 <!doctype html>
-<html lang="id">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -32,10 +43,10 @@ const ogTitle = `Intisukses Mitra Sejati | ${title}`;
     <meta name="author" content="Intisukses Mitra Sejati" />
     <meta name="robots" content="index, follow" />
 
-    <!-- Open Graph -->
+    <!-- ─── Open Graph ────────────────────────────────────────────────────── -->
     <meta property="og:site_name" content="Intisukses Mitra Sejati" />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="id_ID" />
+    <meta property="og:locale" content={lang === "id" ? "id_ID" : "en_US"} />
     <meta property="og:title" content={ogTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={url} />
@@ -46,26 +57,67 @@ const ogTitle = `Intisukses Mitra Sejati | ${title}`;
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={ogTitle} />
 
-    <!-- Twitter / X Card -->
+    <!-- ─── Twitter / X Card ─────────────────────────────────────────────── -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={ogTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <meta name="twitter:image:alt" content={ogTitle} />
 
-    <!-- Favicon -->
+    <!-- ─── Favicon & Theme ───────────────────────────────────────────────── -->
     <link rel="canonical" href={url} />
-    <link rel="icon" type="image/svg+xml" href="/favicon_ims.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon_ims_03.ico" />
     <link rel="apple-touch-icon" href="/ims-touch-icon.png" />
     <meta name="theme-color" content="#0f172a" />
 
-    <!-- Langkah 1: Inisialisasi dataLayer sebelum gtag.js load -->
+    <!-- ─── Structured Data (JSON-LD) ─────────────────────────────────────── -->
+    <JsonLd data={jsonLdData} />
+
+    <!-- Langkah 1: Inisialisasi dataLayer & Consent Default -->
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
       }
-      // Inisialisasi waktu hanya sekali (bukan tiap navigasi View Transitions)
+
+      gtag("consent", "default", {
+        analytics_storage: "denied",
+        ad_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+        wait_for_update: 500,
+      });
+
+      // Jika user sudah pernah memberi consent dan belum kedaluwarsa, langsung update
+      (function () {
+        try {
+          const raw = localStorage.getItem("cookie_consent");
+          if (!raw) return;
+
+          const saved = JSON.parse(raw);
+          const CONSENT_VERSION = 1;
+          const CONSENT_MAX_AGE_DAYS = 180;
+
+          const isExpired =
+            !saved.timestamp ||
+            Date.now() - saved.timestamp >
+              CONSENT_MAX_AGE_DAYS * 24 * 60 * 60 * 1000;
+
+          if (isExpired || saved.version !== CONSENT_VERSION) return;
+
+          gtag("consent", "update", {
+            analytics_storage:
+              saved.analytics === "granted" ? "granted" : "denied",
+            ad_storage: saved.marketing === "granted" ? "granted" : "denied",
+            ad_user_data: saved.marketing === "granted" ? "granted" : "denied",
+            ad_personalization:
+              saved.marketing === "granted" ? "granted" : "denied",
+          });
+        } catch (e) {
+          // Data localStorage rusak/tidak valid, abaikan dan biarkan default denied
+        }
+      })();
+
       if (!window._gtagInitialized) {
         window._gtagInitialized = true;
         gtag("js", new Date());
@@ -75,29 +127,39 @@ const ogTitle = `Intisukses Mitra Sejati | ${title}`;
       }
     </script>
 
-    <!-- Langkah 2: Load library GA secara async (non-blocking) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G8R54H54VV"
-    ></script>
+    <!-- Langkah 2: Load library GA -->
+    <script
+      is:inline
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-G8R54H54VV"></script>
 
-    <!-- Langkah 3: Track pageview setiap navigasi (termasuk View Transitions) -->
-    <script is:inline data-astro-rerun>
-      document.addEventListener("astro:page-load", () => {
-        if (typeof gtag === "function") {
-          gtag("event", "page_view", {
-            page_location: window.location.href,
-            page_path: window.location.pathname,
-          });
-        }
-      });
+    <!-- Langkah 3: Track pageview (dipasang 1x, aman untuk View Transitions) -->
+    <script is:inline>
+      if (!window._gtagPageviewInit) {
+        window._gtagPageviewInit = true;
+        document.addEventListener("astro:page-load", () => {
+          if (typeof window.gtag === "function") {
+            window.gtag("event", "page_view", {
+              page_location: window.location.href,
+              page_path: window.location.pathname,
+            });
+          }
+        });
+      }
     </script>
+
+    <!-- Client Router untuk View Transitions -->
+    <ClientRouter />
+
+    {
+      pwaInfo && pwaInfo.webManifest && (
+        <Fragment set:html={pwaInfo.webManifest.linkTag} />
+      )
+    }
   </head>
-  <body class="bg-zinc-100">
-    <div>
-      <main>
-        <div class="mx-auto w-full">
-          <slot />
-        </div>
-      </main>
-    </div>
+  <body class="bg-zinc-50 min-h-screen scroll-smooth">
+    <main class="w-full">
+      <slot />
+    </main>
   </body>
 </html>

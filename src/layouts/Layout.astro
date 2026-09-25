@@ -7,6 +7,7 @@ import Footer from "../components/Footer.astro";
 import { pwaInfo } from "virtual:pwa-info";
 import JsonLd from "../components/JsonLd.astro";
 import { organizationSchema } from "../assets/tools/schema";
+import CookieConsent from "../components/Cookie.astro";
 
 interface Props {
   title: string;
@@ -17,7 +18,6 @@ interface Props {
 }
 
 const SITE_URL = "https://intisukses-ms.com";
-
 const {
   title,
   description,
@@ -26,17 +26,17 @@ const {
   schema,
 } = Astro.props;
 
+const lang = (Astro.params.lang as string) || "id";
 const ogImage = image.startsWith("http") ? image : `${SITE_URL}${image}`;
 const ogTitle = `Intisukses Mitra Sejati | ${title}`;
 
-// Organization schema selalu tampil + schema tambahan per-halaman (kalau ada)
 const jsonLdData = schema
   ? [organizationSchema, ...(Array.isArray(schema) ? schema : [schema])]
   : organizationSchema;
 ---
 
 <!doctype html>
-<html lang="id">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -49,7 +49,7 @@ const jsonLdData = schema
     <!-- ─── Open Graph ────────────────────────────────────────────────────── -->
     <meta property="og:site_name" content="Intisukses Mitra Sejati" />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="id_ID" />
+    <meta property="og:locale" content={lang === "id" ? "id_ID" : "en_US"} />
     <meta property="og:title" content={ogTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={url} />
@@ -76,13 +76,51 @@ const jsonLdData = schema
     <!-- ─── Structured Data (JSON-LD) ─────────────────────────────────────── -->
     <JsonLd data={jsonLdData} />
 
-    <!-- Langkah 1: Inisialisasi dataLayer sebelum gtag.js load -->
+    <!-- Langkah 1: Inisialisasi dataLayer & Consent Default -->
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
       }
-      // Inisialisasi waktu hanya sekali (bukan tiap navigasi View Transitions)
+
+      gtag("consent", "default", {
+        analytics_storage: "denied",
+        ad_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+        wait_for_update: 500,
+      });
+
+      // Jika user sudah pernah memberi consent dan belum kedaluwarsa, langsung update
+      (function () {
+        try {
+          const raw = localStorage.getItem("cookie_consent");
+          if (!raw) return;
+
+          const saved = JSON.parse(raw);
+          const CONSENT_VERSION = 1;
+          const CONSENT_MAX_AGE_DAYS = 180;
+
+          const isExpired =
+            !saved.timestamp ||
+            Date.now() - saved.timestamp >
+              CONSENT_MAX_AGE_DAYS * 24 * 60 * 60 * 1000;
+
+          if (isExpired || saved.version !== CONSENT_VERSION) return;
+
+          gtag("consent", "update", {
+            analytics_storage:
+              saved.analytics === "granted" ? "granted" : "denied",
+            ad_storage: saved.marketing === "granted" ? "granted" : "denied",
+            ad_user_data: saved.marketing === "granted" ? "granted" : "denied",
+            ad_personalization:
+              saved.marketing === "granted" ? "granted" : "denied",
+          });
+        } catch (e) {
+          // Data localStorage rusak/tidak valid, abaikan dan biarkan default denied
+        }
+      })();
+
       if (!window._gtagInitialized) {
         window._gtagInitialized = true;
         gtag("js", new Date());
@@ -92,31 +130,38 @@ const jsonLdData = schema
       }
     </script>
 
-    <!-- Langkah 2: Load library GA secara async (non-blocking) -->
+    <!-- Langkah 2: Load library GA -->
     <script
       is:inline
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-G8R54H54VV"></script>
 
-    <!-- Langkah 3: Track pageview setiap navigasi (termasuk View Transitions) -->
-    <script is:inline data-astro-rerun>
-      document.addEventListener("astro:page-load", () => {
-        if (typeof gtag === "function") {
-          gtag("event", "page_view", {
-            page_location: window.location.href,
-            page_path: window.location.pathname,
-          });
-        }
-      });
+    <!-- Langkah 3: Track pageview (dipasang 1x, aman untuk View Transitions) -->
+    <script is:inline>
+      if (!window._gtagPageviewInit) {
+        window._gtagPageviewInit = true;
+        document.addEventListener("astro:page-load", () => {
+          if (typeof window.gtag === "function") {
+            window.gtag("event", "page_view", {
+              page_location: window.location.href,
+              page_path: window.location.pathname,
+            });
+          }
+        });
+      }
     </script>
-    <!-- ─── End Google Analytics ──────────────────────────────────────────── -->
 
+    <!-- Client Router untuk View Transitions -->
     <ClientRouter />
-    {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
-  </head>
-  <body class="bg-zinc-50 min-h-screen scroll-smooth">
-    <PageLoader />
 
+    {
+      pwaInfo && pwaInfo.webManifest && (
+        <Fragment set:html={pwaInfo.webManifest.linkTag} />
+      )
+    }
+  </head>
+  <body class="bg-zinc-50 scroll-smooth">
+    <PageLoader />
     <div id="scroll-progress"></div>
 
     <Navbar />
@@ -125,6 +170,9 @@ const jsonLdData = schema
     </main>
     <Footer />
 
+    <!-- Komponen Cookie Consent -->
+    <CookieConsent />
+
     <script>
       import { initUI } from "../assets/tools/initflowbite";
 
@@ -132,31 +180,26 @@ const jsonLdData = schema
       document.addEventListener("astro:after-swap", initUI);
     </script>
 
-    <!-- Scroll progress logic — pakai is:inline agar jalan setelah View Transitions -->
+    <!-- Scroll progress logic (Anti-Memory Leak) -->
     <script is:inline>
-      function initScrollProgress() {
-        const bar = document.getElementById("scroll-progress");
-        if (!bar) return;
-
+      (function () {
         function updateProgress() {
+          const bar = document.getElementById("scroll-progress");
+          if (!bar) return;
+
           const scrolled = window.scrollY;
           const total =
             document.documentElement.scrollHeight - window.innerHeight;
           bar.style.width = total > 0 ? (scrolled / total) * 100 + "%" : "0%";
         }
 
-        // Reset ke 0 saat halaman baru dimuat
-        bar.style.width = "0%";
+        if (!window._scrollProgressInit) {
+          window._scrollProgressInit = true;
+          window.addEventListener("scroll", updateProgress, { passive: true });
+        }
 
-        window.addEventListener("scroll", updateProgress, { passive: true });
-        updateProgress();
-      }
-
-      // Load pertama
-      document.addEventListener("DOMContentLoaded", initScrollProgress);
-
-      // Setelah navigasi View Transitions
-      document.addEventListener("astro:page-load", initScrollProgress);
+        document.addEventListener("astro:page-load", updateProgress);
+      })();
     </script>
   </body>
 </html>

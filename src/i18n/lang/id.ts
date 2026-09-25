@@ -260,6 +260,7 @@ const _id = {
   title_product_3: "untuk setiap Kebutuhan",
   desc_product:
     "Empat kategori produk utama yang dirancang untuk mendukung proyek modern—dari hunian hingga gedung komersial dan industri.",
+  category_0: "Semua",
   category_1: "MEP Sistem",
   category_2: "Bahan Bangunan",
   category_3: "Sanitari",
@@ -752,7 +753,25 @@ const _id = {
   "form.network.title": "Koneksi Anda Bermasalah",
   "form.network.message":
     "Tidak dapat terhubung ke server. Periksa koneksi internet Anda dan coba lagi.",
-
+  // Cookie
+  cookietitle: "Pengaturan Cookie",
+  cookiedesc:
+    "Kami menggunakan cookie untuk menganalisis lalu lintas dan meningkatkan pengalaman Anda di situs kami. Apakah Anda setuju?",
+  cookielearnmore: "Pelajari lebih lanjut",
+  cookiepreferences: "Atur preferensi",
+  cookienecessarytitle: "Essensial",
+  cookienecessarydesc:
+    "Diperlukan agar situs berfungsi dengan baik. Selalu aktif",
+  cookieanalyticstitle: "Analitik & Performa",
+  cookieanalyticsdesc:
+    "Membantu kami memahami bagaimana pengunjung berinteraksi dengan situs",
+  cookiemarketingtitle: "Pemasaran",
+  cookiemarketingdesc: "Digunakan untuk menampilkan iklan yang lebih relevan",
+  cookiemanage: "Kelola preferensi cookie",
+  cookieclosepreferences: "Tutup preferensi",
+  cookiesave: "Simpan pilihan",
+  cookieaccept: "Terima Semua",
+  cookiereject: "Tolak",
   // Footer
   footertitle_1: "HUBUNGI KAMI",
   footertitle_2: "KANTOR PUSAT",
