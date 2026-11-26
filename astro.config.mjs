@@ -11,7 +11,9 @@ export default defineConfig({
   site: "https://intisukses-ms.com/",
   trailingSlash: "never",
   redirects: {
-    "/": "/id/",
+    "/": "/id",
+    "/id/faq": "/id/maintenance",
+    "/en/faq": "/en/maintenance",
   },
   vite: {
     plugins: [tailwindcss()],
@@ -35,6 +37,8 @@ export default defineConfig({
     react(),
     icon(),
     sitemap({
+      // 404 & maintenance bersifat noindex → jangan masuk sitemap
+      filter: (page) => !/\/(404|maintenance)\/?$/.test(page),
       i18n: {
         defaultLocale: "id",
         locales: {
@@ -86,6 +90,7 @@ export default defineConfig({
         ],
       },
       workbox: {
+        navigateFallback: null,
         cleanupOutdatedCaches: true,
         globPatterns: ["**/*.{js,css,html,ico,woff,woff2,txt}"],
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
@@ -142,27 +147,6 @@ export default defineConfig({
                 maxAgeSeconds: 60 * 60 * 24 * 7,
               },
               networkTimeoutSeconds: 5,
-            },
-          },
-          {
-            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: "StaleWhileRevalidate",
-            options: {
-              cacheName: "google-fonts-stylesheets",
-            },
-          },
-          {
-            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "google-fonts-webfonts",
-              expiration: {
-                maxEntries: 20,
-                maxAgeSeconds: 60 * 60 * 24 * 365,
-              },
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
             },
           },
         ],

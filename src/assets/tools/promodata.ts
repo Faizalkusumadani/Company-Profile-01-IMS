@@ -1,22 +1,22 @@
 const dataPromo = [
   {
     id: "01",
-    image: "promo-01.jpeg",
+    image: "BANNER BESTLON.png",
     title: "Promo Bestlon",
   },
   {
     id: "02",
-    image: "promo-02.jpeg",
+    image: "BANNER TRILLIUNWARE.png",
     title: "Promo Trilliunware",
   },
   {
     id: "03",
-    image: "promo-03.jpeg",
+    image: "BANNER TRILLIUN.png",
     title: "Promo Trilliun",
   },
   {
     id: "04",
-    image: "promo-04.jpeg",
+    image: "BANNER UNNU.png",
     title: "Promo Unnu",
   },
 ] as const;

@@ -1,0 +1,259 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import dataPromo from "../assets/tools/promodata";
+
+interface Props {
+  interval?: number;
+  label?: string;
+  class?: string;
+}
+
+const {
+  interval = 10000,
+  label = "Promo terbaru",
+  class: className,
+} = Astro.props;
+
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/**/*.{png,jpg,jpeg,webp,avif}",
+  { eager: true },
+);
+
+const imageByName = new Map(
+  Object.entries(images).map(([path, mod]) => [
+    path.split("/").pop()!,
+    mod.default,
+  ]),
+);
+
+const slides = dataPromo.map((promo) => {
+  const image = imageByName.get(promo.image);
+  if (!image) {
+    throw new Error(
+      `Gambar "${promo.image}" tidak ditemukan di src/assets. Cek nama file dan lokasinya.`,
+    );
+  }
+  return { id: promo.id, title: promo.title, image };
+});
+
+// Rasio carousel mengikuti rasio asli gambar (1920x800 = 2.4:1) agar tidak ada yang terpotong.
+// Semua banner sebaiknya berukuran sama.
+const { width, height } = slides[0].image;
+const aspectRatio = `${width} / ${height}`;
+---
+
+<div class:list={["fade-carousel", className]} data-interval={interval}>
+  <section
+    class="group swiper relative w-full overflow-hidden rounded-2xl bg-slate-900 shadow-lg"
+    style={`aspect-ratio: ${aspectRatio}`}
+    aria-roledescription="carousel"
+    aria-label={label}
+  >
+    <div class="swiper-wrapper">
+      {
+        slides.map((slide, i) => (
+          <div
+            class="swiper-slide"
+            role="group"
+            aria-roledescription="slide"
+            aria-label={`${i + 1} dari ${slides.length}`}
+          >
+            <Image
+              src={slide.image}
+              alt={slide.title}
+              widths={[640, 960, 1280, 1920]}
+              sizes="(max-width: 1280px) 100vw, 1280px"
+              class="h-full w-full object-cover"
+              loading={i === 0 ? "eager" : "lazy"}
+              fetchpriority={i === 0 ? "high" : "auto"}
+              decoding={i === 0 ? "sync" : "async"}
+            />
+          </div>
+        ))
+      }
+    </div>
+
+    <button
+      type="button"
+      class="fc-prev absolute left-3 top-1/2 z-10 grid size-10 -translate-y-1/2 place-items-center rounded-full bg-black/40 text-white backdrop-blur hover:bg-black/60 opacity-0 pointer-events-none transition-opacity duration-200 group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:opacity-40 md:left-5"
+      aria-label="Promo sebelumnya"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        class="size-5"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg
+      >
+    </button>
+    <button
+      type="button"
+      class="fc-next absolute right-3 top-1/2 z-10 grid size-10 -translate-y-1/2 place-items-center rounded-full bg-black/40 text-white backdrop-blur hover:bg-black/60 opacity-0 pointer-events-none transition-opacity duration-200 group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:opacity-40 md:right-5"
+      aria-label="Promo berikutnya"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        class="size-5"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg
+      >
+    </button>
+  </section>
+
+  <!-- Pagination di luar gambar: bar progress ala "stories" -->
+  <div class="fc-pagination mt-3 flex justify-center gap-2"></div>
+</div>
+
+<script>
+  import Swiper from "swiper";
+  import {
+    A11y,
+    Autoplay,
+    EffectFade,
+    Keyboard,
+    Navigation,
+    Pagination,
+  } from "swiper/modules";
+
+  import "swiper/css";
+  import "swiper/css/effect-fade";
+
+  // Menyimpan instance aktif agar bisa di-destroy sebelum halaman diganti (View Transitions)
+  const instances = new Map<HTMLElement, Swiper>();
+
+  function initCarousels() {
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    document.querySelectorAll<HTMLElement>(".fade-carousel").forEach((root) => {
+      if (instances.has(root)) return; // cegah inisialisasi ganda
+
+      const container = root.querySelector<HTMLElement>(".swiper");
+      const paginationEl = root.querySelector<HTMLElement>(".fc-pagination");
+      if (!container || !paginationEl) return;
+
+      const interval = Number(root.dataset.interval) || 5000;
+
+      // Progress bar slide aktif (0 → 1). Tanpa autoplay, bar aktif langsung penuh.
+      const setProgress = (value: number) =>
+        paginationEl.style.setProperty("--fc-progress", String(value));
+      setProgress(reduceMotion ? 1 : 0);
+
+      const swiper = new Swiper(container, {
+        modules: [A11y, Autoplay, EffectFade, Keyboard, Navigation, Pagination],
+        effect: "fade",
+        fadeEffect: { crossFade: true }, // agar slide tidak menumpuk saat transisi
+        loop: true,
+        speed: reduceMotion ? 0 : 800,
+        autoplay: reduceMotion
+          ? false
+          : {
+              delay: interval,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+            },
+        keyboard: { enabled: true },
+        a11y: {
+          prevSlideMessage: "Promo sebelumnya",
+          nextSlideMessage: "Promo berikutnya",
+          paginationBulletMessage: "Ke promo {{index}}",
+        },
+        navigation: {
+          prevEl: root.querySelector<HTMLElement>(".fc-prev"),
+          nextEl: root.querySelector<HTMLElement>(".fc-next"),
+        },
+        pagination: {
+          el: paginationEl,
+          clickable: true,
+          bulletClass: "fc-bullet",
+          bulletActiveClass: "fc-bullet-active",
+        },
+        on: {
+          // Sinkron dengan timer autoplay (ikut berhenti saat di-hover)
+          autoplayTimeLeft: (_swiper, _timeLeft, percentage) =>
+            setProgress(1 - percentage),
+          slideChange: () => {
+            if (!reduceMotion) setProgress(0);
+          },
+        },
+      });
+
+      instances.set(root, swiper);
+    });
+  }
+
+  function destroyCarousels() {
+    instances.forEach((swiper) => swiper.destroy(true, false));
+    instances.clear();
+  }
+
+  // Berjalan di load pertama DAN setiap navigasi View Transitions
+  document.addEventListener("astro:page-load", initCarousels);
+  // Bersihkan timer autoplay & event listener sebelum DOM lama dibuang
+  document.addEventListener("astro:before-swap", destroyCarousels);
+</script>
+
+<style is:global>
+  .fade-carousel {
+    --fc-red: #dc2626; /* warna bar aktif & yang sudah lewat */
+    --fc-track: #d4d4d8; /* warna bar yang belum dimainkan */
+  }
+
+  /* Tiap bullet = area klik setinggi 20px, garis 5px digambar di tengah */
+  .fc-bullet {
+    position: relative;
+    width: 3rem;
+    height: 1.25rem;
+    cursor: pointer;
+  }
+  @media (min-width: 640px) {
+    .fc-bullet {
+      width: 5rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .fc-bullet {
+      width: 7.5rem;
+    }
+  }
+
+  .fc-bullet::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    height: 5px;
+    transform: translateY(-50%);
+    border-radius: 9999px;
+    background: var(--fc-red); /* sebelum slide aktif = penuh */
+  }
+
+  /* Slide aktif: terisi sesuai progress autoplay */
+  .fc-bullet-active::before {
+    background: linear-gradient(
+      to right,
+      var(--fc-red) calc(var(--fc-progress, 1) * 100%),
+      var(--fc-track) 0
+    );
+  }
+
+  /* Setelah slide aktif = belum dimainkan */
+  .fc-bullet-active ~ .fc-bullet::before {
+    background: var(--fc-track);
+  }
+
+  .fc-bullet:focus-visible {
+    outline: 2px solid var(--fc-red);
+    outline-offset: 2px;
+    border-radius: 9999px;
+  }
+</style>

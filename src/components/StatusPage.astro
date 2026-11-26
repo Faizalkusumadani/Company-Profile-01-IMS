@@ -1,0 +1,91 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  code: string; // "404" | "503"
+  title: string;
+  description: string;
+  ctaLabel: string;
+  lang: string;
+}
+
+const { code, title, description, ctaLabel, lang } = Astro.props;
+---
+
+<div
+  class="min-h-screen flex flex-col justify-between bg-linear-to-b from-zinc-50 via-white to-zinc-100 text-zinc-800"
+>
+  <!-- ── Main Content ───────────────────────────────────────────── -->
+  <section class="flex-1 flex items-center justify-center px-6 py-12">
+    <div class="max-w-2xl w-full mx-auto text-center">
+      <!-- Large Visual Typography -->
+      <div class="relative select-none my-2">
+        <span
+          class="text-7xl sm:text-9xl font-extrabold tracking-tight bg-linear-to-br from-ims-red via-red-600 to-amber-600 bg-clip-text text-transparent opacity-90 drop-shadow-xs"
+        >
+          {code}
+        </span>
+      </div>
+
+      <!-- Title & Subtitle -->
+      <h1
+        class="text-2xl sm:text-4xl font-bold text-zinc-900 mb-4 tracking-tight"
+      >
+        {title}
+      </h1>
+
+      <p
+        class="text-base sm:text-lg text-zinc-600 font-normal max-w-lg mx-auto mb-10 leading-relaxed"
+      >
+        {description}
+      </p>
+
+      <!-- CTA Button (trailingSlash: "never" → tanpa slash di akhir) -->
+      <div
+        class="flex flex-col sm:flex-row items-center justify-center gap-3.5 mb-12"
+      >
+        <a
+          href={`/${lang}`}
+          class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-ims-red hover:bg-red-700 text-white font-medium px-7 py-3 rounded-full text-sm sm:text-base shadow-sm transition-all hover:shadow-md"
+        >
+          <Icon name="local:arrow-left" class="w-4 h-4" />
+          {ctaLabel}
+        </a>
+      </div>
+
+      <!-- Quick Help Bar -->
+      <div
+        class="rounded-2xl border border-zinc-200/90 bg-white/80 backdrop-blur-xs p-5 shadow-xs max-w-md mx-auto"
+      >
+        <div
+          class="flex flex-col sm:flex-row items-center justify-around gap-3 text-xs sm:text-sm text-zinc-600"
+        >
+          <a
+            href="tel:+622130067868"
+            class="inline-flex items-center gap-2 hover:text-ims-red transition-colors"
+          >
+            <Icon name="local:phone" class="w-4 h-4 text-zinc-400" />
+            <span>+62 21 300 678 68</span>
+          </a>
+          <span class="hidden sm:inline text-zinc-300">|</span>
+          <a
+            href="mailto:sales@intisukses-ms.com"
+            class="inline-flex items-center gap-2 hover:text-ims-red transition-colors"
+          >
+            <Icon name="local:mail" class="w-4 h-4 text-zinc-400" />
+            <span>sales@intisukses-ms.com</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ─────────────────────────────────────────────────── -->
+  <footer
+    class="w-full max-w-7xl mx-auto px-6 py-6 text-center text-xs text-zinc-400 border-t border-zinc-200/60"
+  >
+    <p>
+      © {new Date().getFullYear()} PT Intisukses Mitra Sejati. All rights reserved.
+    </p>
+  </footer>
+</div>

@@ -1,0 +1,27 @@
+---
+import BasicLayout from "../../layouts/BasicLayout.astro";
+import StatusPage from "../../components/StatusPage.astro";
+import { languages } from "../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+
+export function getStaticPaths() {
+  return Object.keys(languages).map((lang) => ({ params: { lang } }));
+}
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<BasicLayout
+  title={t("notfound_title")}
+  description={t("notfound_desc")}
+  robots="noindex, nofollow"
+>
+  <StatusPage
+    code="404"
+    title={t("notfound_header")}
+    description={t("notfound_desc")}
+    ctaLabel={t("notfound_back_home")}
+    lang={lang}
+  />
+</BasicLayout>

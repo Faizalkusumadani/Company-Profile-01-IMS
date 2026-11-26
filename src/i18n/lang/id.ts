@@ -56,7 +56,7 @@ const _id = {
   arcticlefeaturesfleet_3: "karena waktu Anda ",
   arcticlefeaturesfleet_4: "adalah prioritas kami",
   headerabout: "Distributor Resmi",
-  ctaabout: "Lihat semua",
+  ctaabout: "Lihat detail",
   headeraboutdescription:
     "Sebagai perusahaan yang bergerak di bidang penjualan dan distribusi produk MEP sistem, Bahan Bangunan, Sanitari & (EV) Charger kami berkomitmen untuk menjadi mitra terpercaya dalam memenuhi kebutuhan pelanggan di berbagai sektor. ",
   faq_label: "FAQ",
@@ -114,9 +114,24 @@ const _id = {
   maintenance: "Maintenance",
   ctamaintenance: "Kembali ke Beranda",
   labelmaintenance: "Pembaruan Sistem",
-  headermaintenance: "Halaman Sedang Diperbarui",
+  headermaintenance: "Halaman Sedang Dalam Pemeliharaan",
   maintenancedesc:
-    "Kami sedang melakukan pemeliharaan rutin untuk meningkatkan performa dan layanan. Halaman ini akan segera kembali normal dalam beberapa saat.",
+    "Kami sedang melakukan pemeliharaan sistem rutin untuk meningkatkan performa dan kenyamanan layanan. Halaman ini akan segera dapat diakses kembali.",
+  maintenance_contact_title: "Butuh bantuan mendesak?",
+  maintenance_contact_desc:
+    "Tim sales dan layanan pelanggan kami tetap siap melayani Anda melalui WhatsApp atau telepon.",
+  maintenance_contact_wa: "Hubungi WhatsApp",
+  maintenance_est_time: "Estimasi Selesai",
+  maintenance_est_desc: "Layanan diperkirakan kembali beroperasi segera.",
+
+  // 404 Not Found
+  notfound_title: "Halaman Tidak Ditemukan",
+  notfound_badge: "Error 404",
+  notfound_header: "Halaman Tidak Ditemukan",
+  notfound_desc: "Maaf, tautan yang Anda masukkan kurang tepat",
+  notfound_back_home: "Kembali ke Beranda",
+  notfound_view_products: "Jelajahi Produk",
+  notfound_contact: "Hubungi Kami",
 
   // Tentang Kami
   about: "Tentang Kami",
@@ -676,6 +691,15 @@ const _id = {
     "Training menghadirkan Dedy Budiman, Champion Sales Trainer, yang membawakan materi seputar penguatan mindset, strategi negosiasi, hingga teknik closing yang lebih efektif dan terarah.",
   activities_trainingsales_content_3:
     "Suasana acara berlangsung interaktif dan penuh semangat. Berbagai games menarik dan sesi ice breaking membuat peserta lebih antusias, kompak, serta membangun chemistry tim yang lebih solid. Tidak hanya belajar, seluruh peserta juga menikmati coffee break dan makan siang bersama, yang menjadi momen kebersamaan dan mempererat kolaborasi antar tim. Melalui training ini, Reddmas Group menegaskan komitmennya untuk terus berkembang dan siap terbang melampaui batas di tahun 2026 dengan energi baru, strategi baru, dan semangat juang yang lebih besar. ",
+  activities_presmian2026_category: "Peresmian Kantor Baru 2026",
+  activities_presmian2026_title: "Peresmian Kantor Baru 2026 Di Grand Puri",
+  activities_presmian2026_date: "18 November 2026",
+  activities_presmian2026_content_1:
+    "PT Intisukses Mitra Sejati merayakan momen istimewa melalui kegiatan peresmian kantor baru yang berlangsung dengan penuh sukacita dan antusiasme. Acara ini menjadi tonggak penting dalam perjalanan perusahaan sekaligus simbol semangat baru untuk terus berkembang dan memperluas langkah bisnis ke depan. Suasana semakin semarak dengan kehadiran jajaran manajemen, seluruh karyawan, serta para mitra bisnis yang turut hadir memberikan dukungan dan menyaksikan momen bersejarah ini.",
+  activities_presmian2026_content_2:
+    "Rangkaian acara berlangsung dalam suasana hangat dan penuh kebersamaan. Dimulai dengan seremoni peresmian, sambutan dari jajaran manajemen, hingga momen kebersamaan yang diwarnai dengan interaksi hangat dan antusiasme para tamu undangan. Senyum, canda, serta semangat optimisme yang terpancar sepanjang acara menciptakan suasana yang berkesan, sekaligus mempererat hubungan antara perusahaan, karyawan, dan para mitra yang telah menjadi bagian dari perjalanan PT Intisukses Mitra Sejati.",
+  activities_presmian2026_content_3:
+    "Kehadiran kantor baru ini bukan sekadar perubahan tempat kerja, melainkan representasi dari pencapaian, pertumbuhan, dan komitmen perusahaan untuk melangkah lebih jauh. Dengan fasilitas dan lingkungan kerja yang lebih representatif, PT Intisukses Mitra Sejati optimistis dapat meningkatkan produktivitas, memperkuat pelayanan, serta membangun kolaborasi yang semakin solid. Momentum ini menjadi awal dari babak baru perusahaan dalam menghadirkan kontribusi dan nilai lebih bagi pelanggan maupun mitra bisnis.",
   posted: "Dipost pada tanggal",
   news: "Berita",
   news_others: "Berita Lainnya",

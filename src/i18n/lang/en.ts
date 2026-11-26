@@ -116,10 +116,25 @@ export const en = {
   category: "Category",
   maintenance: "Maintenance",
   ctamaintenance: "Back to Home",
-  labelmaintenance: "System Update",
-  headermaintenance: "Page Underway",
+  labelmaintenance: "System Maintenance",
+  headermaintenance: "Page Under Scheduled Maintenance",
   maintenancedesc:
-    "We're currently performing routine maintenance to improve performance and service. This page will be back to normal shortly.",
+    "We are currently performing routine system maintenance to enhance performance and service reliability. This page will be back online shortly.",
+  maintenance_contact_title: "Need urgent assistance?",
+  maintenance_contact_desc:
+    "Our sales and customer support representatives are available via WhatsApp or phone.",
+  maintenance_contact_wa: "Contact via WhatsApp",
+  maintenance_est_time: "Estimated Completion",
+  maintenance_est_desc: "Our services are expected to resume shortly.",
+
+  // 404 Not Found
+  notfound_title: "Page Not Found",
+  notfound_badge: "Error 404",
+  notfound_header: "Page Not Found",
+  notfound_desc: "Sorry, the link you entered is incorrect",
+  notfound_back_home: "Back to Home",
+  notfound_view_products: "Explore Products",
+  notfound_contact: "Contact Us",
 
   // About
   about: "About Us",
@@ -677,6 +692,16 @@ export const en = {
     "The training featured Dedy Budiman, Champion Sales Trainer, who presented material on mindset strengthening, negotiation strategies, and more effective and targeted closing techniques.",
   activities_trainingsales_content_3:
     "The event was interactive and lively. Various engaging games and icebreaker sessions heightened participants' enthusiasm, cohesion, and fostered stronger team chemistry. In addition to learning, all participants also enjoyed coffee breaks and lunch together, providing moments of togetherness and strengthening team collaboration. Through this training, Reddmas Group affirmed its commitment to continuous growth and readiness to soar beyond boundaries in 2026 with renewed energy, new strategies, and a greater fighting spirit.",
+  activities_presmian2026_category: "Inauguration of New Office 2026",
+  activities_presmian2026_title:
+    "Inauguration of New Office 2026 at Grand Puri",
+  activities_presmian2026_date: "November 18, 2026",
+  activities_presmian2026_content_1:
+    "PT Intisukses Mitra Sejati celebrated a special occasion with the inauguration of its new office, an event marked by great joy and enthusiasm. This milestone serves as a significant landmark in the company’s journey, symbolizing a renewed spirit to continue growing and expanding its business footprint. The atmosphere was further enlivened by the presence of the management team, all employees, and business partners, who gathered to show their support and witness this historic moment.",
+  activities_presmian2026_content_2:
+    "The series of events unfolded in a warm atmosphere, defined by a strong sense of togetherness. From the official inauguration ceremony and remarks by the management team to the shared moments among attendees, the occasion was marked by engaging interactions and great enthusiasm. The smiles, laughter, and spirit of optimism that permeated the event created a memorable experience, while also strengthening the bonds between the company, its employees, and the partners who have been an integral part of the journey of PT Intisukses Mitra Sejati.",
+  activities_presmian2026_content_3:
+    "The opening of this new office represents more than just a change of workplace; it serves as a testament to the company’s achievements, growth, and commitment to reaching even greater heights. With a more representative environment and enhanced facilities, PT Intisukses Mitra Sejati is confident in its ability to boost productivity, strengthen service delivery, and foster even more robust collaboration. This milestone marks the beginning of a new chapter for the company as it continues to deliver greater value and meaningful contributions to its customers and business partners.",
   posted: "Posted on the date",
   news: "News",
   news_others: "Other News",
